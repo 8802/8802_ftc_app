@@ -16,7 +16,7 @@ public class SimulatedOpModeFactory {
     public VirtualMecanumHardware robot; // Pointer to our virtual robot
 
     public SimulatedOpModeFactory(Class c) {
-        // Assert we were passed an opmode we can
+        // Assert we were passed an opmode we can use
         assert c.getSuperclass() == SimulatableMecanumOpMode.class;
 
         // Create a simulated mecanum robot
