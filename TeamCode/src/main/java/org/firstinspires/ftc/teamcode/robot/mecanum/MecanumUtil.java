@@ -21,6 +21,8 @@ public class MecanumUtil {
     private static double clipScale(double d, double scale) {
         return Range.clip(d * scale, -1, 1);
     }
+    private static double clip(double d) {return Range.clip(d, -1, 1);}
+
 
     public static double deadZone(double control, double deadZone) {
         return Math.abs(control) > deadZone ? control : 0;
@@ -41,10 +43,10 @@ public class MecanumUtil {
         double scaleFactor = thetaScale / maxTrig;
 
         return new MecanumPowers(
-                clipScale(Math.cos(theta), scaleFactor) - turn,
-                clipScale(Math.sin(theta), scaleFactor) + turn,
-                clipScale(Math.sin(theta), scaleFactor) - turn,
-                clipScale(Math.cos(theta), scaleFactor) + turn
+                clip(clipScale(Math.cos(theta), scaleFactor) - turn),
+                clip(clipScale(Math.sin(theta), scaleFactor) + turn),
+                clip(clipScale(Math.sin(theta), scaleFactor) - turn),
+                clip(clipScale(Math.cos(theta), scaleFactor) + turn)
         );
     }
 }
