@@ -12,13 +12,12 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 
-class TXHandler {
+public class TXHandler {
     private final static String PYTHON_SERVER_HOST = "localhost";
     private final static int PYTHON_SERVER_PORT = 4446;
 
     protected DatagramSocket txsocket;
     protected InetAddress txhost;
-    protected DatagramSocket rxhost;
 
     Gson gson;
     double framerate;
@@ -35,9 +34,7 @@ class TXHandler {
     public void sendMessage(Pose p) throws IOException {
         JsonObject obj = gson.toJsonTree(p).getAsJsonObject();
         obj.addProperty("index", index);
-        obj.addProperty("fps", framerate);
-        String jsonStr = gson.toJson(obj);
-        System.out.println(jsonStr);
+        obj.addProperty("framerate", framerate);
         byte[] data = gson.toJson(obj).getBytes();
         DatagramPacket packet = new DatagramPacket(data, data.length, txhost, PYTHON_SERVER_PORT);
         txsocket.send(packet);

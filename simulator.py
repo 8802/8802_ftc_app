@@ -1,4 +1,10 @@
 #!/usr/bin/python3
+"""simulator.py: Visualizes Java robot simulator output."""
+import sys
+
+print(sys.version)
+__author__      = "Gavin Uberti"
+
 import json
 import math
 import os
@@ -13,6 +19,8 @@ from operator import attrgetter
 # Hide the Python boot message
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 import pygame
+
+import controller
 
 JAVA_SERVER_HOST = "localhost"
 JAVA_SERVER_PORT = 4445
@@ -32,20 +40,21 @@ ROBOT_DIMS = tuple(ROBOT_WIDTH_IN * x // FIELD_WIDTH_IN for x in SCREEN_DIMS)
 ROBOT = pygame.image.load("res/mecanum.png")
 ROBOT = pygame.transform.scale(ROBOT, (ROBOT_DIMS))
 
-SECS_BETWEEN_FRAMES = 1 / 20
+SECS_BETWEEN_FRAMES = 1 / 60
 
 class RobotPosition:
-    def __init__(self, x, y, h, index, json=""):
+    def __init__(self, x, y, h, index, framerate, json=""):
         self.x = x
         self.y = y
         self.h = h
         self.index = index
+        self.framerate = framerate
         self.json = json
 
     @classmethod
     def from_json(cls, json_data):
         attrs = json.loads(json_data)
-        return cls(attrs["x"], attrs["y"], attrs["heading"], attrs["index"], json_data)
+        return cls(attrs["x"], attrs["y"], attrs["heading"], attrs["index"], attrs["framerate"], json_data)
 
     def __str__(self):
         return str(self.json)
@@ -59,6 +68,7 @@ class RobotPosition:
             frac * (position.y - self.y) + self.y,
             frac * (position.h - self.h) + self.h,
             frac * (position.index - self.index) + self.index,
+            self.framerate
         )
 
     def draw(self, screen):
@@ -80,8 +90,12 @@ class FrameQueue:
         self.last_frame_update = time.time()
         self.prev_start = None
         self.prev_end = None
+        self.real_time = False
 
     def add(self, frame: RobotPosition):
+        if frame.framerate == -1:
+            while len(self.frames) > 1:
+                self._pop_min()
         self.frames.append(frame)
 
     def _pop_min(self):
@@ -128,7 +142,7 @@ def sendMessage(s):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.connect((JAVA_SERVER_HOST, JAVA_SERVER_PORT))
     try:
-        sock.sendall(s)
+        sock.sendall(s.encode())
     finally:
         sock.close()
 
@@ -140,6 +154,8 @@ def main(argv):
     server_thread.daemon = True
     server_thread.start()
     pygame.init()
+
+    gamepad = controller.Controller()
     screen = pygame.display.set_mode(SCREEN_DIMS)
 
     done = False
@@ -149,8 +165,11 @@ def main(argv):
             if event.type == pygame.QUIT:
                 done = True
 
-        # We always need to blit game field
+        # We always need to blit game field and send controller inputs
         screen.blit(RR2_BACKGROUND_FIELD, [0, 0])
+        gamepad.update()
+        sendMessage(gamepad.toJSON())
+
         frame = robot_frames.get()
         if frame:
             frame.draw(screen)
