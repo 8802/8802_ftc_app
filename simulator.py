@@ -1,8 +1,5 @@
 #!/usr/bin/python3
 """simulator.py: Visualizes Java robot simulator output."""
-import sys
-
-print(sys.version)
 __author__      = "Gavin Uberti"
 
 import json
