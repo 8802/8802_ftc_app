@@ -119,4 +119,12 @@ class LineTest {
                 Line.distance(new Point(-0.5, -1.25), new Point(2.5,2.75)),
                 5);
     }
+
+    @Test
+    void nearestLinePoint() {
+        assertEquals(
+                new Line(new Point(-50, -50), new Point(-50, 50))
+                        .nearestLinePoint(new Point(5, 5)),
+                new Point(-50, 5));
+    }
 }

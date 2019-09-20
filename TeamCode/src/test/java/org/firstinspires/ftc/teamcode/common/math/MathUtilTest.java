@@ -61,14 +61,22 @@ class MathUtilTest {
                 new Point(Math.sqrt(2), Math.sqrt(2)),
                 new Point(-Math.sqrt(2), -Math.sqrt(2))
         };
-
         assertEquals(
                 MathUtil.lineSegmentCircleIntersection(
                         new Point(-5, -5),
                         new Point(5, 5),
                         new Point(0, 0),
                         2),
-                new TreeSet<>(Arrays.asList(expected))
+                Arrays.asList(expected));
+
+        assertEquals(
+                1,
+                MathUtil.lineSegmentCircleIntersection(
+                        new Point(-50, 50),
+                        new Point(-50, -50),
+                        new Point(-45, 45),
+                        8).size()
+
         );
     }
 }
