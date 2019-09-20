@@ -1,4 +1,3 @@
-[![Build Status](https://travis-ci.org/8802/8802_ftc_app.svg?branch=master)](https://travis-ci.org/8802/8802_ftc_app)
 <h1 align="center">8802 Negative Resistance</h2>
 
 <p align="center">
