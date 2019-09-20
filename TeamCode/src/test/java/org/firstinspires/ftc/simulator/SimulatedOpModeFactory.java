@@ -17,7 +17,7 @@ public class SimulatedOpModeFactory {
 
     public SimulatedOpModeFactory(Class c) {
         // Assert we were passed an opmode we can use
-        assert c.getSuperclass() == SimulatableMecanumOpMode.class;
+        assert SimulatableMecanumOpMode.class.isAssignableFrom(c);
 
         // Create a simulated mecanum robot
         this.robot = new VirtualMecanumHardware(new Pose(0, 0, 0));

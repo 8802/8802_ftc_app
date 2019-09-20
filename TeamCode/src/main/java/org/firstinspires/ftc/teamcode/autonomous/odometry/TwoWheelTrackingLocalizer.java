@@ -25,8 +25,8 @@ public class TwoWheelTrackingLocalizer {
     public static double LATERAL_X_POS = -7.25;
 
     static final EncoderWheel[] WHEELS = {
-            new EncoderWheel(0, PARALLEL_Y_POS, 0.0, 0), // parallel
-            new EncoderWheel(LATERAL_X_POS, 0, Math.toRadians(90), 1), // lateral
+            new EncoderWheel(0, PARALLEL_Y_POS, 0.0, 0, 0), // parallel
+            new EncoderWheel(LATERAL_X_POS, 0, Math.toRadians(90), 1, 2), // lateral
     };
 
     public Pose currentPosition;
@@ -70,6 +70,8 @@ public class TwoWheelTrackingLocalizer {
         return wheel_radius * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
     }
 
+    public double x() { return currentPosition.x; }
+
     public static int inchesToEncoderTicks(double inches) {
         return (int) Math.round(inches * TICKS_PER_REV / (PARALLEL_WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO));
     }
@@ -78,16 +80,14 @@ public class TwoWheelTrackingLocalizer {
         double[] deltas = new double[] {
                 encoderTicksToInches(data.getMotorCurrentPosition(0) - prevWheelPositions[0],
                         PARALLEL_WHEEL_RADIUS),
-                encoderTicksToInches(data.getMotorCurrentPosition(1) - prevWheelPositions[1],
+                encoderTicksToInches(data.getMotorCurrentPosition(2) - prevWheelPositions[1],
                         LATERAL_WHEEL_RADIUS),
                 MathUtil.angleWrap(heading - prevHeading)
         };
 
-        // Update previous readings
-        for (int i = 0; i < 2; i++) {
-            prevWheelPositions[i] = data.getMotorCurrentPosition(i);
-        }
+        prevWheelPositions[0] = data.getMotorCurrentPosition(0);
         prevHeading = heading;
+        prevWheelPositions[1] = data.getMotorCurrentPosition(2);
 
         RealMatrix m = MatrixUtils.createRealMatrix(new double[][] {deltas});
 
@@ -101,8 +101,6 @@ public class TwoWheelTrackingLocalizer {
         relativeRobotMovement = relativeRobotMovement.add(robotPoseDelta);
         currentPosition = MathUtil.relativeOdometryUpdate(currentPosition, robotPoseDelta);
     }
-
-    public double x() { return currentPosition.x; }
     public double y() { return -currentPosition.y; }
     public double h() { return currentPosition.heading; }
     public Point pos() {

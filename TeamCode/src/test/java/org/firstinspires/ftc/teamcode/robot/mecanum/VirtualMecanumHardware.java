@@ -4,6 +4,8 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.simulator.VirtualRobot;
+import org.firstinspires.ftc.teamcode.autonomous.odometry.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
@@ -11,6 +13,7 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelHardware;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelPowers;
 import org.mockito.Mockito;
+import org.openftc.revextensions2.RevBulkData;
 
 public class VirtualMecanumHardware extends MecanumHardware implements VirtualRobot {
     double TRACK_WIDTH = 17;
@@ -29,11 +32,24 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
     public VirtualMecanumHardware(Pose position) {
         this.position = position;
         this.time = 0;
+        this.localizer = new TwoWheelTrackingLocalizer(0, 2);
         this.wheelPowers = new MecanumPowers(0, 0, 0, 0);
     }
 
+    @Override
     public void initBNO055IMU(HardwareMap hardwareMap) {
         this.imu = Mockito.mock(BNO055IMU.class);
+    }
+
+    @Override
+    public void initBulkReadTelemetry() {
+
+    }
+
+    @Override
+    public RevBulkData performBulkRead() {
+        this.localizer.currentPosition = this.position;
+        return Mockito.mock(RevBulkData.class);
     }
 
     @Override
@@ -77,8 +93,6 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
                         -wheelPowers.frontLeft +
                         -wheelPowers.backLeft) / 4
         ).scale(secs);
-
-        System.out.println(relativeOdometry.toString());
 
         position = MathUtil.relativeOdometryUpdate(position, relativeOdometry);
         time += secs;

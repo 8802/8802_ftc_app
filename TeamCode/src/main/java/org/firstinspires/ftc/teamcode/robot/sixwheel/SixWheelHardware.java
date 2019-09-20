@@ -179,7 +179,7 @@ public class SixWheelHardware {
         threeWheelOdometry[2] = threeWheelOdometryLine.addData("θ", "%.3f", "-1");
 
         Telemetry.Line twoWheelOdometryLine = telemetry.addLine();
-        twoWheelOdometry = new Telemetry.Item[3];
+        twoWheelOdometry = new Telemetry.Item[4];
         twoWheelOdometry[0] = twoWheelOdometryLine.addData("RX", "%.1f", "-1");
         twoWheelOdometry[1] = twoWheelOdometryLine.addData("RY", "%.1f", "-1");
         twoWheelOdometry[2] = twoWheelOdometryLine.addData("Rθ", "%.3f", "-1");

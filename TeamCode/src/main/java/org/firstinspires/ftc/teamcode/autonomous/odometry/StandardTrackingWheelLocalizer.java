@@ -43,9 +43,9 @@ public class StandardTrackingWheelLocalizer {
     public static double LAT_X_POS = -7.25;
 
     static final EncoderWheel[] WHEELS = {
-            new EncoderWheel(0, LEFT_Y_POS, 0.0, 0), // left
-            new EncoderWheel(0, RIGHT_Y_POS, 0.0, 1), // right
-            new EncoderWheel(LAT_X_POS, 0, Math.toRadians(90), 2) // lateral
+            new EncoderWheel(0, LEFT_Y_POS, 0.0, 0, 0), // left
+            new EncoderWheel(0, RIGHT_Y_POS, 0.0, 1, 1), // right
+            new EncoderWheel(LAT_X_POS, 0, Math.toRadians(90), 2, 2) // lateral
     };
 
     public Pose currentPosition;

@@ -20,6 +20,7 @@ public class SixWheelTeleop extends LinearOpMode {
 
         telemetry.clearAll();
         robot.initBulkReadTelemetry();
+        robot.initBNO055IMU(hardwareMap);
 
         while (opModeIsActive()) {
             RevBulkData data = robot.performBulkRead();

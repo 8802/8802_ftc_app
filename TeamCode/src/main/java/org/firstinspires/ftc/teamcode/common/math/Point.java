@@ -46,6 +46,11 @@ public class Point implements Comparable {
     }
 
     @Override
+    public String toString() {
+        return String.format("(%.1f, %.1f)", x, y);
+    }
+
+    @Override
     public int compareTo(Object o) {
         if (this == o) return 0;
         if (o == null || getClass() != o.getClass()) return -1;

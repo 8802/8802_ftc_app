@@ -23,6 +23,7 @@ public class TestPurePursuitTracking extends LinearOpMode {
 
         telemetry.clearAll();
         robot.initBulkReadTelemetry();
+        robot.initBNO055IMU(hardwareMap);
 
         while (opModeIsActive()) {
             robot.performBulkRead();
@@ -37,8 +38,8 @@ public class TestPurePursuitTracking extends LinearOpMode {
                 }
             }
 
-            double left = deadZone(clamp(gamepad1.left_stick_y - gamepad1.right_stick_x), 0.15);
-            double right = deadZone(clamp(gamepad1.left_stick_y + gamepad1.right_stick_x), 0.15);
+            double left = deadZone(clamp(gamepad1.left_stick_y - gamepad1.right_stick_x * 0.6), 0.15);
+            double right = deadZone(clamp(gamepad1.left_stick_y + gamepad1.right_stick_x * 0.6), 0.15);
             robot.driveLeft.setPower(left);
             robot.driveRight.setPower(right);
             robot.PTOLeft.setPower(left);

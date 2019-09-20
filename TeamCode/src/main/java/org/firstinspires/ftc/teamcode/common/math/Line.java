@@ -59,10 +59,17 @@ public class Line {
 
         if (isVerticalLine) {
             return new Point(intercept, l2.evaluate(intercept));
+        } else if (l2.isVerticalLine) {
+            return new Point(l2.intercept, this.evaluate(intercept));
         } else {
             double xIntersect = (l2.intercept - this.intercept) / (this.slope - l2.slope);
             return new Point(xIntersect, this.evaluate(xIntersect));
         }
+    }
+
+    public Point nearestLinePoint(Point p) {
+        Line perpContainer = new Line(p, this.perpendicularSlope());
+        return this.intersect(perpContainer);
     }
 
     public boolean isVertical() {

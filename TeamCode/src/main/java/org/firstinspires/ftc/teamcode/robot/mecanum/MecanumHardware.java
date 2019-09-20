@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.BuildConfig;
 import org.firstinspires.ftc.teamcode.autonomous.odometry.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.common.LoadTimer;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.openftc.revextensions2.ExpansionHubEx;
@@ -44,8 +45,9 @@ public class MecanumHardware {
     private LynxModule chassisLynxHub;
     private ExpansionHubEx chassisHub;
     public BNO055IMU imu;
+    private double headingOffset;
 
-    private StandardTrackingWheelLocalizer localizer;
+    TwoWheelTrackingLocalizer localizer;
 
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
@@ -90,7 +92,7 @@ public class MecanumHardware {
         calTime.stop();
 
         // Set up localization with motor names the wheels are connected to
-        localizer = new StandardTrackingWheelLocalizer(0, 1, 2);
+        localizer = new TwoWheelTrackingLocalizer(0, 1);
 
         // Set up telemetry
         this.telemetry = opMode.telemetry;
@@ -155,18 +157,15 @@ public class MecanumHardware {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
+        headingOffset = imu.getAngularOrientation().firstAngle;
     }
 
     public void initBulkReadTelemetry() {
         Telemetry.Line odometryLine = telemetry.addLine();
-        telOdometry = new Telemetry.Item[4];
+        telOdometry = new Telemetry.Item[3];
         telOdometry[0] = odometryLine.addData("X", "%.1f", "-1");
         telOdometry[1] = odometryLine.addData("Y", "%.1f", "-1");
         telOdometry[2] = odometryLine.addData("θ", "%.3f", "-1");
-
-        Telemetry.Line wheelPowers = telemetry.addLine();
-        wheelPowers.addData("Left", "%.3f", "-1");
-        wheelPowers.addData("Right", "%.3f", "-1");
 
         Telemetry.Line encoderLine = telemetry.addLine();
         telEncoders = new Telemetry.Item[4];
@@ -190,14 +189,13 @@ public class MecanumHardware {
 
     public RevBulkData performBulkRead() {
         RevBulkData data = chassisHub.getBulkInputData();
-
-        // Update localizer
-        localizer.update(data);
+        double heading = imu.getAngularOrientation().firstAngle - headingOffset;
+        localizer.update(data, heading);
 
         // Adjust telemetry localizer info
         telOdometry[0].setValue(String.format("%.1f", localizer.x()));
         telOdometry[1].setValue(String.format("%.1f", localizer.y()));
-        telOdometry[2].setValue(String.format("%.3f", localizer.h()));
+        telOdometry[2].setValue(String.format("%.1f", Math.toDegrees(localizer.h())));
 
         // Adjust encoders and analog inputs
         for (int i = 0; i < 4; i++) {

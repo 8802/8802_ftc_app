@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.common.math;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class MathUtil {
         }
     }
 
-    public static Set<Point> lineSegmentCircleIntersection(Point ul1, Point ul2, Point o, double radius) {
+    public static List<Point> lineSegmentCircleIntersection(Point ul1, Point ul2, Point o, double radius) {
         Point l1 = new Point(ul1.x - o.x, ul1.y - o.y);
         Point l2 = new Point(ul2.x - o.x, ul2.y - o.y);
 
@@ -71,13 +72,13 @@ public class MathUtil {
         if (MathUtil.approxEquals(discriminant, 0)) {
             offsets.add(new Point(0, 0));
         } else if (discriminant > 0) {
-            double x_determinant = Math.signum(d_y) * d_x * Math.sqrt(discriminant);
+            double x_determinant = sgn(d_y) * d_x * Math.sqrt(discriminant);
             double y_determinant = Math.abs(d_y) * Math.sqrt(discriminant);
             offsets.add(new Point(x_determinant, y_determinant));
             offsets.add(new Point(-x_determinant, -y_determinant));
         }
 
-        Set<Point> intersections = new TreeSet<>();
+        List<Point> intersections = new LinkedList<>();
         for (Point offset : offsets) {
             intersections.add(new Point (
                 (determinant * d_y + offset.x) / Math.pow(d_r, 2) + o.x,
@@ -87,15 +88,26 @@ public class MathUtil {
 
         // Verify intersection within bounds of line segment
         intersections.removeIf(point ->
-                (!between(ul1.x, ul2.x, point.x)) ||
-                (!between(ul1.y, ul2.y, point.y))
+                (!between(ul1.x, ul2.x, point.x, 0.1)) ||
+                (!between(ul1.y, ul2.y, point.y, 0.1))
         );
+
+        // Sort points by closeness to ul2 so closest point is at position 0
+        if (intersections.size() == 2 &&
+                (intersections.get(0).distance(ul2) > intersections.get(1).distance(ul2))) {
+            // If it's unsorted, reverse the order
+            intersections.add(intersections.remove(0));
+        }
 
         return intersections;
     }
 
-    public static boolean between(double r1, double r2, double val) {
-        return val > Math.min(r1, r2) && val < Math.max(r1, r2);
+    private static int sgn(double n) {
+        return n < 0 ? -1 : 1;
+    }
+
+    public static boolean between(double r1, double r2, double val, double threshold) {
+        return val > (Math.min(r1, r2) - threshold) && val < (Math.max(r1, r2) + threshold);
     }
 }
 

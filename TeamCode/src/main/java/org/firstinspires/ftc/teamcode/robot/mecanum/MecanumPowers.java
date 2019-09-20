@@ -20,11 +20,12 @@ public class MecanumPowers {
     }
 
     public MecanumPowers(double x, double y, double turnPower) {
-        this.frontLeft = y - turnPower + x * 1.5;
-        this.backLeft = y - turnPower - x * 1.5;
-        this.frontRight = y + turnPower + x * 1.5;
-        this.backRight = y + turnPower - x * 1.5;
+        this.frontLeft = x - turnPower - y;
+        this.backLeft = x - turnPower + y;
+        this.frontRight = x + turnPower + y;
+        this.backRight = x + turnPower - y;
         this.scale();
+
     }
 
     public List<Double> asList() {
