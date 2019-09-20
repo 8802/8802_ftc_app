@@ -17,8 +17,8 @@ STICK_MAPPINGS = {
     "ABS_Y": ("left_stick_y", 32767, 1),
     "ABS_RX": ("right_stick_x", 32767, -1),
     "ABS_RY": ("right_stick_y", 32767, 1),
-    "ABS_Z": ("left_stick_x", 255, 1),
-    "ABS_RZ": ("left_stick_x", 255, 1),
+    "ABS_Z": ("left_trigger", 255, 1),
+    "ABS_RZ": ("right_trigger", 255, 1),
 }
 
 BUTTON_MAPPINGS = {
@@ -72,7 +72,8 @@ class Controller:
             # Now do sticks
             elif event.code in STICK_MAPPINGS:
                 mapping = STICK_MAPPINGS[event.code]
-                self._set_prop(mapping[0], mapping[2] * event.state / mapping[1])
+                value = min(1, max(-1, event.state / mapping[1])) * mapping[2]
+                self._set_prop(mapping[0], float(value))
             # Now do buttons
             elif event.code in BUTTON_MAPPINGS:
                 self._set_prop(BUTTON_MAPPINGS[event.code], bool(event.state))
