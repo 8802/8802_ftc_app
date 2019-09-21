@@ -20,8 +20,8 @@ public class SimulatedOpModeFactory {
         assert SimulatableMecanumOpMode.class.isAssignableFrom(c);
 
         // Create a simulated mecanum robot
-        this.robot = new VirtualMecanumHardware(new Pose(0, 0, 0));
         opMode = (SimulatableMecanumOpMode) Mockito.spy(c);
+        this.robot = new VirtualMecanumHardware(opMode.getStartingPosition());
         Mockito.doReturn(robot).when(opMode).getRobot();
 
         // Mock the gamepads
@@ -39,14 +39,4 @@ public class SimulatedOpModeFactory {
             robot.elapse(seconds / iterations);
         }
     }
-
-    /*public static void main(String[] args) {
-        SimulatedOpModeFactory simulated = new SimulatedOpModeFactory(TestPurePursuitTracking.class);
-        for (int i = 0; i < INIT_ITERATIONS; i++) {
-            simulated.simulateInitLoop();
-        }
-
-        simulated.start();
-        simulated.simulateInitLoop();
-    }*/
 }

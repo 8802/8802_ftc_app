@@ -16,7 +16,7 @@ class RealTimeOpModeRunner {
 
     @Test
     void testOpMode() throws IOException {
-        SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(MecanumFieldCentric .class);
+        SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(SSAutoV1.class);
         simOpMode.opMode.start();
         TXHandler udpServer = new TXHandler(-1);
         RXThread udpClient = new RXThread(simOpMode.opMode.gamepad1, simOpMode.opMode.gamepad2);

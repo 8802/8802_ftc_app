@@ -1,15 +1,16 @@
 package org.firstinspires.ftc.teamcode.autonomous.controllers;
 
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
-import org.firstinspires.ftc.teamcode.common.math.Point;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 
 public class MecanumPurePursuitController {
-    public static double REDUCE_TURN_SPEED_THRESHOLD = Math.PI/4;
-    public static double REDUCE_MOVE_SPEED_THRESHOLD = 8;
+    public static double REDUCE_TURN_SPEED_THRESHOLD = Math.PI/8;
+    public static double REDUCE_MOVE_SPEED_THRESHOLD = 6;
 
-    public static MecanumPowers goToPosition(Pose robotPose, Point target, double movementSpeed, double point_speed) {
+    public static MecanumPowers goToPosition(Pose robotPose, Waypoint target, double movementSpeed, double point_speed) {
         //System.out.println(target);
         //System.out.println(robotPose);
 
@@ -23,8 +24,12 @@ public class MecanumPurePursuitController {
         double yPower = movementSpeed * -relY / REDUCE_MOVE_SPEED_THRESHOLD;
 
         // Get heading that points from robot to target point. We want this to be the robot's heading
-        double pointToRobotAngle = target.minus(robotPose).atan();
-        double angleToTarget = MathUtil.angleWrap(pointToRobotAngle - robotPose.heading);
+        // TODO support driving backwards by changing target.minus(robotPose).atan()
+        double desiredAngle = target instanceof HeadingControlledWaypoint ?
+                ((HeadingControlledWaypoint) target).targetHeading :
+                target.minus(robotPose).atan();
+
+        double angleToTarget = MathUtil.angleWrap(desiredAngle - robotPose.heading);
         double turnPower = angleToTarget / REDUCE_TURN_SPEED_THRESHOLD;
         return new MecanumPowers(xPower, yPower, turnPower);
     }
