@@ -18,13 +18,14 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 import pygame
 
 import controller
+import write_video
 
 JAVA_SERVER_HOST = "localhost"
 JAVA_SERVER_PORT = 4445
 PYTHON_SERVER_PORT = 4446
 
-SCREEN_DIMS = (800, 800)
-FIELD_WIDTH_IN = 12 * 12
+SCREEN_DIMS = (720, 720)
+FIELD_WIDTH_IN = 12 * 12 - 3
 ROBOT_WIDTH_IN = 18
 
 SCREEN_CENTER = tuple(x / 2 for x in SCREEN_DIMS)
@@ -143,6 +144,9 @@ def sendMessage(s):
     finally:
         sock.close()
 
+def gen_filename():
+    return "video/" + str(int(time.time() * 1000)) + ".mp4"
+
 def main(argv):
     server = ThreadedUDPServer(
         ("localhost", PYTHON_SERVER_PORT), ThreadedUDPRequestHandler
@@ -153,6 +157,7 @@ def main(argv):
     pygame.init()
 
     gamepad = controller.Controller()
+    #pipeline = write_video.FramePipeline(gen_filename())
     screen = pygame.display.set_mode(SCREEN_DIMS)
 
     done = False
@@ -170,10 +175,13 @@ def main(argv):
         frame = robot_frames.get()
         if frame:
             frame.draw(screen)
+            #pipeline.write_surface(screen)
         pygame.display.flip()
 
+    #pipeline.close()
     server.shutdown()
     server.server_close()
+
 
 
 if __name__ == "__main__":
