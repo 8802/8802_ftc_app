@@ -15,8 +15,8 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
     MecanumHardware robot;
     PurePursuitPath followPath;
 
-    boolean dpadLeftBumperPrev;
-    double intakeSpeed;
+    boolean dpadUpPrev, dpadDownPrev;
+    int intakePower;
 
     // Adjustable properties
     public abstract boolean fieldCentric();
@@ -38,15 +38,17 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
     @Override
     public void start() {
         robot.initBulkReadTelemetry();
-        dpadLeftBumperPrev = gamepad1.left_bumper;
-        intakeSpeed = 0;
+        dpadUpPrev = gamepad1.dpad_up;
+        dpadDownPrev = gamepad1.dpad_down;
+        intakePower = 0;
     }
 
     @Override
     public void loop() {
         RevBulkData data = robot.performBulkRead();
 
-        MecanumPowers ppPowers = MecanumPurePursuitController.goToPosition(robot.pose(), new Pose(0, 0, 0), 1.0, 1.0);
+        MecanumPowers ppPowers = MecanumPurePursuitController.goToPosition(
+                robot.pose(), new Pose(0, 0, 0), 1.0, 1.0);
         if (gamepad1.left_stick_button) {
             robot.setPowers(ppPowers);
         } else if (gamepad1.right_stick_button) {
@@ -64,21 +66,36 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
             driveScale = Range.clip(driveScale, 0, 1);
 
             // Exponentiate our turn
-            double turn = Math.copySign(Math.pow(MecanumUtil.deadZone(gamepad1.right_stick_x, 0.05), 2), gamepad1.right_stick_x) * slowScale;
+            double turn = Math.copySign(
+                    Math.pow(MecanumUtil.deadZone(gamepad1.right_stick_x, 0.05), 2),
+                    gamepad1.right_stick_x) * slowScale;
 
             MecanumPowers powers = MecanumUtil.powersFromAngle(angle, driveScale, turn);
             robot.setPowers(powers);
         }
 
-        if (gamepad1.left_bumper && !dpadLeftBumperPrev) {
-            dpadLeftBumperPrev = true;
-            intakeSpeed = (intakeSpeed + 0.25);
-            if (intakeSpeed >= 1.1) {intakeSpeed = 0;}
-            robot.setIntakePower(intakeSpeed);
+        if (gamepad1.dpad_up && !dpadUpPrev) {
+            dpadUpPrev = true;
+            if (intakePower == 1) {
+                intakePower = 0;
+            } else {
+                intakePower = 1;
+            }
+            robot.setIntakePower(intakePower);
+        } else if (!gamepad1.dpad_up) {
+            dpadUpPrev = false;
         }
 
-        if (!gamepad1.left_bumper) {
-            dpadLeftBumperPrev = false;
+        if (gamepad1.dpad_down && !dpadDownPrev) {
+            dpadDownPrev = true;
+            if (intakePower == -1) {
+                intakePower = 0;
+            } else {
+                intakePower = -1;
+            }
+            robot.setIntakePower(intakePower);
+        } else if (!gamepad1.dpad_up) {
+            dpadDownPrev = false;
         }
     }
 }
