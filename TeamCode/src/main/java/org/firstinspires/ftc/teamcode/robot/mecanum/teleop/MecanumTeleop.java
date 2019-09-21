@@ -15,6 +15,9 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
     MecanumHardware robot;
     PurePursuitPath followPath;
 
+    boolean dpadLeftBumperPrev;
+    double intakeSpeed;
+
     // Adjustable properties
     public abstract boolean fieldCentric();
 
@@ -35,6 +38,8 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
     @Override
     public void start() {
         robot.initBulkReadTelemetry();
+        dpadLeftBumperPrev = gamepad1.left_bumper;
+        intakeSpeed = 0;
     }
 
     @Override
@@ -63,6 +68,17 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
 
             MecanumPowers powers = MecanumUtil.powersFromAngle(angle, driveScale, turn);
             robot.setPowers(powers);
+        }
+
+        if (gamepad1.left_bumper && !dpadLeftBumperPrev) {
+            dpadLeftBumperPrev = true;
+            intakeSpeed = (intakeSpeed + 0.25);
+            if (intakeSpeed >= 1.1) {intakeSpeed = 0;}
+            robot.setIntakePower(intakeSpeed);
+        }
+
+        if (!gamepad1.left_bumper) {
+            dpadLeftBumperPrev = false;
         }
     }
 }

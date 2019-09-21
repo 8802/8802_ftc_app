@@ -54,6 +54,9 @@ public class MecanumHardware {
     public DcMotorEx backLeft;
     public DcMotorEx backRight;
 
+    public DcMotorEx intakeLeft;
+    public DcMotorEx intakeRight;
+
     public List<DcMotorEx> chassisMotors;
     public List<DcMotorEx> leftChassisMotors;
     public List<DcMotorEx> rightChassisMotors;
@@ -66,10 +69,13 @@ public class MecanumHardware {
         LoadTimer loadTime = new LoadTimer();
         RevExtensions2.init();
 
-        frontLeft = opMode.hardwareMap.get(DcMotorEx.class, "LeftFront");
-        frontRight = opMode.hardwareMap.get(DcMotorEx.class, "RightFront");
-        backLeft = opMode.hardwareMap.get(DcMotorEx.class, "LeftBack");
-        backRight = opMode.hardwareMap.get(DcMotorEx.class, "RightBack");
+        frontLeft = opMode.hardwareMap.get(DcMotorEx.class, "leftFront");
+        frontRight = opMode.hardwareMap.get(DcMotorEx.class, "rightFront");
+        backLeft = opMode.hardwareMap.get(DcMotorEx.class, "leftBack");
+        backRight = opMode.hardwareMap.get(DcMotorEx.class, "rightBack");
+
+        intakeLeft = opMode.hardwareMap.get(DcMotorEx.class, "intakeLeft");
+        intakeRight = opMode.hardwareMap.get(DcMotorEx.class, "intakeRight");
 
         chassisLynxHub = opMode.hardwareMap.get(LynxModule.class, "chassisHub");
         chassisHub = opMode.hardwareMap.get(ExpansionHubEx.class, "chassisHub");
@@ -77,6 +83,7 @@ public class MecanumHardware {
         // Reverse left hand motors
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
+        intakeLeft.setDirection(DcMotor.Direction.REVERSE);
 
         // Set up fast access linked lists
         chassisMotors = Arrays.asList(frontLeft, frontRight, backLeft, backRight);
@@ -226,5 +233,10 @@ public class MecanumHardware {
         frontRight.setPower(powers.frontRight);
         backLeft.setPower(powers.backLeft);
         backRight.setPower(powers.backRight);
+    }
+
+    public void setIntakePower(double d) {
+        intakeLeft.setPower(d);
+        intakeRight.setPower(d);
     }
 }
