@@ -15,12 +15,12 @@ public class SquareAuto extends SimulatableMecanumOpMode {
         this.robot = this.getRobot();
         robot.initBNO055IMU(hardwareMap);
         followPath = new PurePursuitPath(robot,
-                new Waypoint(0, 0),
-                new Waypoint(50, 50),
-                new Waypoint(-50, 50),
-                new Waypoint(-50, -50),
-                new Waypoint(50, -50),
-                new Waypoint(0, 0)
+                new Waypoint(0, 0, 8),
+                new Waypoint(60, 60, 8),
+                new Waypoint(-60, 60, 8),
+                new Waypoint(-60, -60, 8),
+                new Waypoint(60, -60, 8),
+                new Waypoint(0, 0, 8)
         );
     }
 

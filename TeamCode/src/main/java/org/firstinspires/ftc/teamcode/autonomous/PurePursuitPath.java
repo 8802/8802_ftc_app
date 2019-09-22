@@ -38,7 +38,7 @@ public class PurePursuitPath {
         this.robot = robot;
 
         if (!(waypoints.get(waypoints.size() - 1) instanceof StopWaypoint)) {
-            throw new IllegalArgumentException("Final Pure Pursuit waypoint must be a pose!");
+            throw new IllegalArgumentException("Final Pure Pursuit waypoint must be a StopWaypoint!");
         }
     }
 

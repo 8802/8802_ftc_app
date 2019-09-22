@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.autonomous.controllers.MecanumPurePursuitController;
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
@@ -27,12 +28,12 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
         this.robot = this.getRobot();
         robot.initBNO055IMU(hardwareMap);
         followPath = new PurePursuitPath(robot,
-                new Waypoint(0, 0),
-                new Waypoint(50, 50),
-                new Waypoint(-50, 50),
-                new Waypoint(-50, -50),
-                new Waypoint(50, -50),
-                new Waypoint(0, 0)
+                new Waypoint(0, 0, 8),
+                new Waypoint(60, 60, 8),
+                new Waypoint(-60, 60, 8),
+                new Waypoint(-60, -60, 8),
+                new Waypoint(60, -60, 8),
+                new StopWaypoint(0, 0, 8, 0, 1)
         );
     }
 
@@ -49,7 +50,7 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
         RevBulkData data = robot.performBulkRead();
 
         MecanumPowers ppPowers = MecanumPurePursuitController.goToPosition(
-                robot.pose(), new HeadingControlledWaypoint(0, 0, 0), 1.0, 1.0);
+                robot.pose(), new HeadingControlledWaypoint(0, 0, 0, 0), 1.0, 1.0);
         if (gamepad1.left_stick_button) {
             robot.setPowers(ppPowers);
         } else if (gamepad1.right_stick_button) {

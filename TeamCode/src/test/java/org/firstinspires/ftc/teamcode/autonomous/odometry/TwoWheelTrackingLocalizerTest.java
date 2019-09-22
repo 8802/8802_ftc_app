@@ -13,8 +13,10 @@ class TwoWheelTrackingLocalizerTest {
         return new TwoWheelTrackingLocalizer(0, 1);
     }
 
+    // Lateral encoder is on port 2 instead of port 1 because port 1 is
+    // reserved for the second parallel encoder, which we just aren't using here
     private RevBulkData genFakeData(int parallelEncoder, int latEncoder) {
-        int[] encoderVals = new int[] {parallelEncoder, latEncoder};
+        int[] encoderVals = new int[] {parallelEncoder, 0, latEncoder, 0};
         RevBulkData data = Mockito.mock(RevBulkData.class);
         Mockito.when(data.getMotorCurrentPosition(Mockito.anyInt()))
                 .thenAnswer(invocation ->
