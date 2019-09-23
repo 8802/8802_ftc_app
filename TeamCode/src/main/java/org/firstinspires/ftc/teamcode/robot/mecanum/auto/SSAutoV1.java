@@ -17,7 +17,7 @@ public class SSAutoV1 extends SimulatableMecanumOpMode {
     PurePursuitPath followPath;
 
     public Pose getStartingPosition() {
-        return new Pose(-50, FIELD_RADIUS + 9, Math.PI);
+        return new Pose(-50, FIELD_RADIUS - 9, 3 * Math.PI / 2);
     }
 
     @Override
@@ -26,9 +26,9 @@ public class SSAutoV1 extends SimulatableMecanumOpMode {
         robot.initBNO055IMU(hardwareMap);
         followPath = new PurePursuitPath(robot,
                 new Waypoint(getStartingPosition(), 4),
-                new StopWaypoint(8 * 5 + 9 + 4 - FIELD_RADIUS / 2, 22, 4, Math.PI, 2),
-                new StopWaypoint(8 * 5 + 9 - 1 - FIELD_RADIUS / 2, 22, 4, Math.PI, 2),
-                new Waypoint(8 * 5 + 9 - 1 - FIELD_RADIUS / 2, 48, 16),
+                new StopWaypoint(8 * 5 + 9 + 4 - FIELD_RADIUS, 22, 4, Math.PI, 2),
+                new StopWaypoint(8 * 5 + 9 - 1 - FIELD_RADIUS, 22, 4, Math.PI, 2),
+                new Waypoint(8 * 5 + 9 - 1 - FIELD_RADIUS, 48, 16),
                 new Waypoint(48, 48, 16),
                 new StopWaypoint(48, 24, 4, -Math.PI/2, 2)
         );

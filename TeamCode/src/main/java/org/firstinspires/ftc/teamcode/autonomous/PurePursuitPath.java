@@ -55,7 +55,7 @@ public class PurePursuitPath {
             jumpToNextSegment = false;
             Waypoint target = waypoints.get(currPoint + 1);
             if (target instanceof StopWaypoint) {
-                if (robotPosition.distance(target) < ((StopWaypoint) target).allowedError) {
+                if (robotPosition.distance(target) < ((StopWaypoint) target).allowedPositionError) {
                     jumpToNextSegment = true;
                 }
             } else {
