@@ -69,22 +69,28 @@ class RobotPosition:
             self.framerate
         )
 
+    def get_screen_center(self):
+        # We flip X and Y to correspond to how we've laid out field
+        return (  # Coords for center of robot
+            SCREEN_CENTER[1] - SCALE_FACTOR * self.y,
+            SCREEN_CENTER[0] - SCALE_FACTOR * self.x,
+        )
+
     def draw(self, screen):
         rotated = pygame.transform.rotate(ROBOT, math.degrees(self.h))
         robot_size = rotated.get_rect().size
 
-        # We flip X and Y to correspond to how we've laid out field
-        screen_coords = (  # Coords for center of robot
-            SCREEN_CENTER[1] - SCALE_FACTOR * self.y - robot_size[1] / 2,
-            SCREEN_CENTER[0] - SCALE_FACTOR * self.x - robot_size[0] / 2,
-        )
+        # Calculate the corner of the robot
+        center = self.get_screen_center()
+        corner = (center[0] - robot_size[1] / 2, center[1] - robot_size[0] / 2)
 
-        screen.blit(rotated, screen_coords)
+        screen.blit(rotated, corner)
 
 
 class FrameQueue:
     def __init__(self):
         self.frames = []
+        self.trail = []
         self.last_frame_update = time.time()
         self.prev_start = None
         self.prev_end = None
@@ -114,6 +120,9 @@ class FrameQueue:
             time.time() >= self.last_frame_update + SECS_BETWEEN_FRAMES
             and len(self.frames) >= 1
         ):
+            self.trail.append(self.prev_start)
+            while len(self.trail) > 100:
+                self.trail.pop(0)
             self.prev_start = self.prev_end
             self.prev_end = self._pop_min()
             self.last_frame_update = time.time()
@@ -122,6 +131,10 @@ class FrameQueue:
         interpolate_frac = elapsed_time / SECS_BETWEEN_FRAMES
         return self.prev_start.interpolate(self.prev_end, interpolate_frac)
 
+    def draw_trail(self, screen):
+        for frame in self.trail:
+            center = tuple(map(int, frame.get_screen_center()))
+            pygame.draw.circle(screen, (255, 0, 0, 128), center, 4, 0)
 
 robot_frames = FrameQueue()
 
@@ -169,6 +182,7 @@ def main(argv):
 
         # We always need to blit game field and send controller inputs
         screen.blit(RR2_BACKGROUND_FIELD, [0, 0])
+        robot_frames.draw_trail(screen)
         gamepad.update()
         sendMessage(gamepad.toJSON())
 
