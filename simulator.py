@@ -27,6 +27,8 @@ PYTHON_SERVER_PORT = 4446
 SCREEN_DIMS = (720, 720)
 FIELD_WIDTH_IN = 12 * 12 - 3
 ROBOT_WIDTH_IN = 18
+MAX_TRAIL_LENGTH = 1024
+TRAIL_THICKNESS = 20
 
 SCREEN_CENTER = tuple(x / 2 for x in SCREEN_DIMS)
 SCALE_FACTOR = SCREEN_DIMS[0] / FIELD_WIDTH_IN
@@ -101,6 +103,9 @@ class FrameQueue:
             while len(self.frames) > 1:
                 self._pop_min()
         self.frames.append(frame)
+        self.trail.append(frame)
+        while len(self.trail) > MAX_TRAIL_LENGTH:
+            self.trail.pop(0)
 
     def _pop_min(self):
         m = min(self.frames,key=attrgetter('index'))
@@ -120,9 +125,6 @@ class FrameQueue:
             time.time() >= self.last_frame_update + SECS_BETWEEN_FRAMES
             and len(self.frames) >= 1
         ):
-            self.trail.append(self.prev_start)
-            while len(self.trail) > 100:
-                self.trail.pop(0)
             self.prev_start = self.prev_end
             self.prev_end = self._pop_min()
             self.last_frame_update = time.time()
@@ -132,9 +134,12 @@ class FrameQueue:
         return self.prev_start.interpolate(self.prev_end, interpolate_frac)
 
     def draw_trail(self, screen):
-        for frame in self.trail:
-            center = tuple(map(int, frame.get_screen_center()))
-            pygame.draw.circle(screen, (255, 0, 0, 128), center, 4, 0)
+        if len(self.trail) > 0:
+            start = tuple(map(int, self.trail[0].get_screen_center()))
+            for i in range(1, len(self.trail)):
+                end = tuple(map(int, self.trail[i].get_screen_center()))
+                pygame.draw.line(screen, (255, 0, 0), start, end, 4)
+                start = end
 
 robot_frames = FrameQueue()
 

@@ -61,9 +61,10 @@ public class MecanumHardware {
     public List<DcMotorEx> leftChassisMotors;
     public List<DcMotorEx> rightChassisMotors;
 
-    // Inches
-    public static final double TRACK_WIDTH = 16.5;
-    public static final double WHEEL_DIAMETER = 4;
+    // Constants, stored in inches
+    public static double TRACK_WIDTH = 16.5;
+    public static double WHEEL_DIAMETER = 4;
+    public static double FIELD_RADIUS = 141 / 2.0;
 
     public MecanumHardware(OpMode opMode) {
         LoadTimer loadTime = new LoadTimer();

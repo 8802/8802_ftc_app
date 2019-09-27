@@ -66,7 +66,8 @@ public class PurePursuitPath {
             if (jumpToNextSegment) {
                 currPoint++;
             }
-        } while (jumpToNextSegment && currPoint + 1 < waypoints.size());
+        } while (jumpToNextSegment && currPoint < waypoints.size() - 1);
+        if (finished()) {return;}
 
         Waypoint target = waypoints.get(currPoint + 1);
         // If we're making a stop and in the stop portion of the move
@@ -95,19 +96,20 @@ public class PurePursuitPath {
         Line currSegment = new Line(start, mid);
         Point center = currSegment.nearestLinePoint(robotPosition);
 
-        System.out.println("Circle center is on point " + center.toString());
-
-        List<Point> intersectionsWithCurrentLine = MathUtil.lineSegmentCircleIntersection(
+        Point intersection = MathUtil.lineSegmentCircleIntersection(
                 start, mid, center, LOOK_AHEAD_DISTANCE
         );
 
+        // If our line intersects at all
         // We clone the midpoint to preserve metadata, if it exists
-        Point intersection = intersectionsWithCurrentLine.get(0);
         Waypoint target = mid.clone();
         target.x = intersection.x;
         target.y = intersection.y;
-
         robot.setPowers(MecanumPurePursuitController.goToPosition(robotPosition,
                 target, 1.0, 1.0));
+    }
+
+    public boolean finished() {
+        return currPoint >= waypoints.size() - 1;
     }
 }

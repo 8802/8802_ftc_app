@@ -58,7 +58,7 @@ public class MathUtil {
         }
     }
 
-    public static List<Point> lineSegmentCircleIntersection(Point ul1, Point ul2, Point o, double radius) {
+    public static Point lineSegmentCircleIntersection(Point ul1, Point ul2, Point o, double radius) {
         Point l1 = new Point(ul1.x - o.x, ul1.y - o.y);
         Point l2 = new Point(ul2.x - o.x, ul2.y - o.y);
 
@@ -86,12 +86,6 @@ public class MathUtil {
             ));
         }
 
-        // Verify intersection within bounds of line segment
-        intersections.removeIf(point ->
-                (!between(ul1.x, ul2.x, point.x, 0.1)) ||
-                (!between(ul1.y, ul2.y, point.y, 0.1))
-        );
-
         // Sort points by closeness to ul2 so closest point is at position 0
         if (intersections.size() == 2 &&
                 (intersections.get(0).distance(ul2) > intersections.get(1).distance(ul2))) {
@@ -99,7 +93,11 @@ public class MathUtil {
             intersections.add(intersections.remove(0));
         }
 
-        return intersections;
+        if (intersections.size() > 0) {
+            return intersections.get(0);
+        } else {
+            return null;
+        }
     }
 
     private static int sgn(double n) {

@@ -57,26 +57,13 @@ class MathUtilTest {
     @Test
     void lineSegmentCircleIntersection() {
         // Simple case with circle at (0, 0) and line segment with slope 1 through origin
-        Point[] expected = {
-                new Point(Math.sqrt(2), Math.sqrt(2)),
-                new Point(-Math.sqrt(2), -Math.sqrt(2))
-        };
         assertEquals(
                 MathUtil.lineSegmentCircleIntersection(
                         new Point(-5, -5),
                         new Point(5, 5),
                         new Point(0, 0),
                         2),
-                Arrays.asList(expected));
+                new Point(Math.sqrt(2), Math.sqrt(2)));
 
-        assertEquals(
-                1,
-                MathUtil.lineSegmentCircleIntersection(
-                        new Point(-50, 50),
-                        new Point(-50, -50),
-                        new Point(-45, 45),
-                        8).size()
-
-        );
     }
 }
