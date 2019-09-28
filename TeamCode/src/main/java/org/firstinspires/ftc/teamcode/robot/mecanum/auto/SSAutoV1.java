@@ -54,12 +54,19 @@ public class SSAutoV1 extends SimulatableMecanumOpMode {
 
                 // Drive back and grab a third skystone
                 new Waypoint(48, 48, 16),
+                new Waypoint(-40, 48, 16),
+                new StopWaypoint(-40, 24, 16, -0.75 * Math.PI, 2),
+                new Waypoint(-40, 48, 16),
+                new Waypoint(48, 48, 16),
+                new StopWaypoint(48, 24, 4, Math.PI/2, 2),
+
+                // And the fourth
+                new Waypoint(48, 48, 16),
                 new Waypoint(-48, 48, 16),
                 new StopWaypoint(-48, 24, 16, -0.75 * Math.PI, 2),
                 new Waypoint(-48, 48, 16),
                 new Waypoint(48, 48, 16),
                 new StopWaypoint(48, 24, 4, Math.PI/2, 2),
-
 
                 // Drive up and place foundation in corner
                 new Waypoint(48, 48, 16),
