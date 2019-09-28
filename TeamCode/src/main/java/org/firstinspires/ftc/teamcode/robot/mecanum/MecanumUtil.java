@@ -18,6 +18,8 @@ public class MecanumUtil {
     public static final MecanumPowers CLOCKWISE =
             MecanumUtil.powersFromAngle(0, 0, -1);
 
+    public static final MecanumPowers STOP = new MecanumPowers(0, 0, 0, 0);
+
     private static double clipScale(double d, double scale) {
         return Range.clip(d * scale, -1, 1);
     }

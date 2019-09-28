@@ -14,9 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class PurePursuitPath {
-    public static double LOOK_AHEAD_DISTANCE = 16;
-    public static double POSE_ACCURACY_DIST = 2;
-
     private MecanumHardware robot;
     List<Waypoint> waypoints;
 
@@ -59,7 +56,7 @@ public class PurePursuitPath {
                     jumpToNextSegment = true;
                 }
             } else {
-                if (robotPosition.distance(target) < LOOK_AHEAD_DISTANCE) {
+                if (robotPosition.distance(target) < target.followDistance) {
                     jumpToNextSegment = true;
                 }
             }
@@ -68,12 +65,13 @@ public class PurePursuitPath {
             }
         } while (jumpToNextSegment && currPoint < waypoints.size() - 1);
         if (finished()) {return;}
+        System.out.println("Currently on segment " + currPoint);
 
         Waypoint target = waypoints.get(currPoint + 1);
         // If we're making a stop and in the stop portion of the move
-        if (target instanceof StopWaypoint && robotPosition.distance(target) < LOOK_AHEAD_DISTANCE) {
+        if (target instanceof StopWaypoint && robotPosition.distance(target) < target.followDistance) {
             robot.setPowers(MecanumPurePursuitController.goToPosition(
-                    robotPosition, target, 1.0, 1.0));
+                    robotPosition, target, 1.0, false));
             System.out.println("Locking onto point " + target.toString());
         } else {
             trackToLine(
@@ -97,7 +95,7 @@ public class PurePursuitPath {
         Point center = currSegment.nearestLinePoint(robotPosition);
 
         Point intersection = MathUtil.lineSegmentCircleIntersection(
-                start, mid, center, LOOK_AHEAD_DISTANCE
+                start, mid, center, mid.followDistance
         );
 
         // If our line intersects at all
@@ -106,7 +104,7 @@ public class PurePursuitPath {
         target.x = intersection.x;
         target.y = intersection.y;
         robot.setPowers(MecanumPurePursuitController.goToPosition(robotPosition,
-                target, 1.0, 1.0));
+                target, 1.0, true));
     }
 
     public boolean finished() {

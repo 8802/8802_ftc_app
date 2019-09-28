@@ -19,9 +19,20 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
     double TRACK_WIDTH = 17;
 
     double MAX_FORWARD_SPEED = 60; // Per second
-    double MAX_STRAFE_SPEED = 55;
+    double MAX_STRAFE_SPEED = 50;
+
+    Pose TERMINAL_VELOCITIES = new Pose(MAX_FORWARD_SPEED, MAX_STRAFE_SPEED, MAX_FORWARD_SPEED/TRACK_WIDTH);
+    // TODO replace these with better, measured values
+    Pose MAX_ACCERATIONS = new Pose(MAX_FORWARD_SPEED, MAX_STRAFE_SPEED, MAX_FORWARD_SPEED/TRACK_WIDTH);
+
+    // At terminal velocity, the robot's frictional acceleration will be equal to the max acceleration,
+    // but opposite in direction
+    Pose STATIC_FRICTION = new Pose(20, 20, 1);
+    Pose KINETIC_FRICTION = TERMINAL_VELOCITIES.clone().scale(-1);
+
 
     Pose position;
+    Pose velocity;
     double time;
     MecanumPowers wheelPowers;
 
@@ -31,6 +42,7 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
 
     public VirtualMecanumHardware(Pose position) {
         this.position = position;
+        this.velocity = new Pose(0, 0, 0);
         this.time = 0;
         this.localizer = new TwoWheelTrackingLocalizer(0, 2);
         this.wheelPowers = new MecanumPowers(0, 0, 0, 0);
@@ -74,27 +86,38 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
 
         // +y is to the left
         // Calculations are simple because our wheels are oriented at 45 degrees
-        Pose relativeOdometry = new Pose(
-                MAX_FORWARD_SPEED * (
-                        wheelPowers.frontLeft +
-                        wheelPowers.frontRight +
-                        wheelPowers.backLeft +
-                        wheelPowers.backRight) / 4,
+        Pose acceleration = new Pose(
+                (wheelPowers.frontLeft +
+                    wheelPowers.frontRight +
+                    wheelPowers.backLeft +
+                    wheelPowers.backRight) / 4,
 
-                MAX_STRAFE_SPEED * (
-                        wheelPowers.frontRight +
-                        wheelPowers.backLeft +
-                        -wheelPowers.frontLeft +
-                        -wheelPowers.backRight) / 4,
+                (wheelPowers.frontRight +
+                    wheelPowers.backLeft +
+                    -wheelPowers.frontLeft +
+                    -wheelPowers.backRight) / 4,
 
-                (MAX_FORWARD_SPEED / TRACK_WIDTH) * (
-                        wheelPowers.frontRight +
-                        wheelPowers.backRight +
-                        -wheelPowers.frontLeft +
-                        -wheelPowers.backLeft) / 4
-        ).scale(secs);
+            (wheelPowers.frontRight +
+                    wheelPowers.backRight +
+                    -wheelPowers.frontLeft +
+                    -wheelPowers.backLeft) / 4
+        ).multiply(MAX_ACCERATIONS);
 
-        position = MathUtil.relativeOdometryUpdate(position, relativeOdometry);
+        if (false) {
+            acceleration.applyFriction(STATIC_FRICTION);
+
+            Pose velocityDelta = acceleration.scale(secs);
+            velocity = velocity.add(velocityDelta);
+            velocity.clampAbs(TERMINAL_VELOCITIES);
+            System.out.println(velocity);
+            System.out.println(velocityDelta);
+            System.out.println(secs);
+
+            Pose positionDelta = velocity.scale(secs);
+            position = MathUtil.relativeOdometryUpdate(position, positionDelta);
+        } else {
+            position = MathUtil.relativeOdometryUpdate(position, acceleration.scale(secs));
+        }
         time += secs;
     }
 

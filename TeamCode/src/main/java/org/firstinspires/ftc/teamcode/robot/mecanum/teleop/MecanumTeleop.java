@@ -50,7 +50,7 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
         RevBulkData data = robot.performBulkRead();
 
         MecanumPowers ppPowers = MecanumPurePursuitController.goToPosition(
-                robot.pose(), new HeadingControlledWaypoint(0, 0, 0, 0), 1.0, 1.0);
+                robot.pose(), new HeadingControlledWaypoint(0, 0, 0, 0), 1.0, true);
         if (gamepad1.left_stick_button) {
             robot.setPowers(ppPowers);
         } else if (gamepad1.right_stick_button) {

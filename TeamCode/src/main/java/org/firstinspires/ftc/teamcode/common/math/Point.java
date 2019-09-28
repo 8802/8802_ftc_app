@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.common.math;
 
-public class Point implements Comparable {
+public class Point implements Comparable, Cloneable {
     public double x;
     public double y;
 
@@ -56,5 +56,10 @@ public class Point implements Comparable {
         if (o == null || getClass() != o.getClass()) return -1;
         Point p = (Point) o;
         return Integer.compare(this.hashCode(), o.hashCode());
+    }
+
+    @Override
+    public Point clone() {
+        return new Point(x, y);
     }
 }

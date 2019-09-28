@@ -5,7 +5,7 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
 
 public class Waypoint extends Point implements Cloneable {
     Subroutine action;
-    double followDistance;
+    public double followDistance;
 
     public Waypoint(Point p, double followDistance) {
         this(p.x, p.y, followDistance, null);

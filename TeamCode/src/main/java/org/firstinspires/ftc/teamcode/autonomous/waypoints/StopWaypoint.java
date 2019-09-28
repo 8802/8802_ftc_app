@@ -5,7 +5,7 @@ public class StopWaypoint extends HeadingControlledWaypoint {
     public double allowedHeadingError;
 
     public StopWaypoint(double x, double y, double followDistance, double targetHeading, double allowedPositionError) {
-        this(x, y, targetHeading, followDistance, allowedPositionError, null);
+        this(x, y, followDistance, targetHeading, allowedPositionError, null);
     }
 
     public StopWaypoint(double x, double y, double followDistance, double targetHeading, double allowedPositionError, Subroutine action) {

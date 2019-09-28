@@ -25,4 +25,37 @@ class PoseTest {
         assertEquals(sum, sum2);
         assertEquals(sum, new Pose(10, 6, -3002));
     }
+
+    @Test
+    void multiply() {
+        Pose p1 = new Pose(5, 3, -2);
+        Pose p2 = new Pose(1, -3, -0.5);
+        assertEquals(new Pose(5, -9, 1), p1.multiply(p2));
+
+        // Assert we didn't change p1 and p2
+        assertEquals(new Pose(5, 3, -2), p1);
+        assertEquals(new Pose(1, -3, -0.5), p2);
+    }
+
+    @Test
+    void scale() {
+        Pose p1 = new Pose(5, 3, -2);
+        assertEquals(new Pose(2.5, 1.5, -1), p1.scale(0.5));
+        // Assert we didn't change p1
+        assertEquals(new Pose(5, 3, -2), p1);
+    }
+
+    @Test
+    void applyFriction() {
+        Pose p1 = new Pose(50, -25, 6);
+        p1.applyFriction(new Pose(5, 5, 10));
+        assertEquals(new Pose(45, -20, 0), p1);
+    }
+
+    @Test
+    void clampAbs() {
+        Pose p1 = new Pose(50, -25, -2);
+        p1.clampAbs(new Pose(5, 5, 5));
+        assertEquals(new Pose(5, -5, -2), p1);
+    }
 }
