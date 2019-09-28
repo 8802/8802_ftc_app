@@ -21,6 +21,8 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
     double MAX_FORWARD_SPEED = 60; // Per second
     double MAX_STRAFE_SPEED = 50;
 
+    double DECAY_FRAC = 0.1;
+
     Pose TERMINAL_VELOCITIES = new Pose(MAX_FORWARD_SPEED, MAX_STRAFE_SPEED, MAX_FORWARD_SPEED/TRACK_WIDTH);
     // TODO replace these with better, measured values
     Pose MAX_ACCERATIONS = new Pose(MAX_FORWARD_SPEED, MAX_STRAFE_SPEED, MAX_FORWARD_SPEED/TRACK_WIDTH);
@@ -115,6 +117,9 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
 
             Pose positionDelta = velocity.scale(secs);
             position = MathUtil.relativeOdometryUpdate(position, positionDelta);
+        } else if (true) {
+            velocity = velocity.scale(1 - DECAY_FRAC).add(acceleration.scale(DECAY_FRAC));
+            position = MathUtil.relativeOdometryUpdate(position, velocity.scale(secs));
         } else {
             position = MathUtil.relativeOdometryUpdate(position, acceleration.scale(secs));
         }
