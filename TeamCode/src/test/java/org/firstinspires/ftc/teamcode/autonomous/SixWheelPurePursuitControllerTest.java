@@ -110,10 +110,6 @@ class SixWheelPurePursuitControllerTest {
 
         for (int i = 0; i < 16; i++) {
             double[] p = cases[i];
-            //double d = SixWheelPurePursuitController.goToPositionDebug(new Pose(p[0], p[1], p[2]), new Point(0, 0));
-            System.out.println("Corrcheck: " + " | " + p[3] + " | " + p[4]);
-
-            //System.out.println("Checking case " + (i + 1));
             SixWheelPowers powers = SixWheelPurePursuitController.goToPosition(new Pose(p[0], p[1], p[2]), new Point(0, 0));
 
             // Assert we're traveling forward/backward correctly
