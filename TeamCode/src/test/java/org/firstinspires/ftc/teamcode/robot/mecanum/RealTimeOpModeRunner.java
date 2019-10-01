@@ -14,15 +14,16 @@ import java.io.IOException;
 class RealTimeOpModeRunner {
     final static double FRAMERATE = 60;
 
+    @Test
     void testOpMode() throws IOException {
-        SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(SSAutoV1.class);
+        SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(SSAutoV2.class);
         simOpMode.opMode.start();
         TXHandler udpServer = new TXHandler(-1);
         RXThread udpClient = new RXThread(simOpMode.opMode.gamepad1, simOpMode.opMode.gamepad2);
         udpClient.start();
         ElapsedTime time = new ElapsedTime();
 
-        while(time.seconds() < 300) {
+        while(time.seconds() < 120) {
             simOpMode.opMode.loop();
             simOpMode.robot.elapse(1 / FRAMERATE);
             udpServer.sendMessage(simOpMode.robot.pose());
