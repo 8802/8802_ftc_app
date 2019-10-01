@@ -17,6 +17,8 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware.*;
 
 public class SSAutoV1 extends SimulatableMecanumOpMode {
 
+    Waypoint DEPOSIT_LOCATION = new StopWaypoint(24, 30, 4, 0.75 * Math.PI, 2);
+
     MecanumHardware robot;
     PurePursuitPath followPath;
 
@@ -36,45 +38,36 @@ public class SSAutoV1 extends SimulatableMecanumOpMode {
 
                 // Attack the top left corner of the block
                 new StopWaypoint(SKYSTONE.lowerX() + 4, SKYSTONE.y() + 2, 4, -0.75 * Math.PI, 2),
-
-                // Drive up to and stop at foundation
-                new Waypoint(SKYSTONE.lowerX() + 4, 48, 16),
-                new Waypoint(48, 48, 16),
-                new StopWaypoint(48, 24, 4, Math.PI/2, 2),
+                new Waypoint(0, 48, 16),
+                DEPOSIT_LOCATION,
 
                 // Drive back and grab the second skystone
-                new Waypoint(48, 48, 16),
-                new Waypoint(SKYSTONE.upperX() + 4, 48, 16),
+                new Waypoint(0, 48, 16),
                 new StopWaypoint(SKYSTONE.upperX() + 4, SKYSTONE.y() + 2, 4,-0.75 * Math.PI, 2),
-
-                // Drive up to and stop at foundation
-                new Waypoint(SKYSTONE.upperX() + 4, 48, 16),
-                new Waypoint(48, 48, 16),
-                new StopWaypoint(48, 24, 4, Math.PI/2, 2),
+                new Waypoint(0, 48, 16),
+                DEPOSIT_LOCATION,
 
                 // Drive back and grab a third skystone
-                new Waypoint(48, 48, 16),
-                new Waypoint(-40, 48, 16),
+                new Waypoint(0, 48, 16),
                 new StopWaypoint(-40, 24, 16, -0.75 * Math.PI, 2),
-                new Waypoint(-40, 48, 16),
-                new Waypoint(48, 48, 16),
-                new StopWaypoint(48, 24, 4, Math.PI/2, 2),
+                new Waypoint(0, 48, 16),
+                DEPOSIT_LOCATION,
 
                 // And the fourth
-                new Waypoint(48, 48, 16),
-                new Waypoint(-48, 48, 16),
+                new Waypoint(0, 48, 16),
                 new StopWaypoint(-48, 24, 16, -0.75 * Math.PI, 2),
-                new Waypoint(-48, 48, 16),
-                new Waypoint(48, 48, 16),
-                new StopWaypoint(48, 24, 4, Math.PI/2, 2),
+                new Waypoint(0, 48, 16),
+                DEPOSIT_LOCATION,
 
                 // Drive up and place foundation in corner
-                new Waypoint(48, 48, 16),
-                new Waypoint(24, 48, 16),
-                new StopWaypoint(FIELD_RADIUS - 27.5, FIELD_RADIUS - 17, 4, Math.PI, 2),
+                new HeadingControlledWaypoint(36, 40, 4, Math.PI/2),
+                new StopWaypoint(48, 32, 4, Math.PI/2, 2),
+                new HeadingControlledWaypoint(36, 48, 16, Math.PI   ),
+                new StopWaypoint(FIELD_RADIUS - 27.5, FIELD_RADIUS - 14, 4, Math.PI, 2),
 
                 // Park on the line
-                new HeadingControlledWaypoint(FIELD_RADIUS - 27.5, 36, 16, Math.PI),
+                new HeadingControlledWaypoint((FIELD_RADIUS - 27.5) / 2, FIELD_RADIUS - 14, 16, Math.PI),
+                new HeadingControlledWaypoint((FIELD_RADIUS - 27.5) / 2, 36, 16, Math.PI),
                 new StopWaypoint(0, 36, 16, Math.PI, 2)
         );
     }
