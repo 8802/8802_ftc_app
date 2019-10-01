@@ -138,7 +138,9 @@ class FrameQueue:
             start = tuple(map(int, self.trail[0].get_screen_center()))
             for i in range(1, len(self.trail)):
                 end = tuple(map(int, self.trail[i].get_screen_center()))
-                pygame.draw.line(screen, (255, 0, 0), start, end, 4)
+                age = len(self.trail) - i
+                color = (255, int(255 * age / MAX_TRAIL_LENGTH), 0)
+                pygame.draw.line(screen, color, start, end, 4)
                 start = end
 
 robot_frames = FrameQueue()
@@ -175,7 +177,7 @@ def main(argv):
     pygame.init()
 
     gamepad = controller.Controller()
-    #pipeline = write_video.FramePipeline(gen_filename())
+    pipeline = write_video.FramePipeline(gen_filename())
     screen = pygame.display.set_mode(SCREEN_DIMS)
 
     done = False
@@ -194,10 +196,10 @@ def main(argv):
         frame = robot_frames.get()
         if frame:
             frame.draw(screen)
-            #pipeline.write_surface(screen)
+            pipeline.write_surface(screen)
         pygame.display.flip()
 
-    #pipeline.close()
+    pipeline.close()
     server.shutdown()
     server.server_close()
 
