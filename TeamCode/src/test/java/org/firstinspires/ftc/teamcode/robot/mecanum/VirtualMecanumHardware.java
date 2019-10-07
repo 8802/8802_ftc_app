@@ -11,8 +11,6 @@ import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
-import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelHardware;
-import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelPowers;
 import org.mockito.Mockito;
 import org.openftc.revextensions2.RevBulkData;
 

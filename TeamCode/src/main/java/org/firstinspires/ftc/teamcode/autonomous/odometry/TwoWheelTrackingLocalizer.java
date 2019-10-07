@@ -21,11 +21,11 @@ public class TwoWheelTrackingLocalizer {
 
     static final double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double PARALLEL_Y_POS = 2.85;
-    public static double LATERAL_X_POS = -7.25;
+    public static double PARALLEL_Y_POS = 7.25;
+    public static double LATERAL_X_POS = -4.75;
 
     static final EncoderWheel[] WHEELS = {
-            new EncoderWheel(0, PARALLEL_Y_POS, 0.0, 0, 0), // parallel
+            new EncoderWheel(0, PARALLEL_Y_POS, 0, 0, 0), // parallel
             new EncoderWheel(LATERAL_X_POS, 0, Math.toRadians(90), 1, 2), // lateral
     };
 

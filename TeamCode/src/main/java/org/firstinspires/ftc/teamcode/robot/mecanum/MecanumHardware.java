@@ -82,8 +82,8 @@ public class MecanumHardware {
         chassisHub = opMode.hardwareMap.get(ExpansionHubEx.class, "chassisHub");
 
         // Reverse left hand motors
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
         intakeLeft.setDirection(DcMotor.Direction.REVERSE);
 
         // Set up fast access linked lists

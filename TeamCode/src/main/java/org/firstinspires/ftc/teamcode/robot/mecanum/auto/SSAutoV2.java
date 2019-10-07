@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum.auto;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
@@ -15,6 +17,7 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware.FIELD
 
 // Import constants
 
+@Autonomous
 public class SSAutoV2 extends SimulatableMecanumOpMode {
 
     Waypoint DEPOSIT_LOCATION = new StopWaypoint(9, 42, 4, Math.PI, 2);

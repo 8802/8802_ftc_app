@@ -3,7 +3,6 @@ package org.firstinspires.ftc.simulator;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
-import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.VirtualMecanumHardware;
 import org.mockito.Mockito;
 
