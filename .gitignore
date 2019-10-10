@@ -25,4 +25,8 @@ Thumbs.db
 build/
 
 *ASUS_PC_01*
+__pycache__
 
+# Simulator
+video
+test_out.mp4
