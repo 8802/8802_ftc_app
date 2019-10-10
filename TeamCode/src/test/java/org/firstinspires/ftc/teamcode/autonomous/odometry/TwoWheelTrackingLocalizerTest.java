@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous.odometry;
 
 import org.firstinspires.ftc.teamcode.common.math.Pose;
+import org.firstinspires.ftc.teamcode.common.math.TimePose;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openftc.revextensions2.RevBulkData;
@@ -95,5 +96,23 @@ class TwoWheelTrackingLocalizerTest {
                 TwoWheelTrackingLocalizer.LATERAL_X_POS * Math.PI / 2);
         totalHeading += Math.PI / 2;
         localizer.update(genFakeData(totalSquareParallel, totalSquareLateral), totalHeading);
+    }
+
+    @Test
+    void velocity() {
+        TimePose start = new TimePose(0, 0, 0, 0);
+        TwoWheelTrackingLocalizer timedLocalizer = new TwoWheelTrackingLocalizer(0, 1, start);
+
+        // Move in half second increments
+        for (int i = 1; i < 100; i++) {
+            long time = i * 500;
+            TimePose p = new TimePose(i * i, 0, i, time);
+            timedLocalizer.virtualUpdate(p);
+
+            if (i >= TwoWheelTrackingLocalizer.VELOCITY_READ_TICKS) {
+                Pose trueV = new Pose(i * 4 - 2 * TwoWheelTrackingLocalizer.VELOCITY_READ_TICKS, 0, 2);
+                assertEquals(trueV, timedLocalizer.velocity());
+            }
+        }
     }
 }

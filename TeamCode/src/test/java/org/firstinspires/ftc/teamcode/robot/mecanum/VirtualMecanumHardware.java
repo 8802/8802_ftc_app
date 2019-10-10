@@ -9,8 +9,7 @@ import org.firstinspires.ftc.teamcode.autonomous.odometry.StandardTrackingWheelL
 import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
-import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
-import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
+import org.firstinspires.ftc.teamcode.common.math.TimePose;
 import org.mockito.Mockito;
 import org.openftc.revextensions2.RevBulkData;
 
@@ -20,7 +19,7 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
     public static double MAX_FORWARD_SPEED = 60; // Per second
     public static double MAX_STRAFE_SPEED = 50;
 
-    public static double DECAY_FRAC = 0.1; // How fast speed decays off the robotbj
+    public static double DECAY_FRAC = 0.1; // How fast speed decays off the robot
     public static Pose MAX_ACCERATIONS = new Pose(MAX_FORWARD_SPEED, MAX_STRAFE_SPEED,
             MAX_FORWARD_SPEED/TRACK_WIDTH);
 
@@ -56,7 +55,7 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
 
     @Override
     public RevBulkData performBulkRead() {
-        this.localizer.currentPosition = this.position;
+        this.localizer.virtualUpdate(new TimePose(this.position, (long) time * 1000));
         return Mockito.mock(RevBulkData.class);
     }
 
