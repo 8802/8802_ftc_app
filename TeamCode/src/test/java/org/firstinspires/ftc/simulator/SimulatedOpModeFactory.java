@@ -3,8 +3,12 @@ package org.firstinspires.ftc.simulator;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
+import org.firstinspires.ftc.teamcode.common.math.Pose;
+import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
 import org.firstinspires.ftc.teamcode.robot.mecanum.VirtualMecanumHardware;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 public class SimulatedOpModeFactory {
     double FRAMERATE = 20;
@@ -18,10 +22,22 @@ public class SimulatedOpModeFactory {
         // Assert we were passed an opmode we can use
         assert SimulatableMecanumOpMode.class.isAssignableFrom(c);
 
-        // Create a simulated mecanum robot
+        /*When we instantiate a MecanumHardware object, we can optionally tell it where its start
+        position is (otherwise, it defaults to zero). This defaulting case occurs in
+        SimulatableMecanumOpMode, so we only deal with the case where we're passed a position. We
+        override the getRobot method to take the position, intantiate a virtual robot, save that to
+        SimulatedOpModeFactory.robot, and return it as well.
+         */
         opMode = (SimulatableMecanumOpMode) Mockito.spy(c);
-        this.robot = new VirtualMecanumHardware(opMode.getStartingPosition());
-        Mockito.doReturn(robot).when(opMode).getRobot();
+
+        this.robot = new VirtualMecanumHardware(new Pose(0, 0, 0));
+        Mockito.doAnswer((Answer<MecanumHardware>) invocation -> {
+            Object[] args = invocation.getArguments();
+
+            // Instantiate a virtual robot based on the given start position
+            this.robot = new VirtualMecanumHardware((Pose) args[0]);
+            return this.robot;
+        }).when(opMode).getRobot(Mockito.any());
 
         // Mock the gamepads
         opMode.gamepad1 = new Gamepad();

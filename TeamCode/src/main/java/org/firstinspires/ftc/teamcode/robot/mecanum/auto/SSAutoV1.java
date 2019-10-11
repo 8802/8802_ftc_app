@@ -21,23 +21,19 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware.*;
 public class SSAutoV1 extends SimulatableMecanumOpMode {
 
     Waypoint DEPOSIT_LOCATION = new StopWaypoint(24, 30, 4, 0.75 * Math.PI, 2);
-
+    // We'll place the robot right in the crook of the play field
+    Pose START_POSITION = new Pose(-FIELD_RADIUS + 22.75, FIELD_RADIUS - 9, 3 * Math.PI / 2);
     MecanumHardware robot;
     PurePursuitPath followPath;
 
     public static SkystoneState SKYSTONE = SkystoneState.MIDDLE;
 
-    // We'll place the robot right in the crook of the play field
-    public Pose getStartingPosition() {
-        return new Pose(-FIELD_RADIUS + 22.75, FIELD_RADIUS - 9, 3 * Math.PI / 2);
-    }
-
     @Override
     public void init() {
-        this.robot = this.getRobot();
+        this.robot = this.getRobot(START_POSITION);
         robot.initBNO055IMU(hardwareMap);
         followPath = new PurePursuitPath(robot,
-                new Waypoint(getStartingPosition(), 4),
+                new Waypoint(START_POSITION, 4),
 
                 // Attack the top left corner of the block
                 new StopWaypoint(SKYSTONE.lowerX() + 4, SKYSTONE.y() + 2, 4, -0.75 * Math.PI, 2),

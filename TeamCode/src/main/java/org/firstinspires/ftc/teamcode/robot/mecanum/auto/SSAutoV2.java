@@ -22,23 +22,19 @@ public class SSAutoV2 extends SimulatableMecanumOpMode {
 
     Waypoint DEPOSIT_LOCATION = new StopWaypoint(9, 42, 4, Math.PI, 2);
     double GRAB_HEADING = -0.85 * Math.PI;
+    Pose START_POSITION = new Pose(-FIELD_RADIUS + 22.75 + 9, FIELD_RADIUS - 9, 3 * Math.PI / 2);
 
     MecanumHardware robot;
     PurePursuitPath followPath;
 
     public static SkystoneState SKYSTONE = SkystoneState.MIDDLE;
 
-    // We'll place the robot right in the crook of the play field
-    public Pose getStartingPosition() {
-        return new Pose(-FIELD_RADIUS + 22.75 + 9, FIELD_RADIUS - 9, 3 * Math.PI / 2);
-    }
-
     @Override
     public void init() {
-        this.robot = this.getRobot();
+        this.robot = this.getRobot(START_POSITION);
         robot.initBNO055IMU(hardwareMap);
         followPath = new PurePursuitPath(robot,
-                new Waypoint(getStartingPosition(), 4),
+                new Waypoint(START_POSITION, 4),
 
                 // Grab the farthest block and move foundation into position
                 new StopWaypoint(-FIELD_RADIUS + 4 + 4, 24, 4, -0.75 * Math.PI, 2),

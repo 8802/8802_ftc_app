@@ -31,7 +31,7 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
     double time;
     MecanumPowers wheelPowers;
 
-    public VirtualMecanumHardware(Object o) {
+    public VirtualMecanumHardware() {
         this(new Pose(0, 0, 0));
     }
 

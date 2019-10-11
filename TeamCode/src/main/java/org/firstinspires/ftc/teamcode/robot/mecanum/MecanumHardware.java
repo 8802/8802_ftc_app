@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.autonomous.odometry.StandardTrackingWheelL
 import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.common.LoadTimer;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
+import org.firstinspires.ftc.teamcode.common.math.TimePose;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
 import org.openftc.revextensions2.RevExtensions2;
@@ -68,7 +69,7 @@ public class MecanumHardware {
     public static double WHEEL_DIAMETER = 4;
     public static double FIELD_RADIUS = 141 / 2.0;
 
-    public MecanumHardware(OpMode opMode) {
+    public MecanumHardware(OpMode opMode, Pose start) {
         LoadTimer loadTime = new LoadTimer();
         RevExtensions2.init();
 
@@ -102,7 +103,8 @@ public class MecanumHardware {
         calTime.stop();
 
         // Set up localization with motor names the wheels are connected to
-        localizer = new TwoWheelTrackingLocalizer(0, 1);
+        TimePose startPose4D = new TimePose(start, System.currentTimeMillis());
+        localizer = new TwoWheelTrackingLocalizer(0, 1, startPose4D);
         this.powers = new MecanumPowers(0, 0, 0, 0);
 
         // Set up telemetry
