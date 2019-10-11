@@ -57,8 +57,8 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
             followPath.update();
         } else {
             double slowScale = ((1 - gamepad1.left_trigger) * 0.7 + 0.3);
-            double leftX = MecanumUtil.deadZone(gamepad1.left_stick_x, 0.05) * slowScale;
-            double leftY = MecanumUtil.deadZone(gamepad1.left_stick_y, 0.05) * slowScale;
+            double leftX = MecanumUtil.deadZone(-gamepad1.left_stick_x, 0.05) * slowScale;
+            double leftY = MecanumUtil.deadZone(-gamepad1.left_stick_y, 0.05) * slowScale;
             double angle = -Math.atan2(leftY, leftX) + Math.PI / 2;
             if (fieldCentric()) {
                 angle -= robot.pose().heading;
@@ -69,8 +69,8 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
 
             // Exponentiate our turn
             double turn = Math.copySign(
-                    Math.pow(MecanumUtil.deadZone(gamepad1.right_stick_x, 0.05), 2),
-                    gamepad1.right_stick_x) * slowScale;
+                    Math.pow(MecanumUtil.deadZone(-gamepad1.right_stick_x, 0.05), 2),
+                    -gamepad1.right_stick_x) * slowScale;
 
             MecanumPowers powers = MecanumUtil.powersFromAngle(angle, driveScale, turn);
             robot.setPowers(powers);

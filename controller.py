@@ -13,10 +13,10 @@ HAT_MAPPINGS = {
 }
 
 STICK_MAPPINGS = {
-    "ABS_X": ("left_stick_x", 32767, -1),
-    "ABS_Y": ("left_stick_y", 32767, 1),
-    "ABS_RX": ("right_stick_x", 32767, -1),
-    "ABS_RY": ("right_stick_y", 32767, 1),
+    "ABS_X": ("left_stick_x", 32767, 1),
+    "ABS_Y": ("left_stick_y", 32767, -1),
+    "ABS_RX": ("right_stick_x", 32767, 1),
+    "ABS_RY": ("right_stick_y", 32767, -1),
     "ABS_Z": ("left_trigger", 255, 1),
     "ABS_RZ": ("right_trigger", 255, 1),
 }

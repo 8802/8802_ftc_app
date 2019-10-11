@@ -56,12 +56,14 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
     @Override
     public RevBulkData performBulkRead() {
         this.localizer.virtualUpdate(new TimePose(this.position, (long) time * 1000));
+        System.out.println("Position: " + this.localizer.pose().toString());
         return Mockito.mock(RevBulkData.class);
     }
 
     @Override
     public void setPowers(MecanumPowers powers) {
         this.wheelPowers = powers;
+        System.out.println("Powers: " + powers.toString());
     }
 
     public Pose pose() {
@@ -104,9 +106,10 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
                      -errPowers.frontLeft +
                      -errPowers.backLeft) / 4
         ).multiply(MAX_ACCERATIONS);
+        position = MathUtil.relativeOdometryUpdate(position, acceleration.scale(secs));
 
-        velocity = velocity.scale(1 - DECAY_FRAC).add(acceleration.scale(DECAY_FRAC));
-        position = MathUtil.relativeOdometryUpdate(position, velocity.scale(secs));
+        //velocity = velocity.scale(1 - DECAY_FRAC).add(acceleration.scale(DECAY_FRAC));
+        //position = MathUtil.relativeOdometryUpdate(position, velocity.scale(secs));
 
         time += secs;
     }
