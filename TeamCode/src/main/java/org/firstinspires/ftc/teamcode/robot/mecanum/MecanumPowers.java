@@ -67,11 +67,11 @@ public class MecanumPowers {
     public String toString() {
         return String.format(
                 "\n" +
-                "%.1f---%.1f\n" +
-                "| Front |\n" +
-                "|       |\n" +
-                "|       |\n" +
-                "%.1f---%.1f\n"
+                "(%.1f)---(%.1f)\n" +
+                "|   Front   |\n" +
+                "|           |\n" +
+                "|           |\n" +
+                "(%.1f)---(%.1f)\n"
                 , frontLeft, frontRight, backLeft, backRight);
     }
 }
