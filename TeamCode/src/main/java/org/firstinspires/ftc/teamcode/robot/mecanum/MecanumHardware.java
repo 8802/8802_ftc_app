@@ -35,6 +35,7 @@ public class MecanumHardware {
 
     private Telemetry.Item[] telOdometry;
     private Telemetry.Item[] telEncoders;
+    private Telemetry.Item[] telPowers;
     private Telemetry.Item[] telAnalog;
 
     private Telemetry.Item telDigital;
@@ -57,6 +58,7 @@ public class MecanumHardware {
     public DcMotorEx intakeLeft;
     public DcMotorEx intakeRight;
 
+    private MecanumPowers powers;
     public List<DcMotorEx> chassisMotors;
     public List<DcMotorEx> leftChassisMotors;
     public List<DcMotorEx> rightChassisMotors;
@@ -101,6 +103,7 @@ public class MecanumHardware {
 
         // Set up localization with motor names the wheels are connected to
         localizer = new TwoWheelTrackingLocalizer(0, 1);
+        this.powers = new MecanumPowers(0, 0, 0, 0);
 
         // Set up telemetry
         this.telemetry = opMode.telemetry;
@@ -181,6 +184,13 @@ public class MecanumHardware {
             telEncoders[i] = encoderLine.addData("E" + i, -1);
         }
 
+        Telemetry.Line powersLine = telemetry.addLine();
+        telPowers = new Telemetry.Item[4];
+        telPowers[0] = powersLine.addData("FL", "%.2f", "-1");
+        telPowers[1] = powersLine.addData("FR", "%.2f", "-1");
+        telPowers[2] = powersLine.addData("BL", "%.2f", "-1");
+        telPowers[3] = powersLine.addData("BR", "%.2f", "-1");
+
         Telemetry.Line analogLine = telemetry.addLine();
         telAnalog = new Telemetry.Item[4];
         for (int i = 0; i < 4; i++) {
@@ -204,6 +214,11 @@ public class MecanumHardware {
         telOdometry[0].setValue(String.format("%.1f", localizer.x()));
         telOdometry[1].setValue(String.format("%.1f", localizer.y()));
         telOdometry[2].setValue(String.format("%.1f", Math.toDegrees(localizer.h())));
+
+        telPowers[0].setValue(String.format("%.2f", powers.frontLeft));
+        telPowers[1].setValue(String.format("%.2f", powers.frontRight));
+        telPowers[2].setValue(String.format("%.2f", powers.backLeft));
+        telPowers[3].setValue(String.format("%.2f", powers.backRight));
 
         // Adjust encoders and analog inputs
         for (int i = 0; i < 4; i++) {
@@ -230,10 +245,12 @@ public class MecanumHardware {
     }
 
     public void setPowers(MecanumPowers powers) {
+        this.powers = powers;
         frontLeft.setPower(powers.frontLeft);
         frontRight.setPower(powers.frontRight);
         backLeft.setPower(powers.backLeft);
         backRight.setPower(powers.backRight);
+        System.out.println("Powers: " + powers.toString());
     }
 
     public void setIntakePower(double d) {
