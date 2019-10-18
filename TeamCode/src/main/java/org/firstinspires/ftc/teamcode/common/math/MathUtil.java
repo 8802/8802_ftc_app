@@ -23,6 +23,18 @@ public class MathUtil {
         return Math.min(Math.max(d, -1), 1);
     }
 
+    public static double clampAbove(double d, double threshold) {
+        return Math.abs(d) < threshold ? Math.copySign(threshold, d) : d;
+    }
+
+    public static double cutOffBelow(double d, double threshold) {
+        return Math.abs(d) < threshold ? 0 : d;
+    }
+
+    public static double powRetainingSign(double d, double power) {
+        return Math.copySign(Math.pow(Math.abs(d), power), d);
+    }
+
     public static double deadZone(double d, double thresh) {
         return (Math.abs(d) < thresh) ? 0 : d;
     }

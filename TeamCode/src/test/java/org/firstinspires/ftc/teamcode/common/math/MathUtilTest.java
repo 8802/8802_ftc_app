@@ -66,4 +66,15 @@ class MathUtilTest {
                 new Point(Math.sqrt(2), Math.sqrt(2)));
 
     }
+
+    @Test
+    void powRetainingSign() {
+        assertEquals(4, MathUtil.powRetainingSign(2, 2));
+        assertEquals(-4, MathUtil.powRetainingSign(-2, 2));
+
+        double EXPECTED_1_5_POWER = Math.sqrt(Math.pow(2, 3));
+
+        assertEquals(EXPECTED_1_5_POWER, MathUtil.powRetainingSign(2, 1.5));
+        assertEquals(-EXPECTED_1_5_POWER, MathUtil.powRetainingSign(-2, 1.5));
+    }
 }
