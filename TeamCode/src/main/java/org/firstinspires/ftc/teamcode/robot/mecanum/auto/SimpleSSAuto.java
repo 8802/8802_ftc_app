@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum.auto;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
 import org.firstinspires.ftc.teamcode.common.elements.SkystoneState;
@@ -18,66 +21,53 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware.FIELD
 // Import constants
 
 @Autonomous
-public class SSAutoV2 extends SimulatableMecanumOpMode {
+public class SimpleSSAuto extends SimulatableMecanumOpMode {
 
-    Waypoint DEPOSIT_LOCATION = new StopWaypoint(9, 42, 4, Math.PI, 2);
+    Waypoint DEPOSIT_LOCATION = new StopWaypoint(24, 30, 4, 0.75 * Math.PI, 3);
     double GRAB_HEADING = -0.85 * Math.PI;
     Pose START_POSITION = new Pose(-FIELD_RADIUS + 22.75 + 9, FIELD_RADIUS - 9, 3 * Math.PI / 2);
 
     MecanumHardware robot;
     PurePursuitPath followPath;
+    FtcDashboard dashboard;
 
     public static SkystoneState SKYSTONE = SkystoneState.MIDDLE;
 
     @Override
     public void init() {
+        this.dashboard = FtcDashboard.getInstance();
         this.robot = this.getRobot(START_POSITION);
         robot.initBNO055IMU(hardwareMap);
         followPath = new PurePursuitPath(robot,
                 new Waypoint(START_POSITION, 4),
 
                 // Grab the farthest block and move foundation into position
-                new StopWaypoint(-FIELD_RADIUS + 4 + 4, 24, 4, -0.75 * Math.PI, 2),
-                new Waypoint(-FIELD_RADIUS + 4 + 4, 48, 16),
-                new Waypoint(0, 48, 16),
-                new StopWaypoint(48, 32, 4, Math.PI/2, 2),
-                new StopWaypoint(-3, 48, 8, Math.PI, 1),
+                new StopWaypoint(-FIELD_RADIUS + 6 + 4, 24, 4, -0.75 * Math.PI, 3),
+                new Waypoint(-FIELD_RADIUS + 4 + 4, 36, 16),
+                new Waypoint(0, 36, 16, Subroutines.STOP_INTAKE),
+                DEPOSIT_LOCATION,
 
-
-                new StopWaypoint(-FIELD_RADIUS + 28 + 4, 24, 4, -0.75 * Math.PI, 2),
+                new Waypoint(0, 36, 16, Subroutines.ENABLE_INTAKE),
+                new Waypoint(-24, 36, 16),
+                new StopWaypoint(-FIELD_RADIUS + 28 + 4, 24, 4, -0.75 * Math.PI, 3),
                 new Waypoint(-FIELD_RADIUS + 28 + 4, 48, 16),
-                DEPOSIT_LOCATION,
-
-                new StopWaypoint(-FIELD_RADIUS + 42 + 4, 24, 4, GRAB_HEADING, 2),
-                DEPOSIT_LOCATION,
-
-                new StopWaypoint(-FIELD_RADIUS + 36 + 4, 24, 4, GRAB_HEADING, 2),
-                DEPOSIT_LOCATION,
-
-                new StopWaypoint(-FIELD_RADIUS + 20 + 4, 24, 4, GRAB_HEADING, 2),
-                DEPOSIT_LOCATION,
-
-                new StopWaypoint(-FIELD_RADIUS + 12 + 4, 24, 4, GRAB_HEADING, 2),
-                DEPOSIT_LOCATION,
-
-                // Drive up and place foundation in corner
-                new HeadingControlledWaypoint(30, 36, 16, Math.PI),
-                new HeadingControlledWaypoint(30, FIELD_RADIUS - 14, 16, Math.PI),
-                new StopWaypoint(FIELD_RADIUS - 24, FIELD_RADIUS - 14, 4, Math.PI, 2),
-
-                // Park on the line, pushing our partner
-                new StopWaypoint(14, FIELD_RADIUS - 14, 16, Math.PI, 2)
+                new Waypoint(0, 48, 16,  Subroutines.STOP_INTAKE),
+                DEPOSIT_LOCATION
         );
     }
 
     @Override
     public void start() {
         robot.initBulkReadTelemetry();
+        robot.setIntakePower(1);
     }
 
     @Override
     public void loop() {
         RevBulkData data = robot.performBulkRead();
+        followPath.draw(robot.packet.fieldOverlay());
+        robot.sendDashboardTelemetryPacket();
+
         if (!followPath.finished()) {
             followPath.update();
         } else {

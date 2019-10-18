@@ -5,7 +5,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
-import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
@@ -21,7 +20,7 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware.FIELD
 // Import constants
 
 @Autonomous
-public class SimpleSSAuto extends SimulatableMecanumOpMode {
+public class BigSquareAuto extends SimulatableMecanumOpMode {
 
     Waypoint DEPOSIT_LOCATION = new StopWaypoint(24, 30, 4, 0.75 * Math.PI, 3);
     double GRAB_HEADING = -0.85 * Math.PI;
@@ -64,16 +63,8 @@ public class SimpleSSAuto extends SimulatableMecanumOpMode {
     @Override
     public void loop() {
         RevBulkData data = robot.performBulkRead();
-        TelemetryPacket packet = new TelemetryPacket();
-        Pose p = robot.pose();
-        packet.put("x", p.x);
-        packet.put("y", p.y);
-        packet.put("h", p.heading);
-        followPath.draw(packet.fieldOverlay())
-                .setFill("blue")
-                .fillCircle(p.x, p.y, 3);
-
-        dashboard.sendTelemetryPacket(packet);
+        followPath.draw(robot.packet.fieldOverlay());
+        robot.sendDashboardTelemetryPacket();
 
         if (!followPath.finished()) {
             followPath.update();

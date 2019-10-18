@@ -66,6 +66,12 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
         System.out.println("Powers: " + powers.toString());
     }
 
+    // Some method calls we just throw away
+    @Override
+    public void setIntakePower(double power) {
+        System.out.println(String.format("Intake power %.1f", power));
+    }
+
     public Pose pose() {
         return position;
     }
@@ -106,10 +112,10 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
                      -errPowers.frontLeft +
                      -errPowers.backLeft) / 4
         ).multiply(MAX_ACCERATIONS);
-        position = MathUtil.relativeOdometryUpdate(position, acceleration.scale(secs));
+        //position = MathUtil.relativeOdometryUpdate(position, acceleration.scale(secs));
 
-        //velocity = velocity.scale(1 - DECAY_FRAC).add(acceleration.scale(DECAY_FRAC));
-        //position = MathUtil.relativeOdometryUpdate(position, velocity.scale(secs));
+        velocity = velocity.scale(1 - DECAY_FRAC).add(acceleration.scale(DECAY_FRAC));
+        position = MathUtil.relativeOdometryUpdate(position, velocity.scale(secs));
 
         time += secs;
     }

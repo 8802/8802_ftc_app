@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum.teleop;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.autonomous.controllers.MecanumPurePursuitController;
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
@@ -13,9 +15,12 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
 import org.openftc.revextensions2.RevBulkData;
 
+import static org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware.FIELD_RADIUS;
+
 public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
     MecanumHardware robot;
     PurePursuitPath followPath;
+    FtcDashboard dashboard;
 
     boolean dpadUpPrev, dpadDownPrev;
     int intakePower;
@@ -25,6 +30,7 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
 
     @Override
     public void init() {
+        this.dashboard = FtcDashboard.getInstance();
         this.robot = this.getRobot();
         robot.initBNO055IMU(hardwareMap);
         followPath = new PurePursuitPath(robot,
@@ -48,6 +54,9 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
     @Override
     public void loop() {
         RevBulkData data = robot.performBulkRead();
+        robot.getIntakeCurrent();
+        followPath.draw(robot.packet.fieldOverlay());
+        robot.sendDashboardTelemetryPacket();
 
         MecanumPowers ppPowers = MecanumPurePursuitController.goToPosition(
                 robot.pose(), new HeadingControlledWaypoint(0, 0, 0, 0), 1.0, true);

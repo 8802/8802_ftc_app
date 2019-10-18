@@ -79,6 +79,9 @@ public class SSAutoV1 extends SimulatableMecanumOpMode {
     @Override
     public void loop() {
         RevBulkData data = robot.performBulkRead();
+        followPath.draw(robot.packet.fieldOverlay());
+        robot.sendDashboardTelemetryPacket();
+
         if (!followPath.finished()) {
             followPath.update();
         } else {
