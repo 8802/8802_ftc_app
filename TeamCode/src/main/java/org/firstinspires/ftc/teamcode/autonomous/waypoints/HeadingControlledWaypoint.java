@@ -7,7 +7,7 @@ public class HeadingControlledWaypoint extends Waypoint {
         this(x, y, followDistance, targetHeading, null);
     }
 
-    public HeadingControlledWaypoint(double x, double y, double followDistance, double targetHeading, Subroutine action) {
+    public HeadingControlledWaypoint(double x, double y, double followDistance, double targetHeading, Subroutines.Subroutine action) {
         super(x, y, followDistance, action);
         this.targetHeading = targetHeading;
     }

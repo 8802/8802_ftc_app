@@ -2,13 +2,12 @@ package org.firstinspires.ftc.teamcode.autonomous.waypoints;
 
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
 
-abstract class Subroutine {
-    abstract void run(MecanumHardware robot);
-}
-
-class ActivateIntake extends Subroutine {
-    @Override
-    void run(MecanumHardware robot) {
-        robot.setIntakePower(1);
+public class Subroutines {
+    public interface Subroutine {
+        void run(MecanumHardware robot);
     }
+
+    public static final Subroutine ENABLE_INTAKE = (robot) -> { robot.setIntakePower(1); };
+    public static final Subroutine STOP_INTAKE = (robot) -> { robot.setIntakePower(0); };
+    public static final Subroutine REVERSE_INTAKE = (robot) -> { robot.setIntakePower(-1); };
 }

@@ -4,13 +4,13 @@ import org.firstinspires.ftc.teamcode.common.math.Point;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
 
 public class Waypoint extends Point implements Cloneable {
-    Subroutine action;
+    Subroutines.Subroutine action;
     public double followDistance;
 
     public Waypoint(Point p, double followDistance) {
         this(p.x, p.y, followDistance, null);
     }
-    public Waypoint(Point p, double followDistance, Subroutine action) {
+    public Waypoint(Point p, double followDistance, Subroutines.Subroutine action) {
         this(p.x, p.y, followDistance, action);
     }
     public Waypoint(double x, double y, double followDistance) {
@@ -18,7 +18,7 @@ public class Waypoint extends Point implements Cloneable {
     }
 
     // Undeclared variables are null
-    public Waypoint(double x, double y, double followDistance, Subroutine action) {
+    public Waypoint(double x, double y, double followDistance, Subroutines.Subroutine action) {
         super(x, y);
         this.action = action;
         this.followDistance = followDistance;

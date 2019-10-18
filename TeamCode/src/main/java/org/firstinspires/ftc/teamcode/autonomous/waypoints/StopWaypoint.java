@@ -8,7 +8,7 @@ public class StopWaypoint extends HeadingControlledWaypoint {
         this(x, y, followDistance, targetHeading, allowedPositionError, null);
     }
 
-    public StopWaypoint(double x, double y, double followDistance, double targetHeading, double allowedPositionError, Subroutine action) {
+    public StopWaypoint(double x, double y, double followDistance, double targetHeading, double allowedPositionError, Subroutines.Subroutine action) {
         super(x, y, followDistance, targetHeading, action);
         this.allowedPositionError = allowedPositionError;
     }

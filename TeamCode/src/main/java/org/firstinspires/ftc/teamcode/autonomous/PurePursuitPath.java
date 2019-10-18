@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.acmerobotics.dashboard.canvas.Canvas;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+
 import org.firstinspires.ftc.teamcode.autonomous.controllers.MecanumPurePursuitController;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
@@ -13,7 +17,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+@Config
 public class PurePursuitPath {
+    public static double TRACK_SPEED = 0.5;
     private MecanumHardware robot;
     List<Waypoint> waypoints;
 
@@ -62,6 +68,7 @@ public class PurePursuitPath {
             }
             if (jumpToNextSegment) {
                 currPoint++;
+                waypoints.get(currPoint).runAction(robot);
             }
         } while (jumpToNextSegment && currPoint < waypoints.size() - 1);
         if (finished()) {return;}
@@ -71,7 +78,7 @@ public class PurePursuitPath {
         // If we're making a stop and in the stop portion of the move
         if (target instanceof StopWaypoint && robotPosition.distance(target) < target.followDistance) {
             robot.setPowers(MecanumPurePursuitController.goToPosition(
-                    robotPosition, target, 1.0, false));
+                    robotPosition, target, TRACK_SPEED, false));
             System.out.println("Locking onto point " + target.toString());
         } else {
             trackToLine(
@@ -104,7 +111,18 @@ public class PurePursuitPath {
         target.x = intersection.x;
         target.y = intersection.y;
         robot.setPowers(MecanumPurePursuitController.goToPosition(robotPosition,
-                target, 1.0, true));
+                target, TRACK_SPEED, true));
+    }
+
+    public Canvas draw(Canvas t) {
+        double[] xPoints = new double[waypoints.size()];
+        double[] yPoints = new double[waypoints.size()];
+
+        for (int i = 0; i < waypoints.size(); i++) {
+            xPoints[i] = waypoints.get(i).x;
+            yPoints[i] = waypoints.get(i).y;
+        }
+        return t.setStroke("red").setStrokeWidth(1).strokePolyline(xPoints, yPoints);
     }
 
     public boolean finished() {
