@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum;
 
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
+import org.firstinspires.ftc.teamcode.common.math.Pose;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,6 +29,10 @@ public class MecanumPowers {
 
     }
 
+    public MecanumPowers(Pose p) {
+        this(p.x, p.y, p.heading);
+    }
+
     public List<Double> asList() {
         return Arrays.asList(this.frontLeft, this.frontRight, this.backLeft, this.backRight);
     }
@@ -35,12 +40,12 @@ public class MecanumPowers {
     // If we're somehow above one, scale back down
     private void scale() {
         List<Double> vals = asList();
-        double max = Math.max(Collections.max(vals), -Collections.min(vals));
-        if (max > 1) {
-            this.frontLeft /= max;
-            this.frontRight /= max;
-            this.backLeft /= max;
-            this.backRight /= max;
+        double absMax = Math.max(Collections.max(vals), -Collections.min(vals));
+        if (absMax > 1) {
+            this.frontLeft /= absMax;
+            this.frontRight /= absMax;
+            this.backLeft /= absMax;
+            this.backRight /= absMax;
         }
     }
 
