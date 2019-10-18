@@ -18,8 +18,8 @@ import java.util.LinkedList;
 @Config
 public class TwoWheelTrackingLocalizer {
     static final double TICKS_PER_REV = 4 * 600;
-    public static double PARALLEL_WHEEL_RADIUS = 1.14426;
-    public static double LATERAL_WHEEL_RADIUS = 1.14426;
+    public static double PARALLEL_WHEEL_RADIUS = 1.193055;
+    public static double LATERAL_WHEEL_RADIUS = 1.193055;
     public static int VELOCITY_READ_TICKS = 5;
 
     static final double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
@@ -27,10 +27,6 @@ public class TwoWheelTrackingLocalizer {
     public static double PARALLEL_Y_POS = 7.25;
     public static double LATERAL_X_POS = -4.75;
 
-    static final EncoderWheel[] WHEELS = {
-            new EncoderWheel(0, PARALLEL_Y_POS, 0, 0, 0), // parallel
-            new EncoderWheel(LATERAL_X_POS, 0, Math.toRadians(90), 1, 2), // lateral
-    };
     DecompositionSolver forwardSolver;
 
     int[] prevWheelPositions;
@@ -48,6 +44,12 @@ public class TwoWheelTrackingLocalizer {
 
     public TwoWheelTrackingLocalizer(int parallelEncoder, int lateralEncoder, TimePose start) {
         Array2DRowRealMatrix inverseMatrix = new Array2DRowRealMatrix(3, 3);
+
+        EncoderWheel[] WHEELS = {
+                new EncoderWheel(0, PARALLEL_Y_POS, 0, 0, 0), // parallel
+                new EncoderWheel(LATERAL_X_POS, 0, Math.toRadians(90), 1, 2), // lateral
+        };
+
         for (EncoderWheel wheelPosition : WHEELS) {
             double x = Math.cos(wheelPosition.heading);
             double y = Math.sin(wheelPosition.heading);
