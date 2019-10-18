@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.robot.mecanum;
 
 import android.os.Build;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -33,6 +35,8 @@ import java.util.List;
 public class MecanumHardware {
 
     public Telemetry telemetry;
+    private FtcDashboard dashboard;
+    public TelemetryPacket packet;
 
     private Telemetry.Item[] telOdometry;
     private Telemetry.Item[] telEncoders;
@@ -44,12 +48,13 @@ public class MecanumHardware {
     private Telemetry.Item telHertz;
     private long lastTelemetryUpdate;
 
-    private LynxModule chassisLynxHub;
     private ExpansionHubEx chassisHub;
+    private ExpansionHubEx mechanicHub;
+
     public BNO055IMU imu;
     private double headingOffset;
 
-    TwoWheelTrackingLocalizer localizer;
+    public TwoWheelTrackingLocalizer localizer;
 
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
@@ -71,6 +76,7 @@ public class MecanumHardware {
 
     public MecanumHardware(OpMode opMode, Pose start) {
         LoadTimer loadTime = new LoadTimer();
+        this.dashboard = FtcDashboard.getInstance();
         RevExtensions2.init();
 
         frontLeft = opMode.hardwareMap.get(DcMotorEx.class, "leftFront");
@@ -81,8 +87,8 @@ public class MecanumHardware {
         intakeLeft = opMode.hardwareMap.get(DcMotorEx.class, "intakeLeft");
         intakeRight = opMode.hardwareMap.get(DcMotorEx.class, "intakeRight");
 
-        chassisLynxHub = opMode.hardwareMap.get(LynxModule.class, "chassisHub");
         chassisHub = opMode.hardwareMap.get(ExpansionHubEx.class, "chassisHub");
+        mechanicHub = opMode.hardwareMap.get(ExpansionHubEx.class, "mechanicHub");
 
         // Reverse left hand motors
         frontRight.setDirection(DcMotor.Direction.REVERSE);
@@ -242,8 +248,28 @@ public class MecanumHardware {
 
         // Finalize telemetry update
         telemetry.update();
-        lastTelemetryUpdate = System.nanoTime();
+
+        this.packet = new TelemetryPacket();
+        packet.put("x", localizer.x());
+        packet.put("y", localizer.y());
+        packet.put("h", localizer.h());
+        packet.fieldOverlay()
+                .setFill("blue")
+                .fillCircle(localizer.x(), localizer.y(), 3);
+
         return data;
+    }
+
+    public void getIntakeCurrent() {
+        double intakeLeftCurrent = mechanicHub.getMotorCurrentDraw(0);
+        double intakeRightCurrent = mechanicHub.getMotorCurrentDraw(1);
+        packet.put("intakeLeft", intakeLeftCurrent);
+        packet.put("intakeRight", intakeRightCurrent);
+
+    }
+
+    public void sendDashboardTelemetryPacket() {
+        dashboard.sendTelemetryPacket(packet);
     }
 
     public void setPowers(MecanumPowers powers) {
