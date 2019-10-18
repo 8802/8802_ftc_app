@@ -5,11 +5,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.simulator.VirtualRobot;
+import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.autonomous.odometry.StandardTrackingWheelLocalizer;
 import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.common.math.TimePose;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrents;
 import org.mockito.Mockito;
 import org.openftc.revextensions2.RevBulkData;
 
@@ -64,6 +66,16 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
     public void setPowers(MecanumPowers powers) {
         this.wheelPowers = powers;
         System.out.println("Powers: " + powers.toString());
+    }
+
+    // Just throw away calls to these functions
+    @Override
+    public void drawDashboardPath(PurePursuitPath path) {}
+    @Override
+    public void sendDashboardTelemetryPacket() {}
+    @Override
+    public IntakeCurrents getIntakeCurrent() {
+        return new IntakeCurrents(0, 0);
     }
 
     // Some method calls we just throw away

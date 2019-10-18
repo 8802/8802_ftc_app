@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 import org.firstinspires.ftc.teamcode.autonomous.controllers.MecanumPurePursuitController;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
 import org.firstinspires.ftc.teamcode.common.math.Line;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
@@ -66,13 +67,22 @@ public class PurePursuitPath {
                     jumpToNextSegment = true;
                 }
             }
+
+            // Run repeated subroutines, and see if they return true
+            if (waypoints.get(currPoint) instanceof Subroutines.RepeatedSubroutine) {
+                if (((Subroutines.RepeatedSubroutine) waypoints.get(currPoint)).runLoop(robot)) {
+                    currPoint++;
+                }
+            }
+
             if (jumpToNextSegment) {
                 currPoint++;
-                waypoints.get(currPoint).runAction(robot);
+                if (waypoints.get(currPoint) instanceof Subroutines.OnceOffSubroutine) {
+                    ((Subroutines.OnceOffSubroutine) waypoints.get(currPoint)).runOnce(robot);
+                }
             }
         } while (jumpToNextSegment && currPoint < waypoints.size() - 1);
         if (finished()) {return;}
-        System.out.println("Currently on segment " + currPoint);
 
         Waypoint target = waypoints.get(currPoint + 1);
         // If we're making a stop and in the stop portion of the move

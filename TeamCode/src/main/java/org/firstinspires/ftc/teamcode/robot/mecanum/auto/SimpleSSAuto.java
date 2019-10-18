@@ -39,19 +39,25 @@ public class SimpleSSAuto extends SimulatableMecanumOpMode {
         this.robot = this.getRobot(START_POSITION);
         robot.initBNO055IMU(hardwareMap);
         followPath = new PurePursuitPath(robot,
-                new Waypoint(START_POSITION, 4),
+                new Waypoint(START_POSITION, 4, Subroutines.CHECK_BLOCK_GRAB),
 
                 // Grab the farthest block and move foundation into position
-                new StopWaypoint(-FIELD_RADIUS + 6 + 4, 24, 4, -0.75 * Math.PI, 3),
+                new StopWaypoint(-FIELD_RADIUS + 6 + 4, 24, 4, -0.75 * Math.PI, 3, Subroutines.STOP_INTAKE),
                 new Waypoint(-FIELD_RADIUS + 4 + 4, 36, 16),
-                new Waypoint(0, 36, 16, Subroutines.STOP_INTAKE),
+                new Waypoint(0, 36, 16),
                 DEPOSIT_LOCATION,
 
                 new Waypoint(0, 36, 16, Subroutines.ENABLE_INTAKE),
-                new Waypoint(-24, 36, 16),
-                new StopWaypoint(-FIELD_RADIUS + 28 + 4, 24, 4, -0.75 * Math.PI, 3),
+                new Waypoint(-24, 36, 16, Subroutines.CHECK_BLOCK_GRAB),
+                new StopWaypoint(-FIELD_RADIUS + 28 + 4, 24, 4, -0.75 * Math.PI, 3, Subroutines.STOP_INTAKE),
                 new Waypoint(-FIELD_RADIUS + 28 + 4, 48, 16),
-                new Waypoint(0, 48, 16,  Subroutines.STOP_INTAKE),
+                new Waypoint(0, 48, 16),
+                DEPOSIT_LOCATION,
+
+                new Waypoint(0, 36, 16, Subroutines.ENABLE_INTAKE),
+                new Waypoint(-24, 36, 16, Subroutines.CHECK_BLOCK_GRAB),
+                new StopWaypoint(-48, 24, 4, -0.75 * Math.PI, 3, Subroutines.STOP_INTAKE),
+                new Waypoint(0, 48, 16),
                 DEPOSIT_LOCATION
         );
     }
@@ -65,7 +71,7 @@ public class SimpleSSAuto extends SimulatableMecanumOpMode {
     @Override
     public void loop() {
         RevBulkData data = robot.performBulkRead();
-        followPath.draw(robot.packet.fieldOverlay());
+        robot.drawDashboardPath(followPath);
         robot.sendDashboardTelemetryPacket();
 
         if (!followPath.finished()) {

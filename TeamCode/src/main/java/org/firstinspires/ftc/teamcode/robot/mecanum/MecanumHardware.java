@@ -18,11 +18,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.BuildConfig;
+import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.autonomous.odometry.StandardTrackingWheelLocalizer;
 import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.common.LoadTimer;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.common.math.TimePose;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrents;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
 import org.openftc.revextensions2.RevExtensions2;
@@ -260,14 +262,18 @@ public class MecanumHardware {
         return data;
     }
 
-    public void getIntakeCurrent() {
+    public IntakeCurrents getIntakeCurrent() {
         double intakeLeftCurrent = mechanicHub.getMotorCurrentDraw(0);
         double intakeRightCurrent = mechanicHub.getMotorCurrentDraw(1);
         packet.put("intakeLeft", intakeLeftCurrent);
         packet.put("intakeRight", intakeRightCurrent);
+        return new IntakeCurrents(intakeLeftCurrent, intakeRightCurrent);
 
     }
 
+
+    // FTC Dashboard telemetry functions
+    public void drawDashboardPath(PurePursuitPath path) {path.draw(packet.fieldOverlay());}
     public void sendDashboardTelemetryPacket() {
         dashboard.sendTelemetryPacket(packet);
     }

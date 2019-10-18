@@ -24,13 +24,6 @@ public class Waypoint extends Point implements Cloneable {
         this.followDistance = followDistance;
     }
 
-    // Runs the action IF IT EXISTS
-    public void runAction(MecanumHardware robot) {
-        if (action != null) {
-            action.run(robot);
-        }
-    }
-
     @Override
     public Waypoint clone() {
         return new Waypoint(x, y, followDistance, action);
