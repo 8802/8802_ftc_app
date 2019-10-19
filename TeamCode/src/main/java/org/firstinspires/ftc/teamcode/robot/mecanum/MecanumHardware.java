@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.robot.mecanum;
 import android.os.Build;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -19,12 +20,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.BuildConfig;
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
-import org.firstinspires.ftc.teamcode.autonomous.odometry.StandardTrackingWheelLocalizer;
 import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocalizer;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.DelayedSubroutine;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.common.LoadTimer;
+import org.firstinspires.ftc.teamcode.common.StallPreventionQueue;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.common.math.TimePose;
-import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrents;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
 import org.openftc.revextensions2.RevExtensions2;
@@ -32,10 +34,14 @@ import org.openftc.revextensions2.RevExtensions2;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
+@Config
 public class MecanumHardware {
 
+    /* Telemetry */
     public Telemetry telemetry;
     private FtcDashboard dashboard;
     public TelemetryPacket packet;
@@ -50,13 +56,25 @@ public class MecanumHardware {
     private Telemetry.Item telHertz;
     private long lastTelemetryUpdate;
 
+    /* Internal state */
+    /* Odometry */
+    private double headingOffset;
+    public TwoWheelTrackingLocalizer localizer;
+
+    /* Action cache */
+    public LinkedList<DelayedSubroutine> actionCache;
+
+    /* Misc. state */
+    public double lastHeading;
+    public double lastIntakeCurrent;
+    public StallPreventionQueue intakeStallPreventionQueue;
+    public RevBulkData lastChassisRead;
+    private MecanumPowers powers;
+
+    /* Components */
     private ExpansionHubEx chassisHub;
     private ExpansionHubEx mechanicHub;
-
     public BNO055IMU imu;
-    private double headingOffset;
-
-    public TwoWheelTrackingLocalizer localizer;
 
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
@@ -66,15 +84,18 @@ public class MecanumHardware {
     public DcMotorEx intakeLeft;
     public DcMotorEx intakeRight;
 
-    private MecanumPowers powers;
     public List<DcMotorEx> chassisMotors;
     public List<DcMotorEx> leftChassisMotors;
     public List<DcMotorEx> rightChassisMotors;
 
-    // Constants, stored in inches
-    public static double TRACK_WIDTH = 16.5;
-    public static double WHEEL_DIAMETER = 4;
-    public static double FIELD_RADIUS = 141 / 2.0;
+    /* Constants */
+    public static double TRACK_WIDTH = 16.5; // in
+    public static double WHEEL_DIAMETER = 4; // in
+    public static double FIELD_RADIUS = 141 / 2.0; // in
+
+    public static double INTAKE_STALL_DETECT_MAMPS = 8000;
+    public static double INTAKE_STALL_DETECT_MS = 200;
+    public static double INTAKE_UNJAM_REVERSAL_TIME_MS = 200;
 
     public MecanumHardware(OpMode opMode, Pose start) {
         LoadTimer loadTime = new LoadTimer();
@@ -114,6 +135,13 @@ public class MecanumHardware {
         TimePose startPose4D = new TimePose(start, System.currentTimeMillis());
         localizer = new TwoWheelTrackingLocalizer(0, 1, startPose4D);
         this.powers = new MecanumPowers(0, 0, 0, 0);
+        this.lastHeading = 0;
+        this.lastIntakeCurrent = 0;
+        this.intakeStallPreventionQueue = new StallPreventionQueue();
+        this.lastChassisRead = null;
+
+        // Set up action cache
+        actionCache = new LinkedList<>();
 
         // Set up telemetry
         this.telemetry = opMode.telemetry;
@@ -212,13 +240,12 @@ public class MecanumHardware {
         Telemetry.Line timingLine = telemetry.addLine("LOOP ");
         telHertz = timingLine.addData("Hertz", -1);
         telLoopTime = timingLine.addData("Millis", -1);
-
     }
 
     public RevBulkData performBulkRead() {
-        RevBulkData data = chassisHub.getBulkInputData();
-        double heading = imu.getAngularOrientation().firstAngle - headingOffset;
-        localizer.update(data, heading);
+        this.lastChassisRead = chassisHub.getBulkInputData();
+        this.lastHeading = imu.getAngularOrientation().firstAngle - headingOffset;
+        localizer.update(lastChassisRead, lastHeading);
 
         // Adjust telemetry localizer info
         telOdometry[0].setValue(String.format("%.1f", localizer.x()));
@@ -232,16 +259,36 @@ public class MecanumHardware {
 
         // Adjust encoders and analog inputs
         for (int i = 0; i < 4; i++) {
-            telEncoders[i].setValue(data.getMotorCurrentPosition(i));
-            telAnalog[i].setValue(data.getAnalogInputValue(i));
+            telEncoders[i].setValue(lastChassisRead.getMotorCurrentPosition(i));
+            telAnalog[i].setValue(lastChassisRead.getAnalogInputValue(i));
         }
 
         // Adjust digital inputs
         StringBuilder digitals = new StringBuilder();
         for (int i = 0; i < 8; i++) {
-            digitals.append(data.getDigitalInputState(i) ? 1 : 0).append(" ");
+            digitals.append(lastChassisRead.getDigitalInputState(i) ? 1 : 0).append(" ");
         }
         telDigital.setValue(digitals.toString());
+
+        // Adjust motor current and specialty reads
+        this.lastIntakeCurrent = mechanicHub.getMotorCurrentDraw(0);
+        this.intakeStallPreventionQueue.add(lastIntakeCurrent);
+        // If we're stalling the intake, reverse for 200 milliseconds
+        if (this.intakeStallPreventionQueue.aboveThresholdForMillis(INTAKE_STALL_DETECT_MAMPS, (long) INTAKE_STALL_DETECT_MS)) {
+            this.setIntakePower(-1);
+            this.actionCache.add(new DelayedSubroutine((long) INTAKE_UNJAM_REVERSAL_TIME_MS, Subroutines.ENABLE_INTAKE));
+        }
+
+        // Run any cached actions
+        Iterator<DelayedSubroutine> iterator = actionCache.listIterator();
+        long timeMillis = System.currentTimeMillis();
+        while(iterator.hasNext()) {
+            DelayedSubroutine action = iterator.next();
+            if (action.systemActionTime < timeMillis) {
+                action.action.runOnce(this);
+                iterator.remove();
+            }
+        }
 
         // Adjust elapsed time
         double elapsed = ((System.nanoTime() - lastTelemetryUpdate) / 1000000.0);
@@ -255,22 +302,14 @@ public class MecanumHardware {
         packet.put("x", localizer.x());
         packet.put("y", localizer.y());
         packet.put("h", localizer.h());
+        packet.put("current", lastIntakeCurrent);
         packet.fieldOverlay()
                 .setFill("blue")
                 .fillCircle(localizer.x(), localizer.y(), 3);
 
-        return data;
+        lastTelemetryUpdate = System.nanoTime();
+        return lastChassisRead;
     }
-
-    public IntakeCurrents getIntakeCurrent() {
-        double intakeLeftCurrent = mechanicHub.getMotorCurrentDraw(0);
-        double intakeRightCurrent = mechanicHub.getMotorCurrentDraw(1);
-        packet.put("intakeLeft", intakeLeftCurrent);
-        packet.put("intakeRight", intakeRightCurrent);
-        return new IntakeCurrents(intakeLeftCurrent, intakeRightCurrent);
-
-    }
-
 
     // FTC Dashboard telemetry functions
     public void drawDashboardPath(PurePursuitPath path) {path.draw(packet.fieldOverlay());}

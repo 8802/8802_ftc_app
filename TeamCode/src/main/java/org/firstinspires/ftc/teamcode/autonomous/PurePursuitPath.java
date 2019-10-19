@@ -69,16 +69,16 @@ public class PurePursuitPath {
             }
 
             // Run repeated subroutines, and see if they return true
-            if (waypoints.get(currPoint) instanceof Subroutines.RepeatedSubroutine) {
-                if (((Subroutines.RepeatedSubroutine) waypoints.get(currPoint)).runLoop(robot)) {
+            if (waypoints.get(currPoint).action instanceof Subroutines.RepeatedSubroutine) {
+                if (((Subroutines.RepeatedSubroutine) waypoints.get(currPoint).action).runLoop(robot)) {
                     currPoint++;
                 }
             }
 
             if (jumpToNextSegment) {
                 currPoint++;
-                if (waypoints.get(currPoint) instanceof Subroutines.OnceOffSubroutine) {
-                    ((Subroutines.OnceOffSubroutine) waypoints.get(currPoint)).runOnce(robot);
+                if (waypoints.get(currPoint).action instanceof Subroutines.OnceOffSubroutine) {
+                    ((Subroutines.OnceOffSubroutine) waypoints.get(currPoint).action).runOnce(robot);
                 }
             }
         } while (jumpToNextSegment && currPoint < waypoints.size() - 1);

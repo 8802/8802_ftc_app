@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.autonomous.waypoints;
 
-import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
-import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrents;
+import com.acmerobotics.dashboard.config.Config;
 
+import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
+
+@Config
 public class Subroutines {
     public interface Subroutine {}
 
@@ -18,10 +20,11 @@ public class Subroutines {
     public static final OnceOffSubroutine STOP_INTAKE = (robot) -> { robot.setIntakePower(0); };
     public static final OnceOffSubroutine REVERSE_INTAKE = (robot) -> { robot.setIntakePower(-1); };
 
+
+    public static double BLOCK_GRAB_POWER_THRESHOLD = 4000;
     public static final RepeatedSubroutine CHECK_BLOCK_GRAB = (robot) -> {
-        IntakeCurrents powerDraw = robot.getIntakeCurrent();
-        if (powerDraw.hasBlock()) {
-            robot.setIntakePower(0); // Disable intake
+        if (robot.lastIntakeCurrent > BLOCK_GRAB_POWER_THRESHOLD) {
+            //robot.setIntakePower(0); // Disable intake
             return true; // Advance to next motion path
         }
         return false;

@@ -54,7 +54,6 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
     @Override
     public void loop() {
         RevBulkData data = robot.performBulkRead();
-        robot.getIntakeCurrent();
         followPath.draw(robot.packet.fieldOverlay());
         robot.sendDashboardTelemetryPacket();
 
@@ -95,18 +94,6 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
             robot.setIntakePower(intakePower);
         } else if (!gamepad1.dpad_up) {
             dpadUpPrev = false;
-        }
-
-        if (gamepad1.dpad_down && !dpadDownPrev) {
-            dpadDownPrev = true;
-            if (intakePower == -1) {
-                intakePower = 0;
-            } else {
-                intakePower = -1;
-            }
-            robot.setIntakePower(intakePower);
-        } else if (!gamepad1.dpad_up) {
-            dpadDownPrev = false;
         }
     }
 }
