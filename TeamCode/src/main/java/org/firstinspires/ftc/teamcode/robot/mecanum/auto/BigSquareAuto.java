@@ -70,6 +70,7 @@ public class BigSquareAuto extends SimulatableMecanumOpMode {
             followPath.update();
         } else {
             robot.setPowers(MecanumUtil.STOP);
+            stop();
         }
     }
 }

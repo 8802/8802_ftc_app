@@ -23,7 +23,7 @@ class RealTimeOpModeRunner {
         udpClient.start();
         ElapsedTime time = new ElapsedTime();
 
-        while(time.seconds() < 120) {
+        while(time.seconds() < 120 && !simOpMode.stopRequested) {
             simOpMode.opMode.loop();
             simOpMode.robot.elapse(1 / FRAMERATE);
             udpServer.sendMessage(simOpMode.robot.pose());

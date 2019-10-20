@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
+import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
 
 public abstract class SimulatableMecanumOpMode extends OpMode {
     // Start in center of field by default (this is of course illegal)
@@ -12,6 +13,10 @@ public abstract class SimulatableMecanumOpMode extends OpMode {
 
     public MecanumHardware getRobot(Pose start) {
         return new MecanumHardware(this, start);
+    }
+
+    public void stop() {
+        requestOpModeStop();
     }
 
     public MecanumHardware getRobot() {

@@ -85,6 +85,7 @@ public class SSAutoV2 extends SimulatableMecanumOpMode {
             followPath.update();
         } else {
             robot.setPowers(MecanumUtil.STOP);
+            stop();
         }
     }
 }

@@ -17,6 +17,7 @@ public class SimulatedOpModeFactory {
 
     public SimulatableMecanumOpMode opMode; // Pointer to our op mode
     public VirtualMecanumHardware robot; // Pointer to our virtual robot
+    public boolean stopRequested;
 
     public SimulatedOpModeFactory(Class c) {
         // Assert we were passed an opmode we can use
@@ -29,6 +30,7 @@ public class SimulatedOpModeFactory {
         SimulatedOpModeFactory.robot, and return it as well.
          */
         opMode = (SimulatableMecanumOpMode) Mockito.spy(c);
+        stopRequested = false;
 
         this.robot = new VirtualMecanumHardware(new Pose(0, 0, 0));
         Mockito.doAnswer((Answer<MecanumHardware>) invocation -> {
@@ -38,6 +40,23 @@ public class SimulatedOpModeFactory {
             this.robot = new VirtualMecanumHardware((Pose) args[0]);
             return this.robot;
         }).when(opMode).getRobot(Mockito.any());
+
+        Mockito.doAnswer(invocation -> {
+            stopRequested = true;
+            return null;
+        }).when(opMode).stop();
+
+        /*then((Answer) invocation -> {
+            Object[] args = invocation.getArguments();
+
+            // Instantiate a virtual robot based on the given start position
+            this.robot = new VirtualMecanumHardware((Pose) args[0]);
+            return this.robot;
+        });*/
+        /*Mockito.doAnswer(invocation -> {
+            this.running = false;
+            return null;
+        }).when(opMode).requestOpModeStop();*/
 
         // Mock the gamepads
         opMode.gamepad1 = new Gamepad();
