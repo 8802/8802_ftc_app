@@ -79,17 +79,26 @@ public class PurePursuitPath {
             }
 
             // Run repeated subroutines, and see if they return true
-            if (waypoints.get(currPoint).action instanceof Subroutines.RepeatedSubroutine) {
-                if (((Subroutines.RepeatedSubroutine) waypoints.get(currPoint).action).runLoop(robot)) {
+            Subroutines.Subroutine action = waypoints.get(currPoint).action;
+            if (action instanceof Subroutines.RepeatedSubroutine) {
+                if (((Subroutines.RepeatedSubroutine) action).runLoop(robot)) {
                     currPoint++;
                 }
             }
 
             if (jumpToNextSegment) {
                 currPoint++;
-                if (waypoints.get(currPoint).action instanceof Subroutines.OnceOffSubroutine) {
-                    ((Subroutines.OnceOffSubroutine) waypoints.get(currPoint).action).runOnce(robot);
+                action = waypoints.get(currPoint).action;
+                if (action instanceof Subroutines.OnceOffSubroutine) {
+                    ((Subroutines.OnceOffSubroutine) action).runOnce(robot);
                 }
+                if (action instanceof Subroutines.ArrivalInterruptSubroutine) {
+                    interrupting = true;
+                    // TODO make code less gross by either not using or committing to recursion
+                    this.update();
+                    return;
+                }
+
             }
         } while (jumpToNextSegment && currPoint < waypoints.size() - 1);
         if (finished()) {return;}

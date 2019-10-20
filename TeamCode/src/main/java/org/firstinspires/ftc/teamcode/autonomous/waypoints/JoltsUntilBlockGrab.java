@@ -31,7 +31,7 @@ public class JoltsUntilBlockGrab implements Subroutines.ArrivalInterruptSubrouti
         long currentTime = System.currentTimeMillis();
 
         if (currentJolt < 0 || currentTime - joltStartTimeMS > JOLT_MS + PAUSE_MS) {
-            if (currentJolt <= MAX_JOLTS) {
+            if (currentJolt >= MAX_JOLTS) {
                 // If we've failed three times, just give up
                 return true;
             } else {
