@@ -13,6 +13,16 @@ public class MecanumUtil {
     public static final MecanumPowers RIGHT =
             MecanumUtil.powersFromAngle(3 * Math.PI / 2, 1, 0);
 
+    public static final MecanumPowers FORWARD_LEFT =
+            MecanumUtil.powersFromAngle(Math.PI / 4, 1, 0);
+    public static final MecanumPowers BACKWARD_LEFT =
+            MecanumUtil.powersFromAngle(3 * Math.PI / 4, 1, 0);
+    public static final MecanumPowers BACKWARD_RIGHT =
+            MecanumUtil.powersFromAngle(5 * Math.PI / 4, 1, 0);
+    public static final MecanumPowers FORWARD_RIGHT =
+            MecanumUtil.powersFromAngle(7 *Math.PI / 4, 1, 0);
+
+
     public static final MecanumPowers COUNTERCLOCKWISE =
             MecanumUtil.powersFromAngle(0, 0, 1);
     public static final MecanumPowers CLOCKWISE =

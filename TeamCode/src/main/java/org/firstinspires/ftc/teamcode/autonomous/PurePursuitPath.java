@@ -27,6 +27,7 @@ public class PurePursuitPath {
     // currPoint in 0..n-2 means we're on the path from waypoints[currPoint] to
     // waypoints[currPoint + 1]. currPoint = n-1 means we're done.
     int currPoint;
+    boolean interrupting;
 
     public PurePursuitPath(MecanumHardware robot) {
         this(robot, new LinkedList<>());
@@ -40,6 +41,7 @@ public class PurePursuitPath {
         this.waypoints = waypoints;
         this.currPoint = 0;
         this.robot = robot;
+        this.interrupting = false;
 
         if (!(waypoints.get(waypoints.size() - 1) instanceof StopWaypoint)) {
             throw new IllegalArgumentException("Final Pure Pursuit waypoint must be a StopWaypoint!");
@@ -48,10 +50,18 @@ public class PurePursuitPath {
 
     public void update() {
         Pose robotPosition = robot.pose();
-
-        System.out.println("Robot is at position " + robot.pose().toString());
         // Note - our currPoint will only be the last point in the list once we're done moving
         // the robot
+
+        // Before we do anything else, check if we're being interrupted
+        if (interrupting) {
+            boolean advance = ((Subroutines.ArrivalInterruptSubroutine) waypoints.get(currPoint).action).runCycle(robot);
+            if (advance) {
+                interrupting = false;
+            } else {
+                return; // Don't do anything else this cycle
+            }
+        }
 
         // Check whether we should advance to the next piece of the curve
         boolean jumpToNextSegment;

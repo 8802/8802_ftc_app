@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.JoltsUntilBlockGrab;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
@@ -50,9 +51,7 @@ public class SimpleSSAuto extends SimulatableMecanumOpMode {
                 // which means robot must be at 45 degrees
                 new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE * 8, 48, 4, -0.75 * Math.PI, Subroutines.CHECK_BLOCK_GRAB),
                 new StopWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
-                        3, Subroutines.CHECK_BLOCK_GRAB),
-                new StopWaypoint(BACK_PLUNGE_TARGET_X - 8 + SKYSTONE * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
-                        3, Subroutines.CHECK_BLOCK_GRAB),
+                        3, new JoltsUntilBlockGrab(MecanumUtil.FORWARD_RIGHT)),
                 new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE * 8, 48, 12, -Math.PI),
                 // Now make our move to deposit
                 new Waypoint(0, 48, 16),
@@ -60,9 +59,7 @@ public class SimpleSSAuto extends SimulatableMecanumOpMode {
 
                 new Waypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE * 8, 48, 8, Subroutines.ENABLE_INTAKE),
                 new StopWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
-                        3, Subroutines.CHECK_BLOCK_GRAB),
-                new StopWaypoint(FRONT_PLUNGE_TARGET_X - 8 + SKYSTONE * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
-                        3, Subroutines.CHECK_BLOCK_GRAB),
+                        3, new JoltsUntilBlockGrab(MecanumUtil.FORWARD_RIGHT)),
                 new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE * 8, 48, 12, -Math.PI),
                 // Now make our move to deposit
                 new Waypoint(0, 48, 16),
