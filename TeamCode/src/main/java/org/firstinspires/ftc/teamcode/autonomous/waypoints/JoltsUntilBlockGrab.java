@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
 
 @Config
 public class JoltsUntilBlockGrab implements Subroutines.ArrivalInterruptSubroutine {
-    public static double JOLT_MS = 300;
+    public static double JOLT_MS = 500;
     public static double PAUSE_MS = 300;
     public static double MAX_JOLTS = 3;
 
@@ -30,7 +30,8 @@ public class JoltsUntilBlockGrab implements Subroutines.ArrivalInterruptSubrouti
         long currentTime = System.currentTimeMillis();
 
         if (currentJolt < 0 || currentTime - joltStartTimeMS > JOLT_MS + PAUSE_MS) {
-            if (currentJolt >= MAX_JOLTS) {
+            // We subtract 1 from MAX_JOLTS because currentJolt starts at -1, and so it ends up at 2
+            if (currentJolt >= MAX_JOLTS - 1) {
                 // If we've failed three times, just give up
                 return true;
             } else {
