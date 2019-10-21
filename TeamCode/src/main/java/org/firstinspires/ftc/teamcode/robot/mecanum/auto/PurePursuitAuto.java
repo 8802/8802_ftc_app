@@ -14,6 +14,8 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
 import org.openftc.revextensions2.RevBulkData;
 
+import java.util.List;
+
 import static org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware.FIELD_RADIUS;
 
 @Config
@@ -29,7 +31,7 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
     public static Alliance ALLIANCE = Alliance.RED;
 
     public abstract Pose getBlueStartPosition();
-    public abstract Waypoint[] getPurePursuitWaypoints();
+    public abstract List<Waypoint> getPurePursuitWaypoints();
 
     @Override
     public void init() {

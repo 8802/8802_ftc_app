@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.autonomous.waypoints;
 import org.firstinspires.ftc.teamcode.common.math.Point;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
 
+import java.util.Arrays;
+import java.util.LinkedList;
+
 public class Waypoint extends Point implements Cloneable {
     public Subroutines.Subroutine action;
     public double followDistance;
@@ -27,6 +30,10 @@ public class Waypoint extends Point implements Cloneable {
     @Override
     public Waypoint clone() {
         return new Waypoint(x, y, followDistance, action);
+    }
+
+    public static LinkedList<Waypoint> collate(Waypoint... waypoints) {
+        return new LinkedList<>(Arrays.asList(waypoints));
     }
 }
 

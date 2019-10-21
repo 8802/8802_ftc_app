@@ -12,11 +12,16 @@ import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
 import org.firstinspires.ftc.teamcode.common.elements.Alliance;
+import org.firstinspires.ftc.teamcode.common.elements.SkystoneState;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
 import org.openftc.revextensions2.RevBulkData;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware.FIELD_RADIUS;
 
@@ -38,9 +43,10 @@ public class SSAutoLM1 extends PurePursuitAuto {
     }
 
     @Override
-    public Waypoint[] getPurePursuitWaypoints() {
+    public List<Waypoint> getPurePursuitWaypoints() {
         MecanumPowers joltDirection = (ALLIANCE == Alliance.BLUE) ? MecanumUtil.FORWARD_RIGHT : MecanumUtil.FORWARD_LEFT;
-        return new Waypoint[]{
+
+        LinkedList<Waypoint> scoreSkystones = Waypoint.collate(
                 new Waypoint(DEFAULT_START_POSITION, 4),
 
                 // We want to move in strictly on the y-axis WRT the field to grab block,
@@ -59,22 +65,34 @@ public class SSAutoLM1 extends PurePursuitAuto {
                 new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 12, -Math.PI),
                 // Now make our move to deposit
                 new Waypoint(0, 48, 16),
-                DEPOSIT_LOCATION,
+                DEPOSIT_LOCATION
+        );
 
+        /* Now, we will "charge" along two straight lines until we encounter a block. Where those
+        lines are depends on what blocks we grabbed first, since if we grabbed SkystoneState.UPPER
+        the two skystones closest to the field wall haven't been touched.
+         */
+
+        double chargePathY1 = (SKYSTONE == SkystoneState.LOWER) ? 18 : 24;
+        double chargePathY2 = SKYSTONE.index * 6 + 12;
+
+        scoreSkystones.addAll(Waypoint.collate(
                 new Waypoint(0, 36, 16, Subroutines.ENABLE_INTAKE),
                 new Waypoint(-24, 36, 16, Subroutines.CHECK_BLOCK_GRAB),
-                new Waypoint(-24, 18, 16, Subroutines.CHECK_BLOCK_GRAB),
-                new StopWaypoint(-FIELD_RADIUS + 9, 18, 4, -Math.PI, 3),
+                new Waypoint(-24, chargePathY1, 16, Subroutines.CHECK_BLOCK_GRAB),
+                new StopWaypoint(-FIELD_RADIUS + 9, chargePathY1, 4, -Math.PI, 3),
                 new Waypoint(0, 48, 16),
                 DEPOSIT_LOCATION,
 
                 new Waypoint(0, 36, 16, Subroutines.ENABLE_INTAKE),
                 new Waypoint(-24, 36, 16, Subroutines.CHECK_BLOCK_GRAB),
-                new Waypoint(-24, 12, 16, Subroutines.CHECK_BLOCK_GRAB),
-                new StopWaypoint(-FIELD_RADIUS + 9, 12, 4, -Math.PI, 3),
+                new Waypoint(-24, chargePathY2, 16, Subroutines.CHECK_BLOCK_GRAB),
+                new StopWaypoint(-FIELD_RADIUS + 9, chargePathY2, 4, -Math.PI, 3),
                 new Waypoint(0, 48, 16),
                 DEPOSIT_LOCATION
-        };
+        ));
+
+        return scoreSkystones;
     }
 
     @Override
