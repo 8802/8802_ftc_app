@@ -20,7 +20,6 @@ public class JoltsUntilBlockGrab implements Subroutines.ArrivalInterruptSubrouti
         currentJolt = -1;
         joltStartTimeMS = -1;
         this.direction = direction;
-
     }
 
     @Override

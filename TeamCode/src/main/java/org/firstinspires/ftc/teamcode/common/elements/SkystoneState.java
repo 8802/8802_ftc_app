@@ -13,7 +13,7 @@ public enum SkystoneState {
     // Distance to center
     public static double ABS_SKYSTONE_Y_DIST = FIELD_RADIUS - 49;
 
-    private int index;
+    public int index;
     SkystoneState(final int index) { this.index = index; }
 
     public double y() {

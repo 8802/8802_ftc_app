@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 import org.firstinspires.ftc.teamcode.autonomous.controllers.MecanumPurePursuitController;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
@@ -38,13 +39,30 @@ public class PurePursuitPath {
     }
 
     public PurePursuitPath(MecanumHardware robot, List<Waypoint> waypoints) {
-        this.waypoints = waypoints;
+        // We need to deep copy our linked list so the same point doesn't get flipped multiple times
+        this.waypoints = new LinkedList<>();
+        for (Waypoint w : waypoints) {
+            this.waypoints.add(w.clone());
+        }
+
         this.currPoint = 0;
         this.robot = robot;
         this.interrupting = false;
 
         if (!(waypoints.get(waypoints.size() - 1) instanceof StopWaypoint)) {
             throw new IllegalArgumentException("Final Pure Pursuit waypoint must be a StopWaypoint!");
+        }
+    }
+
+    public void reverse() {
+        for (Waypoint w : this.waypoints) {
+            w.y = -w.y;
+
+            // We also need to invert headings.
+            if (w instanceof HeadingControlledWaypoint) {
+                HeadingControlledWaypoint hCW = (HeadingControlledWaypoint) w;
+                hCW.targetHeading = MathUtil.angleWrap(-hCW.targetHeading);
+            }
         }
     }
 

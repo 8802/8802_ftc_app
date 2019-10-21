@@ -11,8 +11,10 @@ import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
+import org.firstinspires.ftc.teamcode.common.elements.Alliance;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
+import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
 import org.openftc.revextensions2.RevBulkData;
 
@@ -22,45 +24,39 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware.FIELD
 
 @Autonomous
 @Config
-public class SimpleSSAuto extends SimulatableMecanumOpMode {
+public class SimpleSSAuto extends PurePursuitAuto {
 
     Waypoint DEPOSIT_LOCATION = new StopWaypoint(24, 30, 4, 0.75 * Math.PI, 3);
-    Pose START_POSITION = new Pose(-FIELD_RADIUS + 22.75 + 9, FIELD_RADIUS - 9, 3 * Math.PI / 2);
 
     public static double PLUNGE_TARGET_Y = 22;
     public static double BACK_PLUNGE_TARGET_X = -FIELD_RADIUS + 13;
     public static double FRONT_PLUNGE_TARGET_X = -FIELD_RADIUS + 34;
 
-
-    MecanumHardware robot;
-    PurePursuitPath followPath;
-    FtcDashboard dashboard;
-
-    //public static SkystoneState SKYSTONE = SkystoneState.MIDDLE;
-    public static int SKYSTONE = 1;
+    @Override
+    public Pose getBlueStartPosition() {
+        return DEFAULT_START_POSITION;
+    }
 
     @Override
-    public void init() {
-        this.dashboard = FtcDashboard.getInstance();
-        this.robot = this.getRobot(START_POSITION);
-        robot.initBNO055IMU(hardwareMap);
-        followPath = new PurePursuitPath(robot,
-                new Waypoint(START_POSITION, 4),
+    public Waypoint[] getPurePursuitWaypoints() {
+        MecanumPowers joltDirection = (ALLIANCE == Alliance.BLUE) ? MecanumUtil.FORWARD_RIGHT : MecanumUtil.FORWARD_LEFT;
+        return new Waypoint[]{
+                new Waypoint(DEFAULT_START_POSITION, 4),
 
                 // We want to move in strictly on the y-axis WRT the field to grab block,
                 // which means robot must be at 45 degrees
-                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE * 8, 48, 4, -0.75 * Math.PI, Subroutines.CHECK_BLOCK_GRAB),
-                new StopWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
-                        3, new JoltsUntilBlockGrab(MecanumUtil.FORWARD_RIGHT)),
-                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE * 8, 48, 12, -Math.PI),
+                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 4, -0.75 * Math.PI, Subroutines.CHECK_BLOCK_GRAB),
+                new StopWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
+                        3, new JoltsUntilBlockGrab(joltDirection)),
+                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 12, -Math.PI),
                 // Now make our move to deposit
                 new Waypoint(0, 48, 16),
                 DEPOSIT_LOCATION,
 
-                new Waypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE * 8, 48, 8, Subroutines.ENABLE_INTAKE),
-                new StopWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
-                        3, new JoltsUntilBlockGrab(MecanumUtil.FORWARD_RIGHT)),
-                new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE * 8, 48, 12, -Math.PI),
+                new Waypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 8, Subroutines.ENABLE_INTAKE),
+                new StopWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
+                        3, new JoltsUntilBlockGrab(joltDirection)),
+                new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 12, -Math.PI),
                 // Now make our move to deposit
                 new Waypoint(0, 48, 16),
                 DEPOSIT_LOCATION,
@@ -78,26 +74,12 @@ public class SimpleSSAuto extends SimulatableMecanumOpMode {
                 new StopWaypoint(-FIELD_RADIUS + 9, 12, 4, -Math.PI, 3),
                 new Waypoint(0, 48, 16),
                 DEPOSIT_LOCATION
-        );
+        };
     }
 
     @Override
     public void start() {
-        robot.initBulkReadTelemetry();
+        super.start();
         robot.setIntakePower(1);
-    }
-
-    @Override
-    public void loop() {
-        RevBulkData data = robot.performBulkRead();
-        robot.drawDashboardPath(followPath);
-        robot.sendDashboardTelemetryPacket();
-
-        if (!followPath.finished()) {
-            followPath.update();
-        } else {
-            robot.setPowers(MecanumUtil.STOP);
-            stop();
-        }
     }
 }
