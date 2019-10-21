@@ -6,7 +6,6 @@ import org.firstinspires.ftc.simulator.RXThread;
 import org.firstinspires.ftc.simulator.SimulatedOpModeFactory;
 import org.firstinspires.ftc.simulator.TXHandler;
 import org.firstinspires.ftc.teamcode.robot.mecanum.auto.*;
-import org.firstinspires.ftc.teamcode.robot.mecanum.teleop.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -16,7 +15,7 @@ class RealTimeOpModeRunner {
 
     @Test
     void testOpMode() throws IOException {
-        SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(SimpleSSAuto.class);
+        SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(SSAutoLM1.class);
         simOpMode.opMode.start();
         TXHandler udpServer = new TXHandler(-1);
         RXThread udpClient = new RXThread(simOpMode.opMode.gamepad1, simOpMode.opMode.gamepad2);

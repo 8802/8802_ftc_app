@@ -24,7 +24,7 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware.FIELD
 
 @Autonomous
 @Config
-public class SimpleSSAuto extends PurePursuitAuto {
+public class SSAutoLM1 extends PurePursuitAuto {
 
     Waypoint DEPOSIT_LOCATION = new StopWaypoint(24, 30, 4, 0.75 * Math.PI, 3);
 
