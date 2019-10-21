@@ -24,7 +24,7 @@ public class JoltsUntilBlockGrab implements Subroutines.ArrivalInterruptSubrouti
 
     @Override
     public boolean runCycle(MecanumHardware robot) {
-        if (robot.lastIntakeCurrent > Subroutines.BLOCK_GRAB_POWER_THRESHOLD) {
+        if (robot.intakeCurrentQueue.hasBlock()) {
             return true; // Advance to next motion path
         }
         long currentTime = System.currentTimeMillis();

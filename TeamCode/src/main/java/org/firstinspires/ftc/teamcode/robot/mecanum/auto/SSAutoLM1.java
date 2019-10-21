@@ -73,8 +73,8 @@ public class SSAutoLM1 extends PurePursuitAuto {
         the two skystones closest to the field wall haven't been touched.
          */
 
-        double chargePathY1 = (SKYSTONE == SkystoneState.LOWER) ? 18 : 24;
-        double chargePathY2 = SKYSTONE.index * 6 + 12;
+        double chargePathY1 = (SKYSTONE == SkystoneState.LOWER) ? 18 : 18;
+        double chargePathY2 = SKYSTONE.index * 3 + 12;
 
         scoreSkystones.addAll(Waypoint.collate(
                 new Waypoint(0, 36, 16, Subroutines.ENABLE_INTAKE),

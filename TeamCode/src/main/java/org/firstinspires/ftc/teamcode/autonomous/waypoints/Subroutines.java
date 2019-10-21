@@ -29,10 +29,6 @@ public class Subroutines {
 
     public static double BLOCK_GRAB_POWER_THRESHOLD = 3000;
     public static final RepeatedSubroutine CHECK_BLOCK_GRAB = (robot) -> {
-        if (robot.lastIntakeCurrent > BLOCK_GRAB_POWER_THRESHOLD) {
-            //robot.setIntakePower(0); // Disable intake
-            return true; // Advance to next motion path
-        }
-        return false;
+        return robot.intakeCurrentQueue.hasBlock();
     };
 }

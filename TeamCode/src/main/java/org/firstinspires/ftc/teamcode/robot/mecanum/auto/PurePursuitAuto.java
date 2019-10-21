@@ -27,8 +27,8 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
     FtcDashboard dashboard;
 
     // Robot state
-    public static SkystoneState SKYSTONE = SkystoneState.MIDDLE;
-    public static Alliance ALLIANCE = Alliance.RED;
+    public static SkystoneState SKYSTONE = SkystoneState.UPPER;
+    public static Alliance ALLIANCE = Alliance.BLUE;
 
     public abstract Pose getBlueStartPosition();
     public abstract List<Waypoint> getPurePursuitWaypoints();

@@ -1,0 +1,55 @@
+package org.firstinspires.ftc.teamcode.common;
+
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrent;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrentQueue;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class IntakeCurrentQueueTest {
+
+    @Test
+    void testStallPrevention() {
+        IntakeCurrent stallCurrents = new IntakeCurrent(12000, 12000);
+
+        IntakeCurrentQueue q = new IntakeCurrentQueue();
+        q.add(stallCurrents, 0);
+        q.add(stallCurrents, 100);
+
+        // We haven't seen a full 500 millis worth of values yet
+        assertFalse(q.stalled());
+
+        q.add(new IntakeCurrent(12000, 0), 200);
+        q.add(new IntakeCurrent(0, 12000), 300);
+        q.add(stallCurrents, 400);
+        q.add(stallCurrents, 500);
+        q.add(stallCurrents, 600);
+        assertTrue(q.stalled());
+
+        q.add(new IntakeCurrent(1500, 2000), 700);
+        q.add(stallCurrents, 800);
+        assertFalse(q.stalled());
+
+        // Assert no errors when we do things without the timestamp argument
+        q.add(new IntakeCurrent(0, 0));
+    }
+
+    @Test
+    void testBlockGrabDetection() {
+        IntakeCurrent baseCurrents = new IntakeCurrent(1500, 2200);
+
+        IntakeCurrentQueue q = new IntakeCurrentQueue();
+        q.add(baseCurrents, 0);
+        q.add(baseCurrents, 100);
+        assertFalse(q.hasBlock());
+
+        q.add(new IntakeCurrent(5000, 5000), 200);
+        assertTrue(q.hasBlock());
+        q.add(baseCurrents, 300);
+        q.add(baseCurrents, 400);
+
+        // Assert we don't detect a block when only one spikes
+        q.add(new IntakeCurrent(15000, 2200), 500);
+        assertFalse(q.hasBlock());
+    }
+}

@@ -24,9 +24,10 @@ import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocali
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.DelayedSubroutine;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.common.LoadTimer;
-import org.firstinspires.ftc.teamcode.common.StallPreventionQueue;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrentQueue;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.common.math.TimePose;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrent;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
 import org.openftc.revextensions2.RevExtensions2;
@@ -66,8 +67,9 @@ public class MecanumHardware {
 
     /* Misc. state */
     public double lastHeading;
-    public double lastIntakeCurrent;
-    public StallPreventionQueue intakeStallPreventionQueue;
+    public IntakeCurrent lastIntakeCurrent;
+    public IntakeCurrentQueue intakeCurrentQueue;
+
     public RevBulkData lastChassisRead;
     private MecanumPowers powers;
 
@@ -93,8 +95,6 @@ public class MecanumHardware {
     public static double WHEEL_DIAMETER = 4; // in
     public static double FIELD_RADIUS = 141 / 2.0; // in
 
-    public static double INTAKE_STALL_DETECT_MAMPS = 8000;
-    public static double INTAKE_STALL_DETECT_MS = 200;
     public static double INTAKE_UNJAM_REVERSAL_TIME_MS = 200;
 
     public MecanumHardware(OpMode opMode, Pose start) {
@@ -136,8 +136,9 @@ public class MecanumHardware {
         localizer = new TwoWheelTrackingLocalizer(0, 1, startPose4D);
         this.powers = new MecanumPowers(0, 0, 0, 0);
         this.lastHeading = 0;
-        this.lastIntakeCurrent = 0;
-        this.intakeStallPreventionQueue = new StallPreventionQueue();
+        this.lastIntakeCurrent = new IntakeCurrent(0, 0);
+        this.intakeCurrentQueue = new IntakeCurrentQueue();
+
         this.lastChassisRead = null;
 
         // Set up action cache
@@ -271,10 +272,15 @@ public class MecanumHardware {
         telDigital.setValue(digitals.toString());
 
         // Adjust motor current and specialty reads
-        this.lastIntakeCurrent = mechanicHub.getMotorCurrentDraw(0);
-        this.intakeStallPreventionQueue.add(lastIntakeCurrent);
+        // We need to read both motors for current to check if they both spike simultaneously
+        this.lastIntakeCurrent = new IntakeCurrent(
+                mechanicHub.getMotorCurrentDraw(0),
+                mechanicHub.getMotorCurrentDraw(1)
+        );
+        this.intakeCurrentQueue.add(this.lastIntakeCurrent);
+
         // If we're stalling the intake, reverse for 200 milliseconds
-        if (this.intakeStallPreventionQueue.aboveThresholdForMillis(INTAKE_STALL_DETECT_MAMPS, (long) INTAKE_STALL_DETECT_MS)) {
+        if (intakeCurrentQueue.stalled()) {
             this.setIntakePower(-1);
             this.actionCache.add(new DelayedSubroutine((long) INTAKE_UNJAM_REVERSAL_TIME_MS, Subroutines.ENABLE_INTAKE));
         }
@@ -302,7 +308,8 @@ public class MecanumHardware {
         packet.put("x", localizer.x());
         packet.put("y", localizer.y());
         packet.put("h", localizer.h());
-        packet.put("current", lastIntakeCurrent);
+        packet.put("leftMAmps", lastIntakeCurrent.leftMAmps);
+        packet.put("rightMAmps", lastIntakeCurrent.rightMAmps);
         packet.fieldOverlay()
                 .setFill("blue")
                 .fillCircle(localizer.x(), localizer.y(), 3);
