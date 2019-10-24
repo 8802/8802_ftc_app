@@ -27,7 +27,6 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware.FIELD
 
 // Import constants
 
-@Autonomous
 @Config
 public class SSAutoLM1 extends PurePursuitAuto {
 

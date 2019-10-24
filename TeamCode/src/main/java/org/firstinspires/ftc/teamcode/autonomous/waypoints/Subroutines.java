@@ -27,7 +27,6 @@ public class Subroutines {
     public static final OnceOffSubroutine STOP_INTAKE = (robot) -> { robot.setIntakePower(0); };
     public static final OnceOffSubroutine REVERSE_INTAKE = (robot) -> { robot.setIntakePower(-1); };
 
-    public static double BLOCK_GRAB_POWER_THRESHOLD = 3000;
     public static final RepeatedSubroutine CHECK_BLOCK_GRAB = (robot) -> {
         return robot.intakeCurrentQueue.hasBlock();
     };
