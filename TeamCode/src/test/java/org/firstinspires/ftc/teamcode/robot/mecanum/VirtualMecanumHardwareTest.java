@@ -12,7 +12,7 @@ class VirtualMecanumHardwareTest {
 
     @Test
     void testVirtualMecanumSquare() {
-        VirtualMecanumHardware virtualRobot = new VirtualMecanumHardware(new Pose(0, 0, 0));
+        VirtualMecanumHardware virtualRobot = new VirtualMecanumHardware(new Pose(0, 0, 0), false);
 
         // Drive top left (+x +y)
         virtualRobot.setPowers(MecanumUtil.powersFromAngle(Math.PI/4, 1, 0));

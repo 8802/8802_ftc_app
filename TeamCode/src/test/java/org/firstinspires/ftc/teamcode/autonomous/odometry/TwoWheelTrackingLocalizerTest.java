@@ -38,14 +38,14 @@ class TwoWheelTrackingLocalizerTest {
         // Move forward 24 inches
         TwoWheelTrackingLocalizer straightLocalizer = getNewLocalizer();
         for (int i = 1; i <= 10; i++) {
-            int distance = StandardTrackingWheelLocalizer.inchesToEncoderTicks(24 * i);
+            int distance = TwoWheelTrackingLocalizer.inchesToEncoderTicks(24 * i);
             straightLocalizer.update(genFakeData(distance, 0), 0);
         }
         // Because we're rounding inchesToEncoderTicks to an int, we'll usually be off by ~0.001
         assertTrue(roughApproxEquals(straightLocalizer.pose(), new Pose(24 * 10, 0, 0)));
 
         // Move left 24 inches
-        int distance = StandardTrackingWheelLocalizer.inchesToEncoderTicks(24);
+        int distance = TwoWheelTrackingLocalizer.inchesToEncoderTicks(24);
         TwoWheelTrackingLocalizer strafeLocalizer = getNewLocalizer();
         strafeLocalizer.update(genFakeData(0, distance), 0);
         assertTrue(roughApproxEquals(strafeLocalizer.pose(), new Pose(0, 24, 0)));
@@ -85,7 +85,7 @@ class TwoWheelTrackingLocalizerTest {
     double totalHeading;
 
     private void moveOneSquareLeg(TwoWheelTrackingLocalizer localizer) {
-        int distance = StandardTrackingWheelLocalizer.inchesToEncoderTicks(24);
+        int distance = TwoWheelTrackingLocalizer.inchesToEncoderTicks(24);
         totalSquareParallel += distance;
         localizer.update(genFakeData(totalSquareParallel, totalSquareLateral), totalHeading);
 

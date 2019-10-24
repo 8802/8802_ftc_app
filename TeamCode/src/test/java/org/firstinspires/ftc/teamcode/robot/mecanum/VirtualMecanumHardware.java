@@ -29,6 +29,7 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
     Pose position;
     Pose velocity;
     double time;
+    boolean slip;
     MecanumPowers wheelPowers;
 
     public VirtualMecanumHardware() {
@@ -36,11 +37,16 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
     }
 
     public VirtualMecanumHardware(Pose position) {
+        this(position, true);
+    }
+
+    public VirtualMecanumHardware(Pose position, boolean slip) {
         this.position = position;
         this.velocity = new Pose(0, 0, 0);
         this.time = 0;
         this.localizer = new TwoWheelTrackingLocalizer(0, 2);
         this.wheelPowers = new MecanumPowers(0, 0, 0, 0);
+        this.slip = slip;
     }
 
     @Override
@@ -49,9 +55,8 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
     }
 
     @Override
-    public void initBulkReadTelemetry() {
+    public void initBulkReadTelemetry() {}
 
-    }
 
     @Override
     public RevBulkData performBulkRead() {
@@ -118,10 +123,13 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
                      -errPowers.frontLeft +
                      -errPowers.backLeft) / 4
         ).multiply(MAX_ACCERATIONS);
-        //position = MathUtil.relativeOdometryUpdate(position, acceleration.scale(secs));
 
-        velocity = velocity.scale(1 - DECAY_FRAC).add(acceleration.scale(DECAY_FRAC));
-        position = MathUtil.relativeOdometryUpdate(position, velocity.scale(secs));
+        if (slip) {
+            velocity = velocity.scale(1 - DECAY_FRAC).add(acceleration.scale(DECAY_FRAC));
+            position = MathUtil.relativeOdometryUpdate(position, velocity.scale(secs));
+        } else {
+            position = MathUtil.relativeOdometryUpdate(position, acceleration.scale(secs));
+        }
 
         time += secs;
     }

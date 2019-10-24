@@ -8,3 +8,10 @@ android:
 
 before_install:
  - sudo chmod +x gradlew
+ script:
+    - echo "Travis commit is $TRAVIS_COMMIT"
+    - ./gradlew clean
+    - ./gradlew assembleDebug
+    - echo "Successfully assembled $TRAVIS_COMMIT"
+    - ./gradlew assembleDebugAndroidTest
+    - echo "Successfully tested $TRAVIS_COMMIT"

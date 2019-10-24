@@ -20,7 +20,6 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware.FIELD
 public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
     MecanumHardware robot;
     PurePursuitPath followPath;
-    FtcDashboard dashboard;
 
     boolean dpadUpPrev, dpadDownPrev;
     int intakePower;
@@ -30,7 +29,6 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
 
     @Override
     public void init() {
-        this.dashboard = FtcDashboard.getInstance();
         this.robot = this.getRobot();
         robot.initBNO055IMU(hardwareMap);
         followPath = new PurePursuitPath(robot,
@@ -54,7 +52,6 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
     @Override
     public void loop() {
         RevBulkData data = robot.performBulkRead();
-        followPath.draw(robot.packet.fieldOverlay());
         robot.sendDashboardTelemetryPacket();
 
         MecanumPowers ppPowers = MecanumPurePursuitController.goToPosition(

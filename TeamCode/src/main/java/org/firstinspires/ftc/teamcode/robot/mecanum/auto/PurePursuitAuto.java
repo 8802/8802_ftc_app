@@ -24,7 +24,6 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
 
     MecanumHardware robot;
     PurePursuitPath followPath;
-    FtcDashboard dashboard;
 
     // Robot state
     public static SkystoneState SKYSTONE = SkystoneState.UPPER;
@@ -35,8 +34,6 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
 
     @Override
     public void init() {
-        this.dashboard = FtcDashboard.getInstance();
-
         Pose start = getBlueStartPosition();
         if (ALLIANCE == Alliance.RED) {
             start.y *= -1;
