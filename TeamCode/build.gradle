@@ -19,3 +19,9 @@ android {
         abortOnError false
     }
 }
+
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}

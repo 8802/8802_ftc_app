@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum.auto;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.disnodeteam.dogecv.detectors.skystone.SkystoneDetector;
 
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
@@ -12,6 +12,9 @@ import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvWebcam;
 import org.openftc.revextensions2.RevBulkData;
 
 import java.util.List;
@@ -24,6 +27,8 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
 
     MecanumHardware robot;
     PurePursuitPath followPath;
+    SkystoneDetector detector;
+    OpenCvCamera phoneCam;
 
     // Robot state
     public static SkystoneState SKYSTONE = SkystoneState.UPPER;
@@ -42,12 +47,21 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
 
         this.robot = this.getRobot(getBlueStartPosition());
         robot.initBNO055IMU(hardwareMap);
-        followPath = new PurePursuitPath(robot, getPurePursuitWaypoints());
+        robot.initCamera(hardwareMap);
 
+        followPath = new PurePursuitPath(robot, getPurePursuitWaypoints());
         // We design all paths for blue side, and then flip them for red
         if (ALLIANCE == Alliance.RED) {
             followPath.reverse();
         }
+
+        this.detector = new SkystoneDetector();
+        int cameraMonitorViewId = hardwareMap.appContext.getResources()
+                .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        phoneCam = new OpenCvWebcam(robot.camera, cameraMonitorViewId);
+        phoneCam.openCameraDevice();
+        phoneCam.setPipeline(detector);
+        phoneCam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
     }
 
     @Override

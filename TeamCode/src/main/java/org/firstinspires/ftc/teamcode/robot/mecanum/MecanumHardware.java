@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.BuildConfig;
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocalizer;
@@ -77,6 +78,7 @@ public class MecanumHardware {
     private ExpansionHubEx chassisHub;
     private ExpansionHubEx mechanicHub;
     public BNO055IMU imu;
+    public WebcamName camera;
 
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
@@ -94,6 +96,12 @@ public class MecanumHardware {
     public static double TRACK_WIDTH = 16.5; // in
     public static double WHEEL_DIAMETER = 4; // in
     public static double FIELD_RADIUS = 141 / 2.0; // in
+
+    public static final String VUFORIA_KEY = "ARdpTSz/////AAABmQ7KRGisnUoRnab3MRG7YtwixzwiqRsIjj" +
+            "kqY7tkci5tbijyA9KkQWQTxmWXvKii7VZmacpaiTk0dKCy73Q1VngkUCG9cn7OPOHFIzeIWSGQEsR8IfcR7q" +
+            "mGEVFaU9PvNyUcHPjWTnV/RD6egsUShXGGWiU/ZvUm2CyIx7O5bxJYuGLha9WsKj0JVkNTaKr/JdKDs/+bEl" +
+            "a8V7Se9Eo2C0PTvqjkOlHpiG/4M55j2HgYLJzt3yz9tMgT5620G1pGgdEBHDar00+Pl1f3p0rymswy8bVeFu" +
+            "BZgvksqNEeliKHQzboYuDprMp/dkqGIC57A6kYDKGie8XVirBGa07PhhuVtgtywwqxGNVlKFQ5ta5T";
 
     public static double INTAKE_UNJAM_REVERSAL_TIME_MS = 200;
 
@@ -208,6 +216,10 @@ public class MecanumHardware {
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
         headingOffset = imu.getAngularOrientation().firstAngle;
+    }
+
+    public void initCamera(HardwareMap hardwareMap) {
+        camera = hardwareMap.get(WebcamName.class, "webcam");
     }
 
     public void initBulkReadTelemetry() {
