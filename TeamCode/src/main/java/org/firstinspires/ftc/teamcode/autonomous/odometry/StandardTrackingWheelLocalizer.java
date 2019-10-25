@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.autonomous.odometry;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.apache.commons.math3.linear.RealMatrix;
-import org.firstinspires.ftc.teamcode.autonomous.odometry.EncoderWheel;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Point;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
@@ -61,12 +59,12 @@ public class StandardTrackingWheelLocalizer {
 
         Array2DRowRealMatrix inverseMatrix = new Array2DRowRealMatrix(3, 3);
         for (EncoderWheel wheelPosition : WHEELS) {
-            Vector2d orientationVector =
-                    new Vector2d(Math.cos(wheelPosition.heading), Math.sin(wheelPosition.heading));
-            inverseMatrix.setEntry(wheelPosition.row, 0, orientationVector.getX());
-            inverseMatrix.setEntry(wheelPosition.row, 1, orientationVector.getY());
+            double x = Math.cos(wheelPosition.heading);
+            double y = Math.sin(wheelPosition.heading);
+            inverseMatrix.setEntry(wheelPosition.row, 0, x);
+            inverseMatrix.setEntry(wheelPosition.row, 1, y);
             inverseMatrix.setEntry(wheelPosition.row, 2,
-                    wheelPosition.x * orientationVector.getY() - wheelPosition.y * orientationVector.getX());
+                    wheelPosition.x * y - wheelPosition.y * x);
         }
 
         forwardSolver = new LUDecomposition(inverseMatrix).getSolver();
