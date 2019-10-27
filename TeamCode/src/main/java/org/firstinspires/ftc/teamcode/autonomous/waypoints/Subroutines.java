@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous.waypoints;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
 
 @Config
@@ -10,6 +11,10 @@ public class Subroutines {
 
     public interface OnceOffSubroutine extends Subroutine {
         void runOnce(MecanumHardware robot);
+    }
+
+    public interface MetaSubroutine extends Subroutine {
+        void runOnce(PurePursuitPath path);
     }
 
     public interface RepeatedSubroutine extends Subroutine {

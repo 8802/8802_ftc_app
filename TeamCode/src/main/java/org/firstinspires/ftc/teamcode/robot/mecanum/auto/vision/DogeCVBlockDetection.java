@@ -1,29 +1,21 @@
-package org.firstinspires.ftc.teamcode.robot.mecanum.auto;
+package org.firstinspires.ftc.teamcode.robot.mecanum.auto.vision;
 
-import com.disnodeteam.dogecv.detectors.skystone.SkystoneDetector;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
-import org.firstinspires.ftc.teamcode.common.elements.Alliance;
-import org.firstinspires.ftc.teamcode.common.elements.SkystoneState;
-import org.firstinspires.ftc.teamcode.common.math.MathUtil;
-import org.firstinspires.ftc.teamcode.common.math.Pose;
-import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
-import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
+import org.firstinspires.ftc.teamcode.robot.mecanum.auto.PurePursuitAuto;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvWebcam;
-import org.openftc.revextensions2.RevBulkData;
 
 import java.util.Locale;
 
 @TeleOp(name="DogeCV Skystone")
 public class DogeCVBlockDetection extends OpMode {
 
-    SkystoneDetector detector;
+    ImprovedSkystoneDetector detector;
     OpenCvCamera webcam;
 
     @Override
@@ -33,9 +25,10 @@ public class DogeCVBlockDetection extends OpMode {
         webcam = new OpenCvWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
         //webcam = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         webcam.openCameraDevice();
-        this.detector = new SkystoneDetector();
+        this.detector = new ImprovedSkystoneDetector();
+        this.detector.useDefaults();
         webcam.setPipeline(detector);
-        webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+        webcam.startStreaming(PurePursuitAuto.CAMERA_WIDTH, PurePursuitAuto.CAMERA_HEIGHT, OpenCvCameraRotation.UPRIGHT);
     }
 
     @Override

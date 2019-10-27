@@ -29,6 +29,7 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrentQueu
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.common.math.TimePose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrent;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.SimpleLift;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
 import org.openftc.revextensions2.RevExtensions2;
@@ -70,6 +71,7 @@ public class MecanumHardware {
     public double lastHeading;
     public IntakeCurrent lastIntakeCurrent;
     public IntakeCurrentQueue intakeCurrentQueue;
+    public SimpleLift pidLift;
 
     public RevBulkData lastChassisRead;
     private MecanumPowers powers;
@@ -87,6 +89,7 @@ public class MecanumHardware {
 
     public DcMotorEx intakeLeft;
     public DcMotorEx intakeRight;
+    public DcMotorEx lift;
 
     public List<DcMotorEx> chassisMotors;
     public List<DcMotorEx> leftChassisMotors;
@@ -117,6 +120,7 @@ public class MecanumHardware {
 
         intakeLeft = opMode.hardwareMap.get(DcMotorEx.class, "intakeLeft");
         intakeRight = opMode.hardwareMap.get(DcMotorEx.class, "intakeRight");
+        lift = opMode.hardwareMap.get(DcMotorEx.class, "lift");
 
         chassisHub = opMode.hardwareMap.get(ExpansionHubEx.class, "chassisHub");
         mechanicHub = opMode.hardwareMap.get(ExpansionHubEx.class, "mechanicHub");
@@ -146,6 +150,7 @@ public class MecanumHardware {
         this.lastHeading = 0;
         this.lastIntakeCurrent = new IntakeCurrent(0, 0);
         this.intakeCurrentQueue = new IntakeCurrentQueue();
+        this.pidLift = new SimpleLift(lift); // Also initializes lift
 
         this.lastChassisRead = null;
 

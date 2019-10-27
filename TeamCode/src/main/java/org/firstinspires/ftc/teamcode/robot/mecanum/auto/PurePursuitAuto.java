@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode.robot.mecanum.auto;
 import com.acmerobotics.dashboard.config.Config;
 import com.disnodeteam.dogecv.detectors.skystone.SkystoneDetector;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
@@ -12,9 +16,6 @@ import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvWebcam;
 import org.openftc.revextensions2.RevBulkData;
 
 import java.util.List;
@@ -23,12 +24,26 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware.FIELD
 
 @Config
 public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
+    /* Vision */
+    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    private static final String LABEL_FIRST_ELEMENT = "Stone";
+    private static final String LABEL_SECOND_ELEMENT = "Skystone";
+
+    public VuforiaLocalizer vuforia;
+    public TFObjectDetector tfod;
+
+    /**
+     * {@link #tfod} is the variable we will use to store our instance of the TensorFlow Object
+     * Detection engine.
+     */
+
     Pose DEFAULT_START_POSITION = new Pose(-FIELD_RADIUS + 22.75 + 9, FIELD_RADIUS - 9, 3 * Math.PI / 2);
+
+    public static int CAMERA_WIDTH = 800;
+    public static int CAMERA_HEIGHT = 448;
 
     MecanumHardware robot;
     PurePursuitPath followPath;
-    SkystoneDetector detector;
-    OpenCvCamera phoneCam;
 
     // Robot state
     public static SkystoneState SKYSTONE = SkystoneState.UPPER;
@@ -55,13 +70,6 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
             followPath.reverse();
         }
 
-        this.detector = new SkystoneDetector();
-        int cameraMonitorViewId = hardwareMap.appContext.getResources()
-                .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        phoneCam = new OpenCvWebcam(robot.camera, cameraMonitorViewId);
-        phoneCam.openCameraDevice();
-        phoneCam.setPipeline(detector);
-        phoneCam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
     }
 
     @Override

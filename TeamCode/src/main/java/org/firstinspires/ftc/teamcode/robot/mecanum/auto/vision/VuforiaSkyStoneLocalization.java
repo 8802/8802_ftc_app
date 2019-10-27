@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robot.mecanum.auto;
+package org.firstinspires.ftc.teamcode.robot.mecanum.auto.vision;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
