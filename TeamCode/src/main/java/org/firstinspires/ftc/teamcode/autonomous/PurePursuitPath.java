@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 import org.firstinspires.ftc.teamcode.autonomous.controllers.MecanumPurePursuitController;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
@@ -13,7 +12,7 @@ import org.firstinspires.ftc.teamcode.common.math.Line;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Point;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
-import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
+import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -22,7 +21,7 @@ import java.util.List;
 @Config
 public class PurePursuitPath {
     public static double TRACK_SPEED = 0.5;
-    private MecanumHardware robot;
+    private SkystoneHardware robot;
     List<Waypoint> waypoints;
 
     // currPoint in 0..n-2 means we're on the path from waypoints[currPoint] to
@@ -30,15 +29,15 @@ public class PurePursuitPath {
     int currPoint;
     boolean interrupting;
 
-    public PurePursuitPath(MecanumHardware robot) {
+    public PurePursuitPath(SkystoneHardware robot) {
         this(robot, new LinkedList<>());
     }
 
-    public PurePursuitPath(MecanumHardware robot, Waypoint... points) {
+    public PurePursuitPath(SkystoneHardware robot, Waypoint... points) {
         this(robot, Arrays.asList(points));
     }
 
-    public PurePursuitPath(MecanumHardware robot, List<Waypoint> waypoints) {
+    public PurePursuitPath(SkystoneHardware robot, List<Waypoint> waypoints) {
         // We need to deep copy our linked list so the same point doesn't get flipped multiple times
         this.waypoints = new LinkedList<>();
         for (Waypoint w : waypoints) {

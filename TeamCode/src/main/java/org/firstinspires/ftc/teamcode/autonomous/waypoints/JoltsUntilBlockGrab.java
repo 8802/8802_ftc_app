@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous.waypoints;
 
 import com.acmerobotics.dashboard.config.Config;
 
-import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
+import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
 
@@ -23,7 +23,7 @@ public class JoltsUntilBlockGrab implements Subroutines.ArrivalInterruptSubrouti
     }
 
     @Override
-    public boolean runCycle(MecanumHardware robot) {
+    public boolean runCycle(SkystoneHardware robot) {
         if (robot.intakeCurrentQueue.hasBlock()) {
             return true; // Advance to next motion path
         }

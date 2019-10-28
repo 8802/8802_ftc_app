@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.common.elements;
 
-import static org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware.*;
+import static org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware.*;
 
 public enum SkystoneState {
     UPPER(2),

@@ -1,10 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum.auto;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.disnodeteam.dogecv.detectors.skystone.SkystoneDetector;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
@@ -14,13 +11,13 @@ import org.firstinspires.ftc.teamcode.common.elements.Alliance;
 import org.firstinspires.ftc.teamcode.common.elements.SkystoneState;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
-import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
+import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
 import org.openftc.revextensions2.RevBulkData;
 
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware.FIELD_RADIUS;
+import static org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware.FIELD_RADIUS;
 
 @Config
 public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
@@ -42,7 +39,7 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
     public static int CAMERA_WIDTH = 800;
     public static int CAMERA_HEIGHT = 448;
 
-    MecanumHardware robot;
+    SkystoneHardware robot;
     PurePursuitPath followPath;
 
     // Robot state
@@ -61,7 +58,6 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
         }
 
         this.robot = this.getRobot(getBlueStartPosition());
-        robot.initBNO055IMU(hardwareMap);
         robot.initCamera(hardwareMap);
 
         followPath = new PurePursuitPath(robot, getPurePursuitWaypoints());

@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.BNO055IMUImpl;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -16,6 +17,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -29,6 +31,7 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrentQueu
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.common.math.TimePose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrent;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.ServoToggle;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.SimpleLift;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
@@ -42,7 +45,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Config
-public class MecanumHardware {
+public class SkystoneHardware {
 
     /* Telemetry */
     public Telemetry telemetry;
@@ -87,83 +90,140 @@ public class MecanumHardware {
     public DcMotorEx backLeft;
     public DcMotorEx backRight;
 
-    public DcMotorEx intakeLeft;
-    public DcMotorEx intakeRight;
-    public DcMotorEx lift;
-
     public List<DcMotorEx> chassisMotors;
     public List<DcMotorEx> leftChassisMotors;
     public List<DcMotorEx> rightChassisMotors;
 
-    /* Constants */
-    public static double TRACK_WIDTH = 16.5; // in
-    public static double WHEEL_DIAMETER = 4; // in
-    public static double FIELD_RADIUS = 141 / 2.0; // in
+    public DcMotorEx intakeLeft;
+    public DcMotorEx intakeRight;
+    public DcMotorEx lift;
 
-    public static final String VUFORIA_KEY = "ARdpTSz/////AAABmQ7KRGisnUoRnab3MRG7YtwixzwiqRsIjj" +
+    public ServoToggle blockGrabber;
+    public ServoToggle leftBlockFlipper;
+    public ServoToggle rightBlockFlipper;
+
+    public ServoToggle capstoneDropper;
+    public ServoToggle leftFoundationLatch;
+    public ServoToggle rightFoundationLatch;
+
+    /* Uneditable constants */
+    public final static double TRACK_WIDTH = 16.5; // in
+    public final static double WHEEL_DIAMETER = 4; // in
+    public final static double FIELD_RADIUS = 141 / 2.0; // in
+
+    public final static String VUFORIA_KEY = "ARdpTSz/////AAABmQ7KRGisnUoRnab3MRG7YtwixzwiqRsIjj" +
             "kqY7tkci5tbijyA9KkQWQTxmWXvKii7VZmacpaiTk0dKCy73Q1VngkUCG9cn7OPOHFIzeIWSGQEsR8IfcR7q" +
             "mGEVFaU9PvNyUcHPjWTnV/RD6egsUShXGGWiU/ZvUm2CyIx7O5bxJYuGLha9WsKj0JVkNTaKr/JdKDs/+bEl" +
             "a8V7Se9Eo2C0PTvqjkOlHpiG/4M55j2HgYLJzt3yz9tMgT5620G1pGgdEBHDar00+Pl1f3p0rymswy8bVeFu" +
             "BZgvksqNEeliKHQzboYuDprMp/dkqGIC57A6kYDKGie8XVirBGa07PhhuVtgtywwqxGNVlKFQ5ta5T";
 
+    /* Tunable parameters */
     public static double INTAKE_UNJAM_REVERSAL_TIME_MS = 200;
 
-    public MecanumHardware(OpMode opMode, Pose start) {
+    /* Servo positions */
+    public static double BLOCK_GRABBER_CLOSED = 0.0;
+    public static double BLOCK_GRABBER_OPEN = 1.0;
+
+    public static double BLOCK_FLIPPER_RETRACTED = 0.0;
+    public static double BLOCK_FLIPPER_EXTENDED = 1.0;
+
+    public static double FOUNDATION_LATCH_OPEN = 0.0;
+    public static double FOUNDATION_LATCH_CLOSED = 1.0;
+
+    public static double CAPSTONE_RETRACTED = 0.0;
+    public static double CAPSTONE_DROPPED = 1.0;
+
+    /**
+     * Instantiates a <b>real</b> SkystoneHardware object that will try to communicate with the REV
+     * hub. Always requires a start position.
+     *
+     * @param hardwareMap The hardwareMap from which to read our devices
+     * @param start The robot's starting location on the field
+     */
+    public SkystoneHardware(HardwareMap hardwareMap, Telemetry telemetry, FtcDashboard dashboard, Pose start) {
         LoadTimer loadTime = new LoadTimer();
-        this.dashboard = FtcDashboard.getInstance();
-        RevExtensions2.init();
 
-        frontLeft = opMode.hardwareMap.get(DcMotorEx.class, "leftFront");
-        frontRight = opMode.hardwareMap.get(DcMotorEx.class, "rightFront");
-        backLeft = opMode.hardwareMap.get(DcMotorEx.class, "leftBack");
-        backRight = opMode.hardwareMap.get(DcMotorEx.class, "rightBack");
+        /* Copy dashboard */
+        this.dashboard = dashboard;
 
-        intakeLeft = opMode.hardwareMap.get(DcMotorEx.class, "intakeLeft");
-        intakeRight = opMode.hardwareMap.get(DcMotorEx.class, "intakeRight");
-        lift = opMode.hardwareMap.get(DcMotorEx.class, "lift");
-
-        chassisHub = opMode.hardwareMap.get(ExpansionHubEx.class, "chassisHub");
-        mechanicHub = opMode.hardwareMap.get(ExpansionHubEx.class, "mechanicHub");
-
-        // Reverse left hand motors
+        /* Drive motors */
+        frontLeft = hardwareMap.get(DcMotorEx.class, "leftFront");
+        frontRight = hardwareMap.get(DcMotorEx.class, "rightFront");
+        backLeft = hardwareMap.get(DcMotorEx.class, "leftBack");
+        backRight = hardwareMap.get(DcMotorEx.class, "rightBack");
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
-        intakeLeft.setDirection(DcMotor.Direction.REVERSE);
-
-        // Set up fast access linked lists
+        powers = new MecanumPowers(0, 0, 0, 0);
+        // Set up fast access lists
         chassisMotors = Arrays.asList(frontLeft, frontRight, backLeft, backRight);
         leftChassisMotors = Arrays.asList(frontLeft, backLeft);
         rightChassisMotors = Arrays.asList(frontRight, backRight);
 
-        // Perform calibration
+        /* Intake */
+        intakeLeft = hardwareMap.get(DcMotorEx.class, "intakeLeft");
+        intakeRight = hardwareMap.get(DcMotorEx.class, "intakeRight");
+        intakeLeft.setDirection(DcMotor.Direction.REVERSE);
+        lastIntakeCurrent = new IntakeCurrent(0, 0);
+        intakeCurrentQueue = new IntakeCurrentQueue();
+
+        /* Lift and block grabbers */
+        lift = hardwareMap.get(DcMotorEx.class, "lift");
+        pidLift = new SimpleLift(lift); // Also initializes lift
+
+        blockGrabber = new ServoToggle(
+                hardwareMap.get(ServoImplEx.class, "blockGrabber"),
+                BLOCK_GRABBER_OPEN, BLOCK_GRABBER_CLOSED);
+        leftBlockFlipper = new ServoToggle(
+                hardwareMap.get(ServoImplEx.class, "leftBlockFlipper"),
+                BLOCK_FLIPPER_RETRACTED, BLOCK_FLIPPER_EXTENDED);
+        rightBlockFlipper = new ServoToggle(
+                hardwareMap.get(ServoImplEx.class, "rightBlockFlipper"),
+                BLOCK_FLIPPER_RETRACTED, BLOCK_FLIPPER_EXTENDED);
+        rightBlockFlipper.servo.setDirection(Servo.Direction.REVERSE);
+
+        /* Latches */
+        leftFoundationLatch = new ServoToggle(
+                hardwareMap.get(ServoImplEx.class, "leftFoundationLatch"),
+                FOUNDATION_LATCH_OPEN, FOUNDATION_LATCH_CLOSED);
+        rightFoundationLatch = new ServoToggle(
+                hardwareMap.get(ServoImplEx.class, "rightFoundationLatch"),
+                FOUNDATION_LATCH_OPEN, FOUNDATION_LATCH_CLOSED);
+        rightFoundationLatch.servo.setDirection(Servo.Direction.REVERSE);
+
+        /* Capstone */
+        capstoneDropper = new ServoToggle(
+                hardwareMap.get(ServoImplEx.class, "capstoneDropper"),
+                CAPSTONE_RETRACTED, CAPSTONE_DROPPED);
+
+        /* Hubs for bulk reads */
+        chassisHub = hardwareMap.get(ExpansionHubEx.class, "chassisHub");
+        mechanicHub = hardwareMap.get(ExpansionHubEx.class, "mechanicHub");
+        lastChassisRead = null;
+
+        /* Perform calibration */
         LoadTimer calTime = new LoadTimer();
+        initBNO055IMU(hardwareMap);
         for (DcMotorEx m : chassisMotors) {
             m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
         calTime.stop();
 
-        // Set up localization with motor names the wheels are connected to
+        /* Init localization */
         TimePose startPose4D = new TimePose(start, System.currentTimeMillis());
         localizer = new TwoWheelTrackingLocalizer(0, 1, startPose4D);
-        this.powers = new MecanumPowers(0, 0, 0, 0);
         this.lastHeading = 0;
-        this.lastIntakeCurrent = new IntakeCurrent(0, 0);
-        this.intakeCurrentQueue = new IntakeCurrentQueue();
-        this.pidLift = new SimpleLift(lift); // Also initializes lift
 
-        this.lastChassisRead = null;
-
-        // Set up action cache
+        /* Action cache */
         actionCache = new LinkedList<>();
 
-        // Set up telemetry
-        this.telemetry = opMode.telemetry;
+        /* Telemetry */
+        this.telemetry = telemetry;
         initTelemetry();
-        logBootTelemetry(opMode.hardwareMap, loadTime, calTime);
+        logBootTelemetry(hardwareMap, loadTime, calTime);
     }
 
-    public MecanumHardware() {} // Used for debugging
+    public SkystoneHardware() {} // Used for debugging
 
     public Pose pose() {
         return localizer.pose();
@@ -215,8 +275,8 @@ public class MecanumHardware {
         lastTelemetryUpdate = System.nanoTime();
     }
 
-    public void initBNO055IMU(HardwareMap hardwareMap) {
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
+    private void initBNO055IMU(HardwareMap hardwareMap) {
+        imu = hardwareMap.get(BNO055IMUImpl.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
@@ -230,9 +290,9 @@ public class MecanumHardware {
     public void initBulkReadTelemetry() {
         Telemetry.Line odometryLine = telemetry.addLine();
         telOdometry = new Telemetry.Item[3];
-        telOdometry[0] = odometryLine.addData("X", "%.1f", "-1");
-        telOdometry[1] = odometryLine.addData("Y", "%.1f", "-1");
-        telOdometry[2] = odometryLine.addData("θ", "%.3f", "-1");
+        telOdometry[0] = odometryLine.addData("X", "0");
+        telOdometry[1] = odometryLine.addData("Y", "0");
+        telOdometry[2] = odometryLine.addData("θ", "0");
 
         Telemetry.Line encoderLine = telemetry.addLine();
         telEncoders = new Telemetry.Item[4];
@@ -242,10 +302,10 @@ public class MecanumHardware {
 
         Telemetry.Line powersLine = telemetry.addLine();
         telPowers = new Telemetry.Item[4];
-        telPowers[0] = powersLine.addData("FL", "%.2f", "-1");
-        telPowers[1] = powersLine.addData("FR", "%.2f", "-1");
-        telPowers[2] = powersLine.addData("BL", "%.2f", "-1");
-        telPowers[3] = powersLine.addData("BR", "%.2f", "-1");
+        telPowers[0] = powersLine.addData("FL", "0");
+        telPowers[1] = powersLine.addData("FR", "0");
+        telPowers[2] = powersLine.addData("BL", "0");
+        telPowers[3] = powersLine.addData("BR", "0");
 
         Telemetry.Line analogLine = telemetry.addLine();
         telAnalog = new Telemetry.Item[4];

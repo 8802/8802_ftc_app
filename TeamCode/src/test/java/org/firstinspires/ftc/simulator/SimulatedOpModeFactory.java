@@ -4,10 +4,9 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
-import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
-import org.firstinspires.ftc.teamcode.robot.mecanum.VirtualMecanumHardware;
+import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
+import org.firstinspires.ftc.teamcode.robot.mecanum.VirtualSkystoneHardware;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 public class SimulatedOpModeFactory {
@@ -16,14 +15,14 @@ public class SimulatedOpModeFactory {
     final static int RUN_ITERATIONS = 400;
 
     public SimulatableMecanumOpMode opMode; // Pointer to our op mode
-    public VirtualMecanumHardware robot; // Pointer to our virtual robot
+    public VirtualSkystoneHardware robot; // Pointer to our virtual robot
     public boolean stopRequested;
 
     public SimulatedOpModeFactory(Class c) {
         // Assert we were passed an opmode we can use
         assert SimulatableMecanumOpMode.class.isAssignableFrom(c);
 
-        /*When we instantiate a MecanumHardware object, we can optionally tell it where its start
+        /*When we instantiate a SkystoneHardware object, we can optionally tell it where its start
         position is (otherwise, it defaults to zero). This defaulting case occurs in
         SimulatableMecanumOpMode, so we only deal with the case where we're passed a position. We
         override the getRobot method to take the position, intantiate a virtual robot, save that to
@@ -32,12 +31,12 @@ public class SimulatedOpModeFactory {
         opMode = (SimulatableMecanumOpMode) Mockito.spy(c);
         stopRequested = false;
 
-        this.robot = new VirtualMecanumHardware(new Pose(0, 0, 0));
-        Mockito.doAnswer((Answer<MecanumHardware>) invocation -> {
+        this.robot = new VirtualSkystoneHardware(new Pose(0, 0, 0));
+        Mockito.doAnswer((Answer<SkystoneHardware>) invocation -> {
             Object[] args = invocation.getArguments();
 
             // Instantiate a virtual robot based on the given start position
-            this.robot = new VirtualMecanumHardware((Pose) args[0]);
+            this.robot = new VirtualSkystoneHardware((Pose) args[0]);
             return this.robot;
         }).when(opMode).getRobot(Mockito.any());
 
@@ -50,7 +49,7 @@ public class SimulatedOpModeFactory {
             Object[] args = invocation.getArguments();
 
             // Instantiate a virtual robot based on the given start position
-            this.robot = new VirtualMecanumHardware((Pose) args[0]);
+            this.robot = new VirtualSkystoneHardware((Pose) args[0]);
             return this.robot;
         });*/
         /*Mockito.doAnswer(invocation -> {

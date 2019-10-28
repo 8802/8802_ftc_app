@@ -6,18 +6,13 @@ import android.media.ToneGenerator;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
-import org.firstinspires.ftc.teamcode.common.elements.Alliance;
-import org.firstinspires.ftc.teamcode.common.math.MathUtil;
-import org.firstinspires.ftc.teamcode.common.math.Pose;
-import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
-import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
+import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 import org.openftc.revextensions2.RevBulkData;
 
 @TeleOp
 public class CalibrateBlockDetection extends SimulatableMecanumOpMode {
-    MecanumHardware robot;
+    SkystoneHardware robot;
     FtcDashboard dashboard;
     ToneGenerator toneGen;
     boolean hadBlock;
@@ -28,7 +23,6 @@ public class CalibrateBlockDetection extends SimulatableMecanumOpMode {
         this.toneGen = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
         this.robot = this.getRobot();
         this.hadBlock = false;
-        robot.initBNO055IMU(hardwareMap);
     }
 
     @Override

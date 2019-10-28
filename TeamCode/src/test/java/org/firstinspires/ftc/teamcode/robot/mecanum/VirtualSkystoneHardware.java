@@ -1,9 +1,15 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.BNO055IMUImpl;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.simulator.VirtualRobot;
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocalizer;
@@ -11,9 +17,10 @@ import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.common.math.TimePose;
 import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 import org.openftc.revextensions2.RevBulkData;
 
-public class VirtualMecanumHardware extends MecanumHardware implements VirtualRobot {
+public class VirtualSkystoneHardware extends SkystoneHardware implements VirtualRobot {
     public static double TRACK_WIDTH = 17;
 
     public static double MAX_FORWARD_SPEED = 60; // Per second
@@ -32,35 +39,60 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
     boolean slip;
     MecanumPowers wheelPowers;
 
-    public VirtualMecanumHardware() {
+    public VirtualSkystoneHardware() {
         this(new Pose(0, 0, 0));
     }
 
-    public VirtualMecanumHardware(Pose position) {
+    public VirtualSkystoneHardware(Pose position) {
         this(position, true);
     }
 
-    public VirtualMecanumHardware(Pose position, boolean slip) {
+    public VirtualSkystoneHardware(Pose position, boolean slip) {
+        super(mockHardwareMap(), mockTelemetry(), Mockito.mock(FtcDashboard.class), position);
+
+        this.slip = slip;
         this.position = position;
         this.velocity = new Pose(0, 0, 0);
-        this.time = 0;
-        this.localizer = new TwoWheelTrackingLocalizer(0, 2);
-        this.wheelPowers = new MecanumPowers(0, 0, 0, 0);
-        this.slip = slip;
     }
 
-    @Override
-    public void initBNO055IMU(HardwareMap hardwareMap) {
-        this.imu = Mockito.mock(BNO055IMU.class);
+    private static HardwareMap mockHardwareMap() {
+        HardwareMap mockHardwareMap = Mockito.mock(HardwareMap.class);
+        Mockito.doAnswer((Answer<HardwareDevice>) invocation -> {
+            Object[] args = invocation.getArguments();
+
+            HardwareDevice device = Mockito.mock((Class<HardwareDevice>) args[0]);
+            Mockito.doReturn(args[1]).when(device).getDeviceName();
+
+            // A few devices need special functions mocked
+            if (device instanceof BNO055IMUImpl) {
+                Orientation imuOrientation = new Orientation();
+                imuOrientation.firstAngle = 0;
+                imuOrientation.secondAngle = 0;
+                imuOrientation.thirdAngle = 0;
+                Mockito.doReturn(imuOrientation).when((BNO055IMUImpl) device).getAngularOrientation();
+            }
+            return device;
+
+        }).when(mockHardwareMap).get(Mockito.any(), Mockito.anyString());
+        return mockHardwareMap;
     }
 
-    @Override
-    public void initBulkReadTelemetry() {}
+    private static Telemetry mockTelemetry() {
+        Telemetry mockTelemetry = Mockito.mock(Telemetry.class);
+        Mockito.doReturn(Mockito.mock(Telemetry.Log.class)).when(mockTelemetry).log();
 
+        Telemetry.Line mockLine = Mockito.mock(Telemetry.Line.class);
+        Mockito.doReturn(Mockito.mock(Telemetry.Item.class)).when(mockLine).addData(Mockito.any(), Mockito.any());
+        Mockito.doReturn(mockLine).when(mockTelemetry).addLine();
+        Mockito.doReturn(mockLine).when(mockTelemetry).addLine(Mockito.any());
+
+        return mockTelemetry;
+    }
 
     @Override
     public RevBulkData performBulkRead() {
         this.localizer.virtualUpdate(new TimePose(this.position, (long) time * 1000));
+        this.packet = new TelemetryPacket();
         System.out.println("Position: " + this.localizer.pose().toString());
         return Mockito.mock(RevBulkData.class);
     }

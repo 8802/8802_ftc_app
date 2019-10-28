@@ -3,16 +3,16 @@ package org.firstinspires.ftc.teamcode.robot.mecanum;
 import org.firstinspires.ftc.simulator.SimulatedOpModeFactory;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
-import org.firstinspires.ftc.teamcode.robot.mecanum.teleop.MecanumRobotCentric;
+import org.firstinspires.ftc.teamcode.robot.mecanum.teleop.SkystoneRobotCentric;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MecanumRobotCentricTest {
+class SkystoneRobotCentricTest {
 
     @Test
     void opModeTest() {
-        SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(MecanumRobotCentric.class);
+        SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(SkystoneRobotCentric.class);
         simOpMode.opMode.start();
 
         // At start, our position should be 0, 0 after waiting a bit

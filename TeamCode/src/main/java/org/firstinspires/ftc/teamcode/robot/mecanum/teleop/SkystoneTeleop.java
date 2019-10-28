@@ -3,21 +3,21 @@ package org.firstinspires.ftc.teamcode.robot.mecanum.teleop;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
-import org.firstinspires.ftc.teamcode.common.math.Pose;
-import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
+import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
 import org.openftc.revextensions2.RevBulkData;
 
 
 @Config
-public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
+public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
     public static int PER_TICK_LIFT_INCREMENT = 1;
 
-    MecanumHardware robot;
+    SkystoneHardware robot;
 
-    boolean dpadUpPrev, dpadDownPrev, leftBumperPrev, rightBumperPrev;
-    int intakePower;
+    boolean leftStickButtonPrev, rightStickButtonPrev, leftBumperPrev, rightBumperPrev, aPrev, yPrev;
+
+    boolean intakeOn;
 
     // Adjustable properties
     public abstract boolean fieldCentric();
@@ -25,17 +25,20 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
     @Override
     public void init() {
         this.robot = this.getRobot();
-        robot.initBNO055IMU(hardwareMap);
     }
 
     @Override
     public void start() {
         robot.initBulkReadTelemetry();
-        dpadUpPrev = gamepad1.dpad_up;
-        dpadDownPrev = gamepad1.dpad_down;
+
+        leftStickButtonPrev = gamepad1.left_stick_button;
+        rightStickButtonPrev = gamepad1.right_stick_button;
         leftBumperPrev = gamepad1.left_bumper;
         rightBumperPrev = gamepad1.right_bumper;
-        intakePower = 0;
+        aPrev = gamepad1.a;
+        yPrev = gamepad1.y;
+
+        intakeOn = false;
     }
 
     @Override
@@ -45,7 +48,7 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
         robot.packet.put("targetPosition", robot.pidLift.targetPosition);
         robot.sendDashboardTelemetryPacket();
 
-        // Drive code
+        /* Drive code */
         double slowScale = ((1 - gamepad1.left_trigger) * 0.7 + 0.3);
         double leftX = MecanumUtil.deadZone(-gamepad1.left_stick_x, 0.05) * slowScale;
         double leftY = MecanumUtil.deadZone(-gamepad1.left_stick_y, 0.05) * slowScale;
@@ -65,18 +68,15 @@ public abstract class MecanumTeleop extends SimulatableMecanumOpMode {
         MecanumPowers powers = MecanumUtil.powersFromAngle(angle, driveScale, turn);
         robot.setPowers(powers);
 
-        // Intake code
-        if (gamepad1.dpad_up && !dpadUpPrev) {
-            dpadUpPrev = true;
-            if (intakePower == 1) {
-                intakePower = 0;
-            } else {
-                intakePower = 1;
-            }
-            robot.setIntakePower(intakePower);
-        } else if (!gamepad1.dpad_up) {
-            dpadUpPrev = false;
+        /* Control intake */
+        if (gamepad1.left_stick_button && !leftStickButtonPrev) {
+            leftStickButtonPrev = true;
+            intakeOn = !intakeOn; // Toggle intake
+            robot.setIntakePower(intakeOn ? 1 : 0);
+        } else if (!gamepad1.left_stick_button) {
+            leftStickButtonPrev = false;
         }
+
 
         if (gamepad1.left_bumper && !leftBumperPrev) {
             leftBumperPrev = true;

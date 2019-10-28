@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous.waypoints;
 
 import org.firstinspires.ftc.teamcode.common.math.Point;
-import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
 
 import java.util.Arrays;
 import java.util.LinkedList;

@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum.auto.vision;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -13,8 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.R;
-import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
+import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +106,7 @@ public class VuforiaSkyStoneLocalization extends LinearOpMode {
 
         // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
-        parameters.vuforiaLicenseKey = MecanumHardware.VUFORIA_KEY;
+        parameters.vuforiaLicenseKey = SkystoneHardware.VUFORIA_KEY;
 
         /**
          * We also indicate which camera on the RC we wish to use.

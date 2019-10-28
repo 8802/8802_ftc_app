@@ -2,17 +2,15 @@ package org.firstinspires.ftc.teamcode.robot.mecanum;
 
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
-import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
-import org.firstinspires.ftc.teamcode.robot.mecanum.VirtualMecanumHardware;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class VirtualMecanumHardwareTest {
+class VirtualSkystoneHardwareTest {
 
     @Test
     void testVirtualMecanumSquare() {
-        VirtualMecanumHardware virtualRobot = new VirtualMecanumHardware(new Pose(0, 0, 0), false);
+        VirtualSkystoneHardware virtualRobot = new VirtualSkystoneHardware(new Pose(0, 0, 0), false);
 
         // Drive top left (+x +y)
         virtualRobot.setPowers(MecanumUtil.powersFromAngle(Math.PI/4, 1, 0));
