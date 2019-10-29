@@ -35,7 +35,6 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.ServoToggle;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.SimpleLift;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
-import org.openftc.revextensions2.RevExtensions2;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -124,11 +123,13 @@ public class SkystoneHardware {
     public static double BLOCK_GRABBER_CLOSED = 0.0;
     public static double BLOCK_GRABBER_OPEN = 1.0;
 
-    public static double BLOCK_FLIPPER_RETRACTED = 0.0;
-    public static double BLOCK_FLIPPER_EXTENDED = 1.0;
+    public static double BLOCK_FLIPPER_RETRACTED = 0.25;
+    public static double BLOCK_FLIPPER_EXTENDED = 0.8;
+    public static double BLOCK_FLIPPER_LR_OFFSET = 0.007;
 
     public static double FOUNDATION_LATCH_OPEN = 0.0;
     public static double FOUNDATION_LATCH_CLOSED = 1.0;
+    public static double FOUNDATION_LATCH_LR_OFFSET = 0.0;
 
     public static double CAPSTONE_RETRACTED = 0.0;
     public static double CAPSTONE_DROPPED = 1.0;
@@ -175,20 +176,24 @@ public class SkystoneHardware {
                 BLOCK_GRABBER_OPEN, BLOCK_GRABBER_CLOSED);
         leftBlockFlipper = new ServoToggle(
                 hardwareMap.get(ServoImplEx.class, "leftBlockFlipper"),
-                BLOCK_FLIPPER_RETRACTED, BLOCK_FLIPPER_EXTENDED);
+                BLOCK_FLIPPER_RETRACTED + BLOCK_FLIPPER_LR_OFFSET,
+                BLOCK_FLIPPER_EXTENDED + BLOCK_FLIPPER_LR_OFFSET);
         rightBlockFlipper = new ServoToggle(
                 hardwareMap.get(ServoImplEx.class, "rightBlockFlipper"),
-                BLOCK_FLIPPER_RETRACTED, BLOCK_FLIPPER_EXTENDED);
-        rightBlockFlipper.servo.setDirection(Servo.Direction.REVERSE);
+                BLOCK_FLIPPER_RETRACTED - BLOCK_FLIPPER_LR_OFFSET,
+                BLOCK_FLIPPER_EXTENDED - BLOCK_FLIPPER_LR_OFFSET,
+                Servo.Direction.REVERSE);
 
         /* Latches */
         leftFoundationLatch = new ServoToggle(
                 hardwareMap.get(ServoImplEx.class, "leftFoundationLatch"),
-                FOUNDATION_LATCH_OPEN, FOUNDATION_LATCH_CLOSED);
+                FOUNDATION_LATCH_OPEN + BLOCK_FLIPPER_LR_OFFSET,
+                FOUNDATION_LATCH_CLOSED + BLOCK_FLIPPER_LR_OFFSET);
         rightFoundationLatch = new ServoToggle(
                 hardwareMap.get(ServoImplEx.class, "rightFoundationLatch"),
-                FOUNDATION_LATCH_OPEN, FOUNDATION_LATCH_CLOSED);
-        rightFoundationLatch.servo.setDirection(Servo.Direction.REVERSE);
+                FOUNDATION_LATCH_OPEN - BLOCK_FLIPPER_LR_OFFSET,
+                FOUNDATION_LATCH_CLOSED - BLOCK_FLIPPER_LR_OFFSET,
+                Servo.Direction.REVERSE);
 
         /* Capstone */
         capstoneDropper = new ServoToggle(
@@ -351,8 +356,8 @@ public class SkystoneHardware {
         // Adjust motor current and specialty reads
         // We need to read both motors for current to check if they both spike simultaneously
         this.lastIntakeCurrent = new IntakeCurrent(
-                mechanicHub.getMotorCurrentDraw(0),
-                mechanicHub.getMotorCurrentDraw(1)
+                mechanicHub.getMotorCurrentDraw(ExpansionHubEx.CurrentDrawUnits.MILLIAMPS, 0),
+                mechanicHub.getMotorCurrentDraw(ExpansionHubEx.CurrentDrawUnits.MILLIAMPS, 1)
         );
         this.intakeCurrentQueue.add(this.lastIntakeCurrent);
 
@@ -390,6 +395,21 @@ public class SkystoneHardware {
         packet.fieldOverlay()
                 .setFill("blue")
                 .fillCircle(localizer.x(), localizer.y(), 3);
+
+        /* Update any FtcDashboard parameters */
+        blockGrabber.retractPosition = BLOCK_FLIPPER_RETRACTED;
+        blockGrabber.extendPosition = BLOCK_FLIPPER_EXTENDED;
+        leftBlockFlipper.retractPosition = BLOCK_FLIPPER_RETRACTED + BLOCK_FLIPPER_LR_OFFSET;
+        leftBlockFlipper.extendPosition = BLOCK_FLIPPER_EXTENDED + BLOCK_FLIPPER_LR_OFFSET;
+        rightBlockFlipper.retractPosition = BLOCK_FLIPPER_RETRACTED - BLOCK_FLIPPER_LR_OFFSET;
+        rightBlockFlipper.extendPosition = BLOCK_FLIPPER_EXTENDED - BLOCK_FLIPPER_LR_OFFSET;
+
+        leftFoundationLatch.retractPosition = FOUNDATION_LATCH_OPEN + BLOCK_FLIPPER_LR_OFFSET;
+        leftFoundationLatch.extendPosition = FOUNDATION_LATCH_CLOSED + BLOCK_FLIPPER_LR_OFFSET;
+        rightFoundationLatch.retractPosition = FOUNDATION_LATCH_OPEN - BLOCK_FLIPPER_LR_OFFSET;
+        rightFoundationLatch.extendPosition = FOUNDATION_LATCH_CLOSED - BLOCK_FLIPPER_LR_OFFSET;
+        capstoneDropper.retractPosition = CAPSTONE_RETRACTED;
+        capstoneDropper.extendPosition = CAPSTONE_DROPPED;
 
         lastTelemetryUpdate = System.nanoTime();
         return lastChassisRead;

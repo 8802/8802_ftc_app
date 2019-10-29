@@ -11,7 +11,7 @@ import org.openftc.revextensions2.RevBulkData;
 
 @Config
 public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
-    public static int PER_TICK_LIFT_INCREMENT = 1;
+    public static double TRIGGER_THRESHOLD = 0.2;
 
     SkystoneHardware robot;
 
@@ -77,7 +77,26 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
             leftStickButtonPrev = false;
         }
 
+        /* Block grabber */
+        if (gamepad1.right_stick_button && !rightStickButtonPrev) {
+            rightStickButtonPrev = true;
+            robot.blockGrabber.toggle();
+        } else if (!gamepad1.right_stick_button) {
+            rightStickButtonPrev = false;
+        }
 
+        /* Intake flipper */
+        boolean leftTrigger = gamepad1.left_trigger > TRIGGER_THRESHOLD;
+        boolean rightTrigger = gamepad1.right_trigger > TRIGGER_THRESHOLD;
+        if (leftTrigger && !rightTrigger) {
+            robot.leftBlockFlipper.retract();
+            robot.rightBlockFlipper.retract();
+        } else if (rightTrigger && !leftTrigger) {
+            robot.leftBlockFlipper.extend();
+            robot.rightBlockFlipper.extend();
+        }
+
+        /* Lit control */
         if (gamepad1.left_bumper && !leftBumperPrev) {
             leftBumperPrev = true;
             robot.pidLift.changeLayer(-1);
@@ -92,10 +111,20 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
             rightBumperPrev = false;
         }
 
-        if (gamepad1.left_trigger > 0.2) {
-            robot.pidLift.changePosition(PER_TICK_LIFT_INCREMENT);
-        } else if (gamepad1.right_trigger > 0.2) {
-            robot.pidLift.changePosition(-PER_TICK_LIFT_INCREMENT);
+        /* Misc servos */
+        if (gamepad1.y && !yPrev) {
+            yPrev = true;
+            robot.leftFoundationLatch.toggle();
+            robot.rightFoundationLatch.toggle();
+        } else {
+            yPrev = false;
+        }
+
+        if (gamepad1.a && !aPrev) {
+            aPrev = true;
+            robot.capstoneDropper.toggle();
+        } else {
+            aPrev = false;
         }
     }
 }
