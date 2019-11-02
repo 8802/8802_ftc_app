@@ -12,7 +12,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.Locale;
 
-@TeleOp(name="DogeCV Skystone")
+@TeleOp(name="UberDetector Skystone")
 public class DogeCVBlockDetection extends OpMode {
 
     ImprovedSkystoneDetector detector;

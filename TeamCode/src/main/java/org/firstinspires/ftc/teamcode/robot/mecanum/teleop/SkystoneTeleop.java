@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.robot.mecanum.teleop;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.DelayedSubroutine;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
 import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
@@ -17,6 +20,8 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
 
     boolean leftStickButtonPrev, rightStickButtonPrev, leftBumperPrev, rightBumperPrev, aPrev, yPrev;
 
+
+    boolean rightStickButtonDeposits; // Toggles from grabbing to depositing
     boolean intakeOn;
 
     // Adjustable properties
@@ -80,7 +85,19 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         /* Block grabber */
         if (gamepad1.right_stick_button && !rightStickButtonPrev) {
             rightStickButtonPrev = true;
-            robot.blockGrabber.toggle();
+            if (rightStickButtonDeposits) {
+                robot.blockGrabber.retract();
+                robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_LITTLE));
+                robot.actionCache.add(new DelayedSubroutine(750, Subroutines.SET_FLIPPER_INTAKING));
+                robot.actionCache.add(new DelayedSubroutine(750, Subroutines.LOWER_A_LITTLE));
+            } else {
+                robot.blockFlipper.readyBlockGrab();
+                robot.blockGrabber.extend(); // Grab the block
+                robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_DRIVING));
+
+            }
+            // Change what the button does
+            rightStickButtonDeposits = !rightStickButtonDeposits;
         } else if (!gamepad1.right_stick_button) {
             rightStickButtonPrev = false;
         }
@@ -91,7 +108,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         if (leftTrigger && !rightTrigger) {
             robot.blockFlipper.readyBlockIntake();
         } else if (rightTrigger && !leftTrigger) {
-            robot.blockFlipper.readyDriving();
+            robot.blockFlipper.normExtend();
         }
 
         /* Lit control */

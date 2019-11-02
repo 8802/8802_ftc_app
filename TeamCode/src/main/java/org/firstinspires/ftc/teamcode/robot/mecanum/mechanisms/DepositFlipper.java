@@ -6,12 +6,20 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 @Config
 public class DepositFlipper {
-    public static double GRABBING = 0.25;
-    public static double INTAKING = 0.35;
-    public static double DRIVING = 0.6;
-    public static double NORM_EXTEND = 0.8;
-    public static double MAX_EXTEND = 0.8;
-    public static double LR_OFFSET = 0.007;
+    public static double LEFT_GRABBING = 0.24;
+    public static double RIGHT_GRABBING = 0.22;
+
+    public static double LEFT_INTAKING = 0.29;
+    public static double RIGHT_INTAKING = 0.27;
+
+    public static double LEFT_DRIVING = 0.6;
+    public static double RIGHT_DRIVING = 0.6;
+
+    public static double LEFT_NORM_EXTEND = 0.8;
+    public static double RIGHT_NORM_EXTEND = 0.8;
+
+    public static double LEFT_MAX_EXTEND = 0.8;
+    public static double RIGHT_MAX_EXTEND = 0.8;
 
     public ServoImplEx leftFlipper;
     public ServoImplEx rightFlipper;
@@ -22,16 +30,16 @@ public class DepositFlipper {
         rightFlipper.setDirection(Servo.Direction.REVERSE);
     }
 
-    public void readyBlockGrab()   {setPosition(GRABBING);}
-    public void readyBlockIntake() {setPosition(INTAKING);}
-    public void readyDriving()     {setPosition(DRIVING);}
-    public void normExtend()       {setPosition(NORM_EXTEND);}
-    public void maxExtend()        {setPosition(MAX_EXTEND);}
+    public void readyBlockGrab()   {setPosition(LEFT_GRABBING, RIGHT_GRABBING);}
+    public void readyBlockIntake() {setPosition(LEFT_INTAKING, RIGHT_INTAKING);}
+    public void readyDriving()     {setPosition(LEFT_DRIVING, RIGHT_DRIVING);}
+    public void normExtend()       {setPosition(LEFT_NORM_EXTEND, RIGHT_NORM_EXTEND);}
+    public void maxExtend()        {setPosition(LEFT_MAX_EXTEND, RIGHT_MAX_EXTEND);}
 
 
-    public void setPosition(double position) {
-        leftFlipper.setPosition(position + LR_OFFSET);
-        rightFlipper.setPosition(position - LR_OFFSET);
+    public void setPosition(double left, double right) {
+        leftFlipper.setPosition(left);
+        rightFlipper.setPosition(right);
     }
 
 

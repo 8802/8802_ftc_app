@@ -26,7 +26,7 @@ public class DepositBlock implements Subroutines.ArrivalInterruptSubroutine {
     public boolean runCycle(SkystoneHardware robot) {
         if (timeSinceStart == null) {
             timeSinceStart = new ElapsedTime(); // Start the timer
-            robot.blockFlipper.setPosition(AUTO_DEPOSIT_FLIPPER_POSITION);
+            robot.blockFlipper.setPosition(AUTO_DEPOSIT_FLIPPER_POSITION, AUTO_DEPOSIT_FLIPPER_POSITION);
         }
         if (timeSinceStart.milliseconds() > PAUSE_MS) {
             //robot.blockGrabber

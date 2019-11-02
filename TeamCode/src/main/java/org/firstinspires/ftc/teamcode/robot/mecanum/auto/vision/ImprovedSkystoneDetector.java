@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.robot.mecanum.auto.vision;
 import com.acmerobotics.dashboard.config.Config;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.DogeCVDetector;
-import com.disnodeteam.dogecv.detectors.skystone.SkystoneDetector;
 import com.disnodeteam.dogecv.filters.DogeCVColorFilter;
 import com.disnodeteam.dogecv.filters.GrayscaleFilter;
 import com.disnodeteam.dogecv.filters.LeviColorFilter;
@@ -11,6 +10,7 @@ import com.disnodeteam.dogecv.scoring.MaxAreaScorer;
 import com.disnodeteam.dogecv.scoring.PerfectAreaScorer;
 import com.disnodeteam.dogecv.scoring.RatioScorer;
 
+import org.firstinspires.ftc.teamcode.common.elements.SkystoneState;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -23,10 +23,13 @@ import java.util.List;
 
 @Config
 public class ImprovedSkystoneDetector extends DogeCVDetector {
-    public static double START_ROW_FRAC = 0.0;
-    public static double END_ROW_FRAC = 1.0;
-    public static double START_COL_FRAC = 0.0;
-    public static double END_COL_FRAC = 1.0;
+    public static double START_ROW_FRAC = 0.25;
+    public static double END_ROW_FRAC = 0.75;
+    public static double START_COL_FRAC = 0.28;
+    public static double END_COL_FRAC = 0.88;
+
+    public static double MIDDLE_LOWER_CUTOFF = 397;
+    public static double LOWER_UPPER_CUTOFF = 549;
 
     public DogeCV.AreaScoringMethod areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Setting to decide to use MaxAreaScorer or PerfectAreaScorer
 
@@ -40,8 +43,9 @@ public class ImprovedSkystoneDetector extends DogeCVDetector {
 
 
     // Results of the detector
-    private Point screenPosition = new Point(); // Screen position of the mineral
+    private Point screenPosition = new Point(); // Center screen position of the block
     private Rect foundRect = new Rect(); // Found rect
+    private SkystoneState skystoneState = SkystoneState.UPPER;
 
     private Mat rawImage = new Mat();
     private Mat workingMat = new Mat();
@@ -52,9 +56,11 @@ public class ImprovedSkystoneDetector extends DogeCVDetector {
     public Point getScreenPosition() {
         return screenPosition;
     }
-
     public Rect foundRectangle() {
         return foundRect;
+    }
+    public SkystoneState getSkystoneState() {
+        return skystoneState;
     }
 
 
@@ -105,20 +111,21 @@ public class ImprovedSkystoneDetector extends DogeCVDetector {
 
         Mat outMat = new Mat();
         input.copyTo(outMat);
-        Point trueTL = new Point(startRow, startCol);
-        Point trueBR = new Point(endRow, endCol);
+        Point trueTL = new Point(startCol, startRow);
+        Point trueBR = new Point(endCol, endRow);
         Rect crop = new Rect(trueTL, trueBR);
 
 
         if(bestRect != null) {
             // Show chosen result
             Imgproc.rectangle(outMat, crop.tl(), crop.br(), new Scalar(0,0,255),4);
-            Rect subRect = new Rect(new Point(startRow + bestRect.tl().x, startCol + bestRect.tl().y),
-                    new Point(startRow + bestRect.br().x, startCol + bestRect.br().y));
+            Rect subRect = new Rect(new Point(startCol + bestRect.tl().x, startRow + bestRect.tl().y),
+                    new Point(startCol + bestRect.br().x, startRow + bestRect.br().y));
             Imgproc.rectangle(outMat, subRect, new Scalar(255,0,0),4);
             Imgproc.putText(blackMask, "Chosen", subRect.tl(),0,1,new Scalar(255,255,255));
 
-            screenPosition = new Point(bestRect.x, bestRect.y);
+            screenPosition = new Point(bestRect.x + bestRect.width / 2, bestRect.y + bestRect.height / 2);
+            skystoneState = calcSkystoneState(screenPosition.x);
             foundRect = bestRect;
             found = true;
         }
@@ -126,16 +133,17 @@ public class ImprovedSkystoneDetector extends DogeCVDetector {
             found = false;
         }
 
-        // This is ridiculously slow (3000 ms per 480p frame) RN
-        // Pixel by pixel, copy blackMask into output
-        /*for (int i = 0; i < endRow - startRow; i++) {
-            for (int j = 0; j < endCol - startCol; j++) {
-                double[] data = blackMask.get(i, j);
-                data = new double[] {data[0], data[1], data[2], 1.0};
-                outMat.put(startRow + i, startCol + j, data);
-            }
-        }*/
         return outMat;
+    }
+
+    private static SkystoneState calcSkystoneState(double middleX) {
+        if (middleX < MIDDLE_LOWER_CUTOFF) {
+            return SkystoneState.MIDDLE;
+        } else if (middleX < LOWER_UPPER_CUTOFF) {
+            return SkystoneState.LOWER;
+        } else {
+            return SkystoneState.UPPER;
+        }
     }
 
     @Override

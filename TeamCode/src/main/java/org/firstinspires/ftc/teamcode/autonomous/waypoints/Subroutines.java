@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 @Config
 public class Subroutines {
+    public static int LIFT_RAISE_AMOUNT = 500;
+
     public interface Subroutine {}
 
     public interface OnceOffSubroutine extends Subroutine {
@@ -43,6 +45,14 @@ public class Subroutines {
     public static final OnceOffSubroutine SET_FLIPPER_DRIVING = (robot) -> { robot.blockFlipper.readyDriving(); };
     public static final OnceOffSubroutine SET_FLIPPER_MAX_OUT = (robot) -> { robot.blockFlipper.maxExtend(); };
 
+    public static final OnceOffSubroutine LIFT_A_LITTLE = (robot) -> {
+        robot.pidLift.changePosition(LIFT_RAISE_AMOUNT);
+    };
+
+    public static final OnceOffSubroutine LOWER_A_LITTLE = (robot) -> {
+        robot.pidLift.changePosition(-LIFT_RAISE_AMOUNT);
+    };
+
     public static final RepeatedSubroutine CHECK_BLOCK_GRAB = (robot) -> {
         return robot.intakeCurrentQueue.hasBlock();
     };
@@ -50,6 +60,7 @@ public class Subroutines {
     /* When this is called, we assume the flipper is in intaking position and the block grabber is
     open. TODO verify that this is the case.
      */
+
     public static final OnceOffSubroutine AUTO_PROCESS_INTAKED_BLOCK = (robot) -> {
         CLOSE_CLAW.runOnce(robot);
         SET_FLIPPER_GRABBING.runOnce(robot);
