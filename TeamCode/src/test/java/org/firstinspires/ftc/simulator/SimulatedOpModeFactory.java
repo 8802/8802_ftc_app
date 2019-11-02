@@ -72,4 +72,9 @@ public class SimulatedOpModeFactory {
             robot.elapse(seconds / iterations);
         }
     }
+
+    public void cycle() {
+        opMode.loop();
+        robot.elapse(0.01);
+    }
 }

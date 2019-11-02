@@ -89,11 +89,9 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         boolean leftTrigger = gamepad1.left_trigger > TRIGGER_THRESHOLD;
         boolean rightTrigger = gamepad1.right_trigger > TRIGGER_THRESHOLD;
         if (leftTrigger && !rightTrigger) {
-            robot.leftBlockFlipper.retract();
-            robot.rightBlockFlipper.retract();
+            robot.blockFlipper.readyBlockIntake();
         } else if (rightTrigger && !leftTrigger) {
-            robot.leftBlockFlipper.extend();
-            robot.rightBlockFlipper.extend();
+            robot.blockFlipper.readyDriving();
         }
 
         /* Lit control */

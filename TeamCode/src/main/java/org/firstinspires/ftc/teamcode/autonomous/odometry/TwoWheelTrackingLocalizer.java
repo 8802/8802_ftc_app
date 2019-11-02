@@ -25,7 +25,7 @@ public class TwoWheelTrackingLocalizer {
     static final double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
     public static double PARALLEL_Y_POS = 7.25;
-    public static double LATERAL_X_POS = -4.75;
+    public static double LATERAL_X_POS = -3.00;
 
     DecompositionSolver forwardSolver;
 

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.simulator.VirtualRobot;
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocali
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.common.math.TimePose;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrent;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.openftc.revextensions2.RevBulkData;
@@ -109,6 +111,10 @@ public class VirtualSkystoneHardware extends SkystoneHardware implements Virtual
     @Override
     public void sendDashboardTelemetryPacket() {}
 
+    @Override
+    public void initCamera(HardwareMap hardwareMap) {
+        this.camera = Mockito.mock(WebcamName.class);
+    }
     // Some method calls we just throw away
     @Override
     public void setIntakePower(double power) {
@@ -162,6 +168,8 @@ public class VirtualSkystoneHardware extends SkystoneHardware implements Virtual
         } else {
             position = MathUtil.relativeOdometryUpdate(position, acceleration.scale(secs));
         }
+
+        this.intakeCurrentQueue.add(new IntakeCurrent(0, 0));
 
         time += secs;
     }

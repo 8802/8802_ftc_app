@@ -27,6 +27,7 @@ import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocali
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.DelayedSubroutine;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.common.LoadTimer;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.DepositFlipper;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrentQueue;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.common.math.TimePose;
@@ -98,8 +99,7 @@ public class SkystoneHardware {
     public DcMotorEx lift;
 
     public ServoToggle blockGrabber;
-    public ServoToggle leftBlockFlipper;
-    public ServoToggle rightBlockFlipper;
+    public DepositFlipper blockFlipper;
 
     public ServoToggle capstoneDropper;
     public ServoToggle leftFoundationLatch;
@@ -122,10 +122,6 @@ public class SkystoneHardware {
     /* Servo positions */
     public static double BLOCK_GRABBER_CLOSED = 0.0;
     public static double BLOCK_GRABBER_OPEN = 1.0;
-
-    public static double BLOCK_FLIPPER_RETRACTED = 0.25;
-    public static double BLOCK_FLIPPER_EXTENDED = 0.8;
-    public static double BLOCK_FLIPPER_LR_OFFSET = 0.007;
 
     public static double FOUNDATION_LATCH_OPEN = 0.0;
     public static double FOUNDATION_LATCH_CLOSED = 1.0;
@@ -174,25 +170,19 @@ public class SkystoneHardware {
         blockGrabber = new ServoToggle(
                 hardwareMap.get(ServoImplEx.class, "blockGrabber"),
                 BLOCK_GRABBER_OPEN, BLOCK_GRABBER_CLOSED);
-        leftBlockFlipper = new ServoToggle(
+        blockFlipper = new DepositFlipper(
                 hardwareMap.get(ServoImplEx.class, "leftBlockFlipper"),
-                BLOCK_FLIPPER_RETRACTED + BLOCK_FLIPPER_LR_OFFSET,
-                BLOCK_FLIPPER_EXTENDED + BLOCK_FLIPPER_LR_OFFSET);
-        rightBlockFlipper = new ServoToggle(
-                hardwareMap.get(ServoImplEx.class, "rightBlockFlipper"),
-                BLOCK_FLIPPER_RETRACTED - BLOCK_FLIPPER_LR_OFFSET,
-                BLOCK_FLIPPER_EXTENDED - BLOCK_FLIPPER_LR_OFFSET,
-                Servo.Direction.REVERSE);
+                hardwareMap.get(ServoImplEx.class, "rightBlockFlipper"));
 
         /* Latches */
         leftFoundationLatch = new ServoToggle(
                 hardwareMap.get(ServoImplEx.class, "leftFoundationLatch"),
-                FOUNDATION_LATCH_OPEN + BLOCK_FLIPPER_LR_OFFSET,
-                FOUNDATION_LATCH_CLOSED + BLOCK_FLIPPER_LR_OFFSET);
+                FOUNDATION_LATCH_OPEN + FOUNDATION_LATCH_LR_OFFSET,
+                FOUNDATION_LATCH_CLOSED + FOUNDATION_LATCH_LR_OFFSET);
         rightFoundationLatch = new ServoToggle(
                 hardwareMap.get(ServoImplEx.class, "rightFoundationLatch"),
-                FOUNDATION_LATCH_OPEN - BLOCK_FLIPPER_LR_OFFSET,
-                FOUNDATION_LATCH_CLOSED - BLOCK_FLIPPER_LR_OFFSET,
+                FOUNDATION_LATCH_OPEN - FOUNDATION_LATCH_LR_OFFSET,
+                FOUNDATION_LATCH_CLOSED - FOUNDATION_LATCH_LR_OFFSET,
                 Servo.Direction.REVERSE);
 
         /* Capstone */
@@ -397,17 +387,12 @@ public class SkystoneHardware {
                 .fillCircle(localizer.x(), localizer.y(), 3);
 
         /* Update any FtcDashboard parameters */
-        blockGrabber.retractPosition = BLOCK_FLIPPER_RETRACTED;
-        blockGrabber.extendPosition = BLOCK_FLIPPER_EXTENDED;
-        leftBlockFlipper.retractPosition = BLOCK_FLIPPER_RETRACTED + BLOCK_FLIPPER_LR_OFFSET;
-        leftBlockFlipper.extendPosition = BLOCK_FLIPPER_EXTENDED + BLOCK_FLIPPER_LR_OFFSET;
-        rightBlockFlipper.retractPosition = BLOCK_FLIPPER_RETRACTED - BLOCK_FLIPPER_LR_OFFSET;
-        rightBlockFlipper.extendPosition = BLOCK_FLIPPER_EXTENDED - BLOCK_FLIPPER_LR_OFFSET;
-
-        leftFoundationLatch.retractPosition = FOUNDATION_LATCH_OPEN + BLOCK_FLIPPER_LR_OFFSET;
-        leftFoundationLatch.extendPosition = FOUNDATION_LATCH_CLOSED + BLOCK_FLIPPER_LR_OFFSET;
-        rightFoundationLatch.retractPosition = FOUNDATION_LATCH_OPEN - BLOCK_FLIPPER_LR_OFFSET;
-        rightFoundationLatch.extendPosition = FOUNDATION_LATCH_CLOSED - BLOCK_FLIPPER_LR_OFFSET;
+        blockGrabber.retractPosition = BLOCK_GRABBER_OPEN;
+        blockGrabber.extendPosition = BLOCK_GRABBER_CLOSED;
+        leftFoundationLatch.retractPosition = FOUNDATION_LATCH_OPEN + FOUNDATION_LATCH_LR_OFFSET;
+        leftFoundationLatch.extendPosition = FOUNDATION_LATCH_CLOSED + FOUNDATION_LATCH_LR_OFFSET;
+        rightFoundationLatch.retractPosition = FOUNDATION_LATCH_OPEN - FOUNDATION_LATCH_LR_OFFSET;
+        rightFoundationLatch.extendPosition = FOUNDATION_LATCH_CLOSED - FOUNDATION_LATCH_LR_OFFSET;
         capstoneDropper.retractPosition = CAPSTONE_RETRACTED;
         capstoneDropper.extendPosition = CAPSTONE_DROPPED;
 
@@ -418,7 +403,9 @@ public class SkystoneHardware {
     // FTC Dashboard telemetry functions
     public void drawDashboardPath(PurePursuitPath path) {path.draw(packet.fieldOverlay());}
     public void sendDashboardTelemetryPacket() {
-        dashboard.sendTelemetryPacket(packet);
+        if (dashboard != null) {
+            dashboard.sendTelemetryPacket(packet);
+        }
     }
 
     public void setPowers(MecanumPowers powers) {

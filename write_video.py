@@ -9,11 +9,9 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "hide"
 from pygame import surfarray
 import numpy as np
 
-PATH = "C:\\Users\\guberti\\Downloads\\ffmpeg-20190930-6ca3d34-win64-static\\ffmpeg-20190930-6ca3d34-win64-static\\bin\\ffmpeg.exe"
-
 class FramePipeline:
     def __init__(self, filename, size=(720, 720), framerate=24):
-        command = [PATH,
+        command = ['ffmpeg',
             '-y', # Overwrite existing file
             '-f', 'rawvideo',
             '-vcodec', 'rawvideo',
