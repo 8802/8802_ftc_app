@@ -147,7 +147,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
 
         if (gamepad1.a && !aPrev) {
             aPrev = true;
-            robot.capstoneDropper.toggle();
+            robot.setIntakePower(-1);
         } else if (!gamepad1.a) {
             aPrev = false;
         }

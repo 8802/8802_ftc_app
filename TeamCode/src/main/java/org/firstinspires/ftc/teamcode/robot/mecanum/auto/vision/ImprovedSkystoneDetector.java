@@ -24,7 +24,7 @@ import java.util.List;
 
 @Config
 public class ImprovedSkystoneDetector extends DogeCVDetector {
-    public static double START_ROW_FRAC = 0.25;
+    public static double START_ROW_FRAC = 0.5;
     public static double END_ROW_FRAC = 0.75;
     public static double START_COL_FRAC = 0.28;
     public static double END_COL_FRAC = 0.88;
@@ -32,8 +32,8 @@ public class ImprovedSkystoneDetector extends DogeCVDetector {
     public static double BLUE_MIDDLE_LOWER_CUTOFF = 75;
     public static double BLUE_LOWER_UPPER_CUTOFF = 135;
 
-    public static double RED_UPPER_LOWER_CUTOFF = 75;
-    public static double RED_LOWER_MIDDLE_CUTOFF = 135;
+    public static double RED_LOWER_MIDDLE_CUTOFF = 40;
+    public static double RED_MIDDLE_UPPER_CUTOFF = 105;
 
     public DogeCV.AreaScoringMethod areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Setting to decide to use MaxAreaScorer or PerfectAreaScorer
 
@@ -152,12 +152,12 @@ public class ImprovedSkystoneDetector extends DogeCVDetector {
                 return SkystoneState.UPPER;
             }
         } else {
-            if (middleX < RED_UPPER_LOWER_CUTOFF) {
-                return SkystoneState.UPPER;
-            } else if (middleX < RED_LOWER_MIDDLE_CUTOFF) {
+            if (middleX < RED_LOWER_MIDDLE_CUTOFF) {
                 return SkystoneState.LOWER;
-            } else {
+            } else if (middleX < RED_MIDDLE_UPPER_CUTOFF) {
                 return SkystoneState.MIDDLE;
+            } else {
+                return SkystoneState.UPPER;
             }
         }
     }

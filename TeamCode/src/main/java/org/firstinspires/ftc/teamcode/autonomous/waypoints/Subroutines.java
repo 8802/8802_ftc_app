@@ -73,6 +73,10 @@ public class Subroutines {
         robot.pidLift.goToMin();
     };
 
+    public static final OnceOffSubroutine LOWER_FLIPPER_LOW = (robot) -> {
+        robot.blockFlipper.setPosition(0.2, 0.18);
+    };
+
     public static final RepeatedSubroutine CHECK_BLOCK_GRAB = (robot) -> {
         return robot.intakeCurrentQueue.hasBlock();
     };
