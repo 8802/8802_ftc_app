@@ -25,7 +25,6 @@ public class JoltsUntilBlockGrab implements Subroutines.ArrivalInterruptSubrouti
     @Override
     public boolean runCycle(SkystoneHardware robot) {
         if (robot.intakeCurrentQueue.hasBlock()) {
-            Subroutines.GRAB_INTAKED_BLOCK.runOnce(robot);
             return true; // Advance to next motion path
         }
         long currentTime = System.currentTimeMillis();
@@ -34,7 +33,6 @@ public class JoltsUntilBlockGrab implements Subroutines.ArrivalInterruptSubrouti
             // We subtract 1 from MAX_JOLTS because currentJolt starts at -1, and so it ends up at 2
             if (currentJolt >= MAX_JOLTS - 1) {
                 // If we've failed three times, just give up
-                Subroutines.GRAB_INTAKED_BLOCK.runOnce(robot);
                 return true;
             } else {
                 // Otherwise, start a new jolt

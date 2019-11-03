@@ -87,6 +87,19 @@ public class Subroutines {
         robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_DRIVING));
     };
 
+    public static final OnceOffSubroutine SMART_DROP_BLOCK = (robot) -> {
+        robot.blockFlipper.normExtend();
+        robot.blockGrabber.retract();
+        robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_LITTLE));
+        robot.actionCache.add(new DelayedSubroutine(750, Subroutines.SET_FLIPPER_INTAKING));
+        robot.actionCache.add(new DelayedSubroutine(750, Subroutines.LIFT_TO_ZERO));
+    };
+
+    public static final OnceOffSubroutine SMART_DROP_BLOCK_WITH_LATCHES = (robot) -> {
+        SET_FOUNDATION_LATCHES_DOWN.runOnce(robot);
+        SMART_DROP_BLOCK.runOnce(robot);
+    };
+
     public static final OnceOffSubroutine DROP_BLOCK_AND_RETRACT = (robot) -> {
         robot.blockGrabber.retract();
         robot.leftFoundationLatch.retract();
