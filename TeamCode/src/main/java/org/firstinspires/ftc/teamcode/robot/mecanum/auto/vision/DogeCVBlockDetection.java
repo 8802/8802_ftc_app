@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.common.elements.Alliance;
 import org.firstinspires.ftc.teamcode.robot.mecanum.auto.PurePursuitAuto;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -12,7 +13,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.Locale;
 
-@TeleOp(name="UberDetector Skystone")
+@TeleOp(name="Red UberDetector Skystone")
 public class DogeCVBlockDetection extends OpMode {
 
     ImprovedSkystoneDetector detector;
@@ -25,7 +26,7 @@ public class DogeCVBlockDetection extends OpMode {
         //webcam = new OpenCvWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
         webcam = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         webcam.openCameraDevice();
-        this.detector = new ImprovedSkystoneDetector();
+        this.detector = new ImprovedSkystoneDetector(Alliance.RED);
         this.detector.useDefaults();
         webcam.setPipeline(detector);
         webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);

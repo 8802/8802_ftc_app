@@ -61,14 +61,14 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
         this.robot = this.getRobot(start);
 
         // Start camera
-        /*int cameraMonitorViewId = hardwareMap.appContext.getResources()
+        int cameraMonitorViewId = hardwareMap.appContext.getResources()
                 .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         webcam.openCameraDevice();
-        this.detector = new ImprovedSkystoneDetector();
+        this.detector = new ImprovedSkystoneDetector(ALLIANCE);
         this.detector.useDefaults();
         webcam.setPipeline(detector);
-        webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);*/
+        webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
         telemetry.clearAll();
     }
 

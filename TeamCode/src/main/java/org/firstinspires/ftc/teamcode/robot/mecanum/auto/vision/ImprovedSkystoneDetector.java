@@ -10,6 +10,7 @@ import com.disnodeteam.dogecv.scoring.MaxAreaScorer;
 import com.disnodeteam.dogecv.scoring.PerfectAreaScorer;
 import com.disnodeteam.dogecv.scoring.RatioScorer;
 
+import org.firstinspires.ftc.teamcode.common.elements.Alliance;
 import org.firstinspires.ftc.teamcode.common.elements.SkystoneState;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -28,8 +29,11 @@ public class ImprovedSkystoneDetector extends DogeCVDetector {
     public static double START_COL_FRAC = 0.28;
     public static double END_COL_FRAC = 0.88;
 
-    public static double MIDDLE_LOWER_CUTOFF = 75;
-    public static double LOWER_UPPER_CUTOFF = 135;
+    public static double BLUE_MIDDLE_LOWER_CUTOFF = 75;
+    public static double BLUE_LOWER_UPPER_CUTOFF = 135;
+
+    public static double RED_UPPER_LOWER_CUTOFF = 75;
+    public static double RED_LOWER_MIDDLE_CUTOFF = 135;
 
     public DogeCV.AreaScoringMethod areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Setting to decide to use MaxAreaScorer or PerfectAreaScorer
 
@@ -46,6 +50,7 @@ public class ImprovedSkystoneDetector extends DogeCVDetector {
     private Point screenPosition = new Point(); // Center screen position of the block
     private Rect foundRect = new Rect(); // Found rect
     private SkystoneState skystoneState = SkystoneState.UPPER;
+    private Alliance alliance;
 
     private Mat rawImage = new Mat();
     private Mat workingMat = new Mat();
@@ -64,8 +69,9 @@ public class ImprovedSkystoneDetector extends DogeCVDetector {
     }
 
 
-    public ImprovedSkystoneDetector() {
+    public ImprovedSkystoneDetector(Alliance alliance) {
         detectorName = "Improved Skystone Detector";
+        this.alliance = alliance;
     }
 
     @Override
@@ -125,7 +131,7 @@ public class ImprovedSkystoneDetector extends DogeCVDetector {
             Imgproc.putText(blackMask, "Chosen", subRect.tl(),0,1,new Scalar(255,255,255));
 
             screenPosition = new Point(bestRect.x + bestRect.width / 2, bestRect.y + bestRect.height / 2);
-            skystoneState = calcSkystoneState(screenPosition.x);
+            skystoneState = calcSkystoneState(screenPosition.x, alliance);
             foundRect = bestRect;
             found = true;
         }
@@ -136,13 +142,23 @@ public class ImprovedSkystoneDetector extends DogeCVDetector {
         return outMat;
     }
 
-    private static SkystoneState calcSkystoneState(double middleX) {
-        if (middleX < MIDDLE_LOWER_CUTOFF) {
-            return SkystoneState.MIDDLE;
-        } else if (middleX < LOWER_UPPER_CUTOFF) {
-            return SkystoneState.LOWER;
+    private static SkystoneState calcSkystoneState(double middleX, Alliance alliance) {
+        if (alliance == Alliance.BLUE) {
+            if (middleX < BLUE_MIDDLE_LOWER_CUTOFF) {
+                return SkystoneState.MIDDLE;
+            } else if (middleX < BLUE_LOWER_UPPER_CUTOFF) {
+                return SkystoneState.LOWER;
+            } else {
+                return SkystoneState.UPPER;
+            }
         } else {
-            return SkystoneState.UPPER;
+            if (middleX < RED_UPPER_LOWER_CUTOFF) {
+                return SkystoneState.UPPER;
+            } else if (middleX < RED_LOWER_MIDDLE_CUTOFF) {
+                return SkystoneState.LOWER;
+            } else {
+                return SkystoneState.MIDDLE;
+            }
         }
     }
 
