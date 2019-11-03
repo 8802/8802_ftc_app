@@ -74,6 +74,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         robot.setPowers(powers);
 
         /* Control intake */
+
         if (gamepad1.left_stick_button && !leftStickButtonPrev) {
             leftStickButtonPrev = true;
             intakeOn = !intakeOn; // Toggle intake
@@ -89,7 +90,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
                 robot.blockGrabber.retract();
                 robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_LITTLE));
                 robot.actionCache.add(new DelayedSubroutine(750, Subroutines.SET_FLIPPER_INTAKING));
-                robot.actionCache.add(new DelayedSubroutine(750, Subroutines.LOWER_A_LITTLE));
+                robot.actionCache.add(new DelayedSubroutine(750, Subroutines.LIFT_TO_ZERO));
             } else {
                 robot.blockFlipper.readyBlockGrab();
                 robot.blockGrabber.extend(); // Grab the block
@@ -131,14 +132,14 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
             yPrev = true;
             robot.leftFoundationLatch.toggle();
             robot.rightFoundationLatch.toggle();
-        } else {
+        } else if (!gamepad1.y) {
             yPrev = false;
         }
 
         if (gamepad1.a && !aPrev) {
             aPrev = true;
             robot.capstoneDropper.toggle();
-        } else {
+        } else if (!gamepad1.a) {
             aPrev = false;
         }
     }

@@ -120,11 +120,12 @@ public class SkystoneHardware {
     public static double INTAKE_UNJAM_REVERSAL_TIME_MS = 200;
 
     /* Servo positions */
-    public static double BLOCK_GRABBER_CLOSED = 0.0;
-    public static double BLOCK_GRABBER_OPEN = 1.0;
+    public static double BLOCK_GRABBER_CLOSED = 0.25;
+    public static double BLOCK_GRABBER_OPEN = 0.95;
 
     public static double FOUNDATION_LATCH_OPEN = 0.0;
-    public static double FOUNDATION_LATCH_CLOSED = 1.0;
+    public static double FOUNDATION_LATCH_CLOSED = 0.74;
+    public static double FOUNDATION_LATCH_OUT = 0.5;
     public static double FOUNDATION_LATCH_LR_OFFSET = 0.0;
 
     public static double CAPSTONE_RETRACTED = 0.0;

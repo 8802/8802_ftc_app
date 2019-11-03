@@ -46,8 +46,8 @@ public class TwoWheelTrackingLocalizer {
         Array2DRowRealMatrix inverseMatrix = new Array2DRowRealMatrix(3, 3);
 
         EncoderWheel[] WHEELS = {
-                new EncoderWheel(0, PARALLEL_Y_POS, 0, 0, 0), // parallel
-                new EncoderWheel(LATERAL_X_POS, 0, Math.toRadians(90), 1, 2), // lateral
+                new EncoderWheel(0, PARALLEL_Y_POS, Math.toRadians(180), 0, 0), // parallel
+                new EncoderWheel(LATERAL_X_POS, 0, Math.toRadians(90), 1, 1), // lateral
         };
 
         for (EncoderWheel wheelPosition : WHEELS) {
@@ -87,14 +87,14 @@ public class TwoWheelTrackingLocalizer {
         double[] deltas = new double[] {
                 encoderTicksToInches(data.getMotorCurrentPosition(0) - prevWheelPositions[0],
                         PARALLEL_WHEEL_RADIUS),
-                encoderTicksToInches(data.getMotorCurrentPosition(2) - prevWheelPositions[1],
+                encoderTicksToInches(data.getMotorCurrentPosition(1) - prevWheelPositions[1],
                         LATERAL_WHEEL_RADIUS),
                 MathUtil.angleWrap(heading - prevHeading)
         };
 
         prevWheelPositions[0] = data.getMotorCurrentPosition(0);
         prevHeading = heading;
-        prevWheelPositions[1] = data.getMotorCurrentPosition(2);
+        prevWheelPositions[1] = data.getMotorCurrentPosition(1);
 
         RealMatrix m = MatrixUtils.createRealMatrix(new double[][] {deltas});
 
@@ -116,7 +116,7 @@ public class TwoWheelTrackingLocalizer {
     }
 
     public double x() { return currentPosition.x; }
-    public double y() { return -currentPosition.y; }
+    public double y() { return currentPosition.y; }
     public double h() { return currentPosition.heading; }
     public Pose pose() {
         return new Pose(currentPosition.x, currentPosition.y, currentPosition.heading);

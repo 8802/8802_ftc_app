@@ -10,10 +10,8 @@ public class SimpleLift {
 
     // We separate these out to make changing them with FTCDashboard easier
     public static int LAYER_0 = 0;
-    public static int LAYER_1 = 1000;
-    public static int LAYER_2 = 2000;
-    public static int LAYER_3 = 3000;
-    public static int LAYER_4 = 4000;
+    public static int LAYER_SHIFT = 500;
+    public static int MAX_POSITION = 3000;
 
 
     private DcMotorEx lift;
@@ -23,10 +21,10 @@ public class SimpleLift {
     // Also initializes the DcMotor
     public SimpleLift(DcMotorEx lift) {
         this.lift = lift;
+        lift.setPower(0); // Set power to zero before switching modes to stop jumping
         lift.setTargetPosition(LAYER_0);
-        lift.setPower(1);
         lift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
+        lift.setPower(1);
         this.layer = 0;
         this.targetPosition = LAYER_0;
     }
@@ -41,13 +39,17 @@ public class SimpleLift {
 
     private void setLiftPositionFromLayer() {
         // We need to create a new list each tick in case we change things in FTC Dashboard
-        int[] layers = new int[] {LAYER_0, LAYER_1, LAYER_2, LAYER_3, LAYER_4};
-        lift.setTargetPosition(layers[layer]);
-        targetPosition = layers[layer];
+        targetPosition = LAYER_0 + layer * LAYER_SHIFT;
+        lift.setTargetPosition(targetPosition);
     }
 
     public void changePosition(int delta) {
-        targetPosition = Math.max(LAYER_0, Math.min(LAYER_4, targetPosition + delta));
+        targetPosition += delta;
         lift.setTargetPosition(targetPosition);
+    }
+
+    public void goToMin() {
+        layer = 0;
+        setLiftPositionFromLayer();
     }
 }

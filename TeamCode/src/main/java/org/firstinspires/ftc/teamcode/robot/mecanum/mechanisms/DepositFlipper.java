@@ -12,13 +12,13 @@ public class DepositFlipper {
     public static double LEFT_INTAKING = 0.29;
     public static double RIGHT_INTAKING = 0.27;
 
-    public static double LEFT_DRIVING = 0.6;
+    public static double LEFT_DRIVING = 0.62;
     public static double RIGHT_DRIVING = 0.6;
 
-    public static double LEFT_NORM_EXTEND = 0.8;
+    public static double LEFT_NORM_EXTEND = 0.82;
     public static double RIGHT_NORM_EXTEND = 0.8;
 
-    public static double LEFT_MAX_EXTEND = 0.8;
+    public static double LEFT_MAX_EXTEND = 0.82;
     public static double RIGHT_MAX_EXTEND = 0.8;
 
     public ServoImplEx leftFlipper;
@@ -28,6 +28,7 @@ public class DepositFlipper {
         this.leftFlipper = leftFlipper;
         this.rightFlipper = rightFlipper;
         rightFlipper.setDirection(Servo.Direction.REVERSE);
+        readyBlockIntake();
     }
 
     public void readyBlockGrab()   {setPosition(LEFT_GRABBING, RIGHT_GRABBING);}

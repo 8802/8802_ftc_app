@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous.waypoints;
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
+import org.firstinspires.ftc.teamcode.common.elements.SkystoneState;
 import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 
 import java.util.concurrent.Delayed;
@@ -45,12 +46,31 @@ public class Subroutines {
     public static final OnceOffSubroutine SET_FLIPPER_DRIVING = (robot) -> { robot.blockFlipper.readyDriving(); };
     public static final OnceOffSubroutine SET_FLIPPER_MAX_OUT = (robot) -> { robot.blockFlipper.maxExtend(); };
 
+    public static final OnceOffSubroutine SET_FOUNDATION_LATCHES_DOWN = (robot) -> {
+        robot.leftFoundationLatch.extend();
+        robot.rightFoundationLatch.extend();
+    };
+
+    public static final OnceOffSubroutine SET_FOUNDATION_LATCHES_UP = (robot) -> {
+        robot.leftFoundationLatch.retract();
+        robot.rightFoundationLatch.retract();
+    };
+
+    public static final OnceOffSubroutine SET_FOUNDATION_LATCHES_OUT = (robot) -> {
+        robot.leftFoundationLatch.servo.setPosition(SkystoneHardware.FOUNDATION_LATCH_OUT);
+        robot.rightFoundationLatch.servo.setPosition(SkystoneHardware.FOUNDATION_LATCH_OUT);
+    };
+
     public static final OnceOffSubroutine LIFT_A_LITTLE = (robot) -> {
         robot.pidLift.changePosition(LIFT_RAISE_AMOUNT);
     };
 
     public static final OnceOffSubroutine LOWER_A_LITTLE = (robot) -> {
         robot.pidLift.changePosition(-LIFT_RAISE_AMOUNT);
+    };
+
+    public static final OnceOffSubroutine LIFT_TO_ZERO = (robot) -> {
+        robot.pidLift.goToMin();
     };
 
     public static final RepeatedSubroutine CHECK_BLOCK_GRAB = (robot) -> {
@@ -61,17 +81,17 @@ public class Subroutines {
     open. TODO verify that this is the case.
      */
 
-    public static final OnceOffSubroutine AUTO_PROCESS_INTAKED_BLOCK = (robot) -> {
-        CLOSE_CLAW.runOnce(robot);
-        SET_FLIPPER_GRABBING.runOnce(robot);
-        // Now, we'll add a delay to let this happen
-        robot.actionCache.add(new DelayedSubroutine(500, SET_FLIPPER_DRIVING));
+    public static final OnceOffSubroutine GRAB_INTAKED_BLOCK = (robot) -> {
+        robot.blockFlipper.readyBlockGrab();
+        robot.blockGrabber.extend(); // Grab the block
+        robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_DRIVING));
     };
 
-    public static final OnceOffSubroutine DEPOSIT_BLOCK = (robot) -> {
-        CLOSE_CLAW.runOnce(robot);
-        SET_FLIPPER_GRABBING.runOnce(robot);
-        // Now, we'll add a delay to let this happen
-        robot.actionCache.add(new DelayedSubroutine(100, SET_FLIPPER_DRIVING));
+    public static final OnceOffSubroutine DROP_BLOCK_AND_RETRACT = (robot) -> {
+        robot.blockGrabber.retract();
+        robot.leftFoundationLatch.retract();
+        robot.rightFoundationLatch.retract();
+        robot.actionCache.add(new DelayedSubroutine(500, SET_FLIPPER_INTAKING));
+        robot.actionCache.add(new DelayedSubroutine(1000, ENABLE_INTAKE));
     };
 }
