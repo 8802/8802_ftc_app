@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 @Config
 public class Subroutines {
-    public static int LIFT_RAISE_AMOUNT = 500;
+    public static int LIFT_RAISE_AMOUNT = 800;
 
     public interface Subroutine {}
 

@@ -28,8 +28,8 @@ public class ImprovedSkystoneDetector extends DogeCVDetector {
     public static double START_COL_FRAC = 0.28;
     public static double END_COL_FRAC = 0.88;
 
-    public static double MIDDLE_LOWER_CUTOFF = 397;
-    public static double LOWER_UPPER_CUTOFF = 549;
+    public static double MIDDLE_LOWER_CUTOFF = 75;
+    public static double LOWER_UPPER_CUTOFF = 135;
 
     public DogeCV.AreaScoringMethod areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Setting to decide to use MaxAreaScorer or PerfectAreaScorer
 

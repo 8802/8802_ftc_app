@@ -17,7 +17,7 @@ class RealTimeOpModeRunner {
 
     @Test
     void testOpMode() throws IOException {
-        SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(BlindFourBlockBlue.class);
+        SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(BlindFourBlockRed.class);
         simOpMode.opMode.start();
         TXHandler udpServer = new TXHandler(-1);
         RXThread udpClient = new RXThread(simOpMode.opMode.gamepad1, simOpMode.opMode.gamepad2);

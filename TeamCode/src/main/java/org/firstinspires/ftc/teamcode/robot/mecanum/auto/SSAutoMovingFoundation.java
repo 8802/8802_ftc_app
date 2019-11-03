@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.ActionAndWait;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.JoltsUntilBlockGrab;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.RamFoundationBackward;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
@@ -24,7 +25,7 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware.FIEL
 @Config
 public class SSAutoMovingFoundation extends PurePursuitAuto {
 
-    StopWaypoint DEPOSIT_LOCATION = new StopWaypoint(FIELD_RADIUS - 20, FIELD_RADIUS - 20, 8,
+    StopWaypoint DEPOSIT_LOCATION = new StopWaypoint(FIELD_RADIUS- 20, FIELD_RADIUS - 20, 8,
             Math.PI, 8, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK));
 
     Waypoint GRAB_FOUNDATION_LOCATION = new StopWaypoint(FIELD_RADIUS - 4 - (34.5/2), 24,
@@ -51,21 +52,22 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 4, -0.75 * Math.PI, Subroutines.CHECK_BLOCK_GRAB),
                 new StopWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
                         3, new JoltsUntilBlockGrab(joltDirection)),
-                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 12, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
+                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 36, 12, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
 
                 // Now make our move to deposit
-                new Waypoint(24, 48, 16, Subroutines.SET_FOUNDATION_LATCHES_OUT),
+                new Waypoint(24, 36, 16, Subroutines.SET_FOUNDATION_LATCHES_OUT),
                 GRAB_FOUNDATION_LOCATION,
                 new Waypoint(FIELD_RADIUS - 4 - (34.5/2), 48, 16),
-                new HeadingControlledWaypoint(0, 54, 24, Math.toRadians(200), Subroutines.SET_FOUNDATION_LATCHES_UP),
+                new HeadingControlledWaypoint(0, 30, 20, Math.toRadians(250), new RamFoundationBackward(ALLIANCE)),
+                new Waypoint(0, 36, 16),
                 //new StopWaypoint(50, 54, 8, DEPOSIT_LOCATION.targetHeading, 8, Subroutines.SET_FOUNDATION_LATCHES_UP),
 
                 new Waypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 8, Subroutines.ENABLE_INTAKE),
                 new StopWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
                         3, new JoltsUntilBlockGrab(joltDirection)),
-                new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 12, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
+                new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, 36, 12, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
                 // Now make our move to deposit
-                new Waypoint(0, 48, 16),
+                new HeadingControlledWaypoint(0, 36, 16, Math.toRadians(220)),
                 new StopWaypoint(DEPOSIT_LOCATION.x, DEPOSIT_LOCATION.y, 8,
                         Math.PI, 8, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK))
         );
@@ -78,13 +80,13 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
         double chargePathY1 = 22;
 
         scoreSkystones.addAll(Waypoint.collate(
-                new Waypoint(0, 36, 16, Subroutines.ENABLE_INTAKE),
-                new Waypoint(-24, 36, 16, Subroutines.CHECK_BLOCK_GRAB),
-                new Waypoint(-24, chargePathY1, 16, Subroutines.CHECK_BLOCK_GRAB),
+                /*new Waypoint(0, 36, 16, Subroutines.ENABLE_INTAKE),
+                new Waypoint(-36, 36, 16, Subroutines.CHECK_BLOCK_GRAB),
+                new Waypoint(-36, chargePathY1, 16, Subroutines.CHECK_BLOCK_GRAB),
                 new StopWaypoint(-FIELD_RADIUS + 9, chargePathY1, 4, -Math.PI, 3),
-                new Waypoint(0, 48, 16, Subroutines.GRAB_INTAKED_BLOCK),
+                new Waypoint(0, 36, 16, Subroutines.GRAB_INTAKED_BLOCK),
                 new StopWaypoint(DEPOSIT_LOCATION.x, DEPOSIT_LOCATION.y, 8,
-                        Math.PI, 8, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK)),
+                        Math.PI, 8, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK)),*/
                 /* Park */
                 new HeadingControlledWaypoint(DEPOSIT_LOCATION.x, 36, 16, Math.PI),
                 new StopWaypoint(4, 36, 8, Math.PI, 0)

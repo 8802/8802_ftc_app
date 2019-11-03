@@ -18,10 +18,10 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
 
     SkystoneHardware robot;
 
-    boolean leftStickButtonPrev, rightStickButtonPrev, leftBumperPrev, rightBumperPrev, aPrev, yPrev;
+    boolean leftStickButtonPrev, rightStickButtonPrev, rightTriggerPrev, leftBumperPrev, rightBumperPrev, aPrev, yPrev;
 
 
-    boolean rightStickButtonDeposits; // Toggles from grabbing to depositing
+    boolean rightTriggerDropsBlock; // Toggles from grabbing to depositing
     boolean intakeOn;
 
     // Adjustable properties
@@ -44,6 +44,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         yPrev = gamepad1.y;
 
         intakeOn = false;
+        rightTriggerDropsBlock = false;
     }
 
     @Override
@@ -86,19 +87,10 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         /* Block grabber */
         if (gamepad1.right_stick_button && !rightStickButtonPrev) {
             rightStickButtonPrev = true;
-            if (rightStickButtonDeposits) {
-                robot.blockGrabber.retract();
-                robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_LITTLE));
-                robot.actionCache.add(new DelayedSubroutine(750, Subroutines.SET_FLIPPER_INTAKING));
-                robot.actionCache.add(new DelayedSubroutine(750, Subroutines.LIFT_TO_ZERO));
-            } else {
-                robot.blockFlipper.readyBlockGrab();
-                robot.blockGrabber.extend(); // Grab the block
-                robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_DRIVING));
-
-            }
-            // Change what the button does
-            rightStickButtonDeposits = !rightStickButtonDeposits;
+            robot.blockFlipper.readyBlockGrab();
+            robot.blockGrabber.extend(); // Grab the block
+            robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_DRIVING));
+            rightTriggerDropsBlock = false;
         } else if (!gamepad1.right_stick_button) {
             rightStickButtonPrev = false;
         }
@@ -108,8 +100,25 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         boolean rightTrigger = gamepad1.right_trigger > TRIGGER_THRESHOLD;
         if (leftTrigger && !rightTrigger) {
             robot.blockFlipper.readyBlockIntake();
-        } else if (rightTrigger && !leftTrigger) {
+            rightTriggerDropsBlock = false;
+        }
+
+        if (rightTrigger && !rightTriggerPrev) {
+            rightTriggerPrev = true;
+            if (rightTriggerDropsBlock) {
+                robot.blockGrabber.retract();
+                robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_LITTLE));
+                robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.SET_FLIPPER_INTAKING));
+                robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.LIFT_TO_ZERO));
+            } else {
+                robot.blockFlipper.normExtend();
+            }
+            rightTriggerDropsBlock = !rightTriggerDropsBlock;
+            rightTriggerPrev = true;
+
             robot.blockFlipper.normExtend();
+        } else if (!rightTrigger) {
+            rightTriggerPrev = false;
         }
 
         /* Lit control */

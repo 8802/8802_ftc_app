@@ -22,13 +22,13 @@ public class DogeCVBlockDetection extends OpMode {
     public void init() {
         int cameraMonitorViewId = hardwareMap.appContext.getResources()
                 .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = new OpenCvWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
-        //webcam = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        //webcam = new OpenCvWebcam(hardwareMap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
+        webcam = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         webcam.openCameraDevice();
         this.detector = new ImprovedSkystoneDetector();
         this.detector.useDefaults();
         webcam.setPipeline(detector);
-        webcam.startStreaming(PurePursuitAuto.CAMERA_WIDTH, PurePursuitAuto.CAMERA_HEIGHT, OpenCvCameraRotation.UPRIGHT);
+        webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
     }
 
     @Override
@@ -41,6 +41,7 @@ public class DogeCVBlockDetection extends OpMode {
         telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
         telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
         telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
+        telemetry.addData("Classification", detector.getSkystoneState().toString());
         telemetry.update();
 
         if (gamepad1.a) {
