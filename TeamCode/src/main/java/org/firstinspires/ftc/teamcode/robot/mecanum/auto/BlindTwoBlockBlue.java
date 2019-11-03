@@ -3,11 +3,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.common.elements.Alliance;
 
-@Autonomous(name="Four block red", group="4Block")
-public class BlindFourBlockRed extends SSAutoMovingFoundation {
+@Autonomous(name="Two block blue", group="2Block")
+public class BlindTwoBlockBlue extends SSAutoMovingFoundation {
     @Override
     public void init() {
-        this.ALLIANCE = Alliance.RED;
+        this.ALLIANCE = Alliance.BLUE;
         super.init();
     }
 }
