@@ -21,7 +21,18 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
     boolean leftStickButtonPrev, rightStickButtonPrev, rightTriggerPrev, leftBumperPrev, rightBumperPrev, aPrev, yPrev;
 
 
-    boolean rightTriggerDropsBlock; // Toggles from grabbing to depositing
+    enum RightTriggerActions {
+        GRAB(0), VERIFY(1), DROP(2);
+        int index;
+        RightTriggerActions(int index) {
+            this.index = 0;
+        }
+        public RightTriggerActions next() {
+            return this.values()[(index++ % 2)];
+        }
+    }
+
+    RightTriggerActions nextRightTriggerAction;
     boolean intakeOn;
 
     // Adjustable properties
@@ -44,7 +55,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         yPrev = gamepad1.y;
 
         intakeOn = false;
-        rightTriggerDropsBlock = false;
+        nextRightTriggerAction = RightTriggerActions.GRAB;
     }
 
     @Override
@@ -87,10 +98,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         /* Block grabber */
         if (gamepad1.right_stick_button && !rightStickButtonPrev) {
             rightStickButtonPrev = true;
-            robot.blockFlipper.readyBlockGrab();
-            robot.blockGrabber.extend(); // Grab the block
-            robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_DRIVING));
-            rightTriggerDropsBlock = false;
+            /* Do nothing */
         } else if (!gamepad1.right_stick_button) {
             rightStickButtonPrev = false;
         }
@@ -100,23 +108,37 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         boolean rightTrigger = gamepad1.right_trigger > TRIGGER_THRESHOLD;
         if (leftTrigger && !rightTrigger) {
             robot.blockFlipper.readyBlockIntake();
-            rightTriggerDropsBlock = false;
+            nextRightTriggerAction = RightTriggerActions.GRAB;
         }
 
         if (rightTrigger && !rightTriggerPrev) {
             rightTriggerPrev = true;
-            if (rightTriggerDropsBlock) {
-                robot.blockGrabber.retract();
-                robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_LITTLE));
-                robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.SET_FLIPPER_INTAKING));
-                robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.LIFT_TO_ZERO));
-            } else {
-                robot.blockFlipper.normExtend();
-            }
-            rightTriggerDropsBlock = !rightTriggerDropsBlock;
-            rightTriggerPrev = true;
+            switch(nextRightTriggerAction) {
+                case GRAB:
+                    if (robot.blockGrabber.extended()) {
+                        // If we've already grabbed the block, just flip out
+                        robot.blockFlipper.readyDriving();
+                    } else {
+                        robot.blockFlipper.readyBlockGrab();
+                        robot.blockGrabber.extend(); // Grab the block
+                        robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_DRIVING));
+                    }
+                    break;
 
-            robot.blockFlipper.normExtend();
+                case VERIFY:
+                    robot.blockFlipper.normExtend();
+                    break;
+
+                case DROP:
+                    robot.blockGrabber.retract();
+                    robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_LITTLE));
+                    robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.SET_FLIPPER_INTAKING));
+                    robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.LIFT_TO_ZERO));
+                    break;
+            }
+
+            nextRightTriggerAction = nextRightTriggerAction.next();
+            rightTriggerPrev = true;
         } else if (!rightTrigger) {
             rightTriggerPrev = false;
         }
@@ -147,7 +169,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
 
         if (gamepad1.a && !aPrev) {
             aPrev = true;
-            robot.setIntakePower(-1);
+            robot.capstoneDropper.toggle();
         } else if (!gamepad1.a) {
             aPrev = false;
         }

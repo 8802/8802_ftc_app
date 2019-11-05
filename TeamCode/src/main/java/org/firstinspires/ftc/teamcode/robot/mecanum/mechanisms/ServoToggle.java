@@ -40,6 +40,10 @@ public class ServoToggle {
         }
     }
 
+    public boolean extended() {
+        return extended;
+    }
+
     private double target() {
         return extended ? extendPosition : retractPosition;
     }
