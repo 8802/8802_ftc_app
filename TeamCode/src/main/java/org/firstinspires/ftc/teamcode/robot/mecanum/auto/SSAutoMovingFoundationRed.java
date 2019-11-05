@@ -29,7 +29,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
             Math.PI, 8, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK));
 
     Waypoint GRAB_FOUNDATION_LOCATION = new StopWaypoint(FIELD_RADIUS - (34.5/2), 28,
-            8, Math.PI * 0.5, 5, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK_WITH_LATCHES));
+            8, Math.PI * 0.5, 5, new ActionAndWait(1000, Subroutines.SET_FOUNDATION_LATCHES_DOWN));
 
     public static double PLUNGE_TARGET_Y = 22;
     public static double BACK_PLUNGE_TARGET_X = -FIELD_RADIUS + 13;
@@ -58,7 +58,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                 new Waypoint(18, 40, 12, Subroutines.SET_FOUNDATION_LATCHES_OUT),
                 new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 40, 8, Math.PI * 0.5, Subroutines.SET_FOUNDATION_LATCHES_OUT),
                 GRAB_FOUNDATION_LOCATION,
-                new Waypoint(FIELD_RADIUS - 4 - (34.5/2), 48, 16),
+                new Waypoint(FIELD_RADIUS - 4 - (34.5/2), 48, 16, Subroutines.SMART_DROP_BLOCK_WITH_LATCHES),
                 new HeadingControlledWaypoint(0, 30, 20, Math.toRadians(250), new RamFoundationBackwardRed(Alliance.RED))
         );
 
@@ -78,8 +78,8 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                 new StopWaypoint(DEPOSIT_LOCATION.x, DEPOSIT_LOCATION.y, 8,
                         Math.PI, 8, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK)),*/
                 /* Park */
-                new HeadingControlledWaypoint(DEPOSIT_LOCATION.x, 36, 16, Math.PI),
-                new StopWaypoint(4, 36, 8, Math.PI, 0)
+                new HeadingControlledWaypoint(24, 40, 6, Math.PI),
+                new StopWaypoint(4, 40, 6, Math.PI, 0)
                 ));
 
         return scoreSkystones;

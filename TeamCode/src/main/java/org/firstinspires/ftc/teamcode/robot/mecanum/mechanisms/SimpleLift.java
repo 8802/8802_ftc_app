@@ -6,12 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Config
 public class SimpleLift {
-    public final int MAX_LAYER = 4;
+    public final int MAX_LAYER = 8;
 
     // We separate these out to make changing them with FTCDashboard easier
     public static int LAYER_0 = 0;
     public static int LAYER_SHIFT = 500;
-    public static int MAX_POSITION = 3000;
 
 
     private DcMotorEx lift;
