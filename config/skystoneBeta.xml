@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot type="FirstInspires-FTC">
+    <LynxUsbDevice name="portal" serialNumber="DQ3MJL2J" parentModuleAddress="1">
+        <LynxModule name="chassisHub" port="1">
+            <NeveRest20Gearmotor name="rightFront" port="0" />
+            <NeveRest20Gearmotor name="rightBack" port="1" />
+            <NeveRest20Gearmotor name="leftBack" port="2" />
+            <NeveRest20Gearmotor name="leftFront" port="3" />
+            <LynxEmbeddedIMU name="imu" port="0" bus="0" />
+        </LynxModule>
+        <LynxModule name="mechanicHub" port="2">
+            <NeveRest3.7v1Gearmotor name="intakeRight" port="0" />
+            <NeveRest3.7v1Gearmotor name="intakeLeft" port="1" />
+            <NeveRest3.7v1Gearmotor name="lift" port="2" />
+            <LynxEmbeddedIMU name="imu 1" port="0" bus="0" />
+        </LynxModule>
+    </LynxUsbDevice>
+</Robot>
