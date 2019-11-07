@@ -77,9 +77,7 @@ public class Subroutines {
         robot.blockFlipper.setPosition(0.2, 0.18);
     };
 
-    public static final RepeatedSubroutine CHECK_BLOCK_GRAB = (robot) -> {
-        return robot.intakeCurrentQueue.hasBlock();
-    };
+    public static final RepeatedSubroutine CHECK_BLOCK_GRAB = (robot) -> robot.intakeCurrentQueue.hasBlock();
 
     /* When this is called, we assume the flipper is in intaking position and the block grabber is
     open. TODO verify that this is the case.

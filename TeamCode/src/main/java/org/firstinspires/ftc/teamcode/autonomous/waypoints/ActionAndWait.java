@@ -23,6 +23,7 @@ public class ActionAndWait implements Subroutines.ArrivalInterruptSubroutine {
     @Override
     public boolean runCycle(SkystoneHardware robot) {
         if (this.timer == null) {
+            robot.setPowers(MecanumUtil.STOP);
             action.runOnce(robot);
             this.timer = new ElapsedTime();
         }
