@@ -27,8 +27,6 @@ import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocali
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.DelayedSubroutine;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.common.LoadTimer;
-import org.firstinspires.ftc.teamcode.common.elements.Alliance;
-import org.firstinspires.ftc.teamcode.robot.mecanum.auto.vision.ImprovedSkystoneDetector;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.DepositFlipper;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrentQueue;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
@@ -36,9 +34,6 @@ import org.firstinspires.ftc.teamcode.common.math.TimePose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrent;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.ServoToggle;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.SimpleLift;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
 
@@ -88,8 +83,7 @@ public class SkystoneHardware {
     private ExpansionHubEx chassisHub;
     private ExpansionHubEx mechanicHub;
     public BNO055IMU imu;
-    public OpenCvCamera camera;
-    public ImprovedSkystoneDetector detector;
+    public WebcamName camera;
 
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
@@ -285,15 +279,8 @@ public class SkystoneHardware {
         headingOffset = imu.getAngularOrientation().firstAngle;
     }
 
-    public void initOpenCVCamera(HardwareMap hardwareMap, Alliance alliance) {
-        int cameraMonitorViewId = hardwareMap.appContext.getResources()
-                .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camera = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        camera.openCameraDevice();
-        this.detector = new ImprovedSkystoneDetector(alliance);
-        this.detector.useDefaults();
-        camera.setPipeline(detector);
-        camera.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+    public void initCamera(HardwareMap hardwareMap) {
+        camera = hardwareMap.get(WebcamName.class, "webcam");
     }
 
     public void initBulkReadTelemetry() {

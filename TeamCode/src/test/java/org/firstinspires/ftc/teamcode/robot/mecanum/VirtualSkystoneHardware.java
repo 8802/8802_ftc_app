@@ -2,25 +2,24 @@ package org.firstinspires.ftc.teamcode.robot.mecanum;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.BNO055IMUImpl;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.simulator.VirtualRobot;
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
-import org.firstinspires.ftc.teamcode.common.elements.Alliance;
-import org.firstinspires.ftc.teamcode.common.elements.SkystoneState;
+import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.common.math.TimePose;
-import org.firstinspires.ftc.teamcode.robot.mecanum.auto.vision.ImprovedSkystoneDetector;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrent;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
-import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.revextensions2.RevBulkData;
 
 public class VirtualSkystoneHardware extends SkystoneHardware implements VirtualRobot {
@@ -113,12 +112,9 @@ public class VirtualSkystoneHardware extends SkystoneHardware implements Virtual
     public void sendDashboardTelemetryPacket() {}
 
     @Override
-    public void initOpenCVCamera(HardwareMap hardwareMap, Alliance a) {
-        this.camera = Mockito.mock(OpenCvCamera.class);
-        this.detector = Mockito.mock(ImprovedSkystoneDetector.class);
-        Mockito.doReturn(SkystoneState.MIDDLE).when(detector).getSkystoneState();
+    public void initCamera(HardwareMap hardwareMap) {
+        this.camera = Mockito.mock(WebcamName.class);
     }
-
     // Some method calls we just throw away
     @Override
     public void setIntakePower(double power) {

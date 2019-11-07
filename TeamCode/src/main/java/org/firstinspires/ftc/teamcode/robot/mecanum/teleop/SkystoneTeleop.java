@@ -22,17 +22,13 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
 
 
     enum RightTriggerActions {
-        GRAB, VERIFY, DROP;
+        GRAB(0), VERIFY(1), DROP(2);
+        int index;
+        RightTriggerActions(int index) {
+            this.index = 0;
+        }
         public RightTriggerActions next() {
-            switch(this) {
-                case GRAB:
-                    return VERIFY;
-                case VERIFY:
-                    return DROP;
-                case DROP:
-                    return GRAB;
-            }
-            return null;
+            return this.values()[(index++ % 2)];
         }
     }
 
@@ -95,7 +91,6 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
             leftStickButtonPrev = true;
             intakeOn = !intakeOn; // Toggle intake
             robot.setIntakePower(intakeOn ? 1 : 0);
-            robot.blockGrabber.retract();
         } else if (!gamepad1.left_stick_button) {
             leftStickButtonPrev = false;
         }
