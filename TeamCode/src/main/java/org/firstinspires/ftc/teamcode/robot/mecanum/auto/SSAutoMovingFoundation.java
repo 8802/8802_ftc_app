@@ -24,6 +24,7 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware.FIEL
 
 @Config
 public class SSAutoMovingFoundation extends PurePursuitAuto {
+    Pose START_POSITION = new Pose(-FIELD_RADIUS + 22.75 + 9, FIELD_RADIUS - 9, 1 * Math.PI / 2);
 
     StopWaypoint DEPOSIT_LOCATION = new StopWaypoint(FIELD_RADIUS- 20, FIELD_RADIUS - 20, 8,
             Math.PI, 8, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK));
@@ -37,7 +38,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
 
     @Override
     public Pose getBlueStartPosition() {
-        return DEFAULT_START_POSITION;
+        return START_POSITION;
     }
 
     @Override
@@ -45,7 +46,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
         MecanumPowers joltDirection = (ALLIANCE == Alliance.BLUE) ? MecanumUtil.FORWARD_RIGHT : MecanumUtil.FORWARD_LEFT;
 
         LinkedList<Waypoint> scoreSkystones = Waypoint.collate(
-                new Waypoint(DEFAULT_START_POSITION, 4),
+                new Waypoint(START_POSITION, 4),
 
                 // We want to move in strictly on the y-axis WRT the field to grab block,
                 // which means robot must be at 45 degrees
