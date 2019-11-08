@@ -4,6 +4,7 @@ import android.media.AudioManager;
 import android.media.ToneGenerator;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 import org.openftc.revextensions2.RevBulkData;
 
 @TeleOp
+@Disabled
 public class CalibrateBlockDetection extends SimulatableMecanumOpMode {
     SkystoneHardware robot;
     FtcDashboard dashboard;

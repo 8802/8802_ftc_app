@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum.auto.vision;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -14,6 +15,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.Locale;
 
 @TeleOp(name="Red UberDetector Skystone")
+@Disabled
 public class DogeCVBlockDetection extends OpMode {
 
     ImprovedSkystoneDetector detector;
