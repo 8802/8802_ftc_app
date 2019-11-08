@@ -61,7 +61,19 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                 GRAB_FOUNDATION_LOCATION,
                 new Waypoint(FIELD_RADIUS - 4 - (34.5/2), 52, 16, Subroutines.SMART_DROP_BLOCK_WITH_LATCHES),
                 new HeadingControlledWaypoint(20, 36, 6, Math.toRadians(220)),
-                new PointTurnWaypoint(20, 36, 6, Math.toRadians(220), Math.toRadians(10), new RamFoundationBackwardRed(Alliance.RED))
+                new PointTurnWaypoint(20, 36, 6, Math.toRadians(230), Math.toRadians(10), new RamFoundationBackwardRed(Alliance.RED)),
+
+                new Waypoint(36, 40, 6),
+                new HeadingControlledWaypoint(0, 40, 6, Math.PI),
+
+                new Waypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 6, Subroutines.ENABLE_INTAKE),
+                new StopWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
+                        3, new JoltsUntilBlockGrab(joltDirection)),
+                new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, 36, 12, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
+                // Now make our move to deposit
+                new HeadingControlledWaypoint(0, 36, 16, Math.PI),
+                new StopWaypoint(DEPOSIT_LOCATION.x, DEPOSIT_LOCATION.y, 8,
+                        Math.PI, 8, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK))
         );
 
         /* Now, we will "charge" along two straight lines until we encounter a block. Where those
