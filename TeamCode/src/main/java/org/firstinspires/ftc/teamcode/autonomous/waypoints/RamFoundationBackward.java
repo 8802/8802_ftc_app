@@ -22,15 +22,13 @@ public class RamFoundationBackward implements Subroutines.ArrivalInterruptSubrou
     @Override
     public boolean runCycle(SkystoneHardware robot) {
         if (this.timer == null) {
-            if (alliance == Alliance.BLUE) {
-                robot.setPowers(new MecanumPowers(-1, -0.55, -1, -0.55));
-            } else {
-                robot.setPowers(new MecanumPowers(-0.55, -1, -0.55, -1));
-            }
+            robot.setPowers(new MecanumPowers(-1, -0.55, -1, -0.55));
             this.timer = new ElapsedTime();
         }
 
-        if (timer.milliseconds() > 3000) {
+        // If the robot is stopped or we've been here for two seconds
+        if (robot.localizer.velocity().radius() < 1 ||
+                timer.milliseconds() > 2000) {
             robot.leftFoundationLatch.retract();
             robot.rightFoundationLatch.retract();
             return true;

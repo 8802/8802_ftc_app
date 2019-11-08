@@ -52,10 +52,10 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 4, -0.75 * Math.PI, Subroutines.CHECK_BLOCK_GRAB),
                 new StopWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
                         3, new JoltsUntilBlockGrab(joltDirection)),
-                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 36, 12, -Math.PI),
+                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 36, 12, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
 
                 // Now make our move to deposit
-                new HeadingControlledWaypoint(-8, 36, 12, Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
+                new HeadingControlledWaypoint(-8, 36, 12, Math.PI),
                 new HeadingControlledWaypoint(24, 36, 12, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_OUT),
                 GRAB_FOUNDATION_LOCATION,
                 new Waypoint(FIELD_RADIUS - 4 - (34.5/2), 48, 16),
