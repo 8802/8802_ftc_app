@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.teamcode.autonomous.controllers.MecanumPurePursuitController;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.PointTurnWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
@@ -89,6 +90,11 @@ public class PurePursuitPath {
                 if (robotPosition.distance(target) < ((StopWaypoint) target).allowedPositionError) {
                     jumpToNextSegment = true;
                 }
+            } else if (target instanceof PointTurnWaypoint) {
+                PointTurnWaypoint ptTarget = (PointTurnWaypoint) target;
+                if (Math.abs(robotPosition.heading - ptTarget.targetHeading) < ptTarget.allowedHeadingError) {
+                    jumpToNextSegment = true;
+                }
             } else {
                 if (robotPosition.distance(target) < target.followDistance) {
                     jumpToNextSegment = true;
@@ -126,6 +132,9 @@ public class PurePursuitPath {
             robot.setPowers(MecanumPurePursuitController.goToPosition(
                     robotPosition, target, TRACK_SPEED, false));
             System.out.println("Locking onto point " + target.toString());
+        } else if (target instanceof PointTurnWaypoint) {
+            robot.setPowers(MecanumPurePursuitController.goToPosition(
+                    robotPosition, target, 1.0, true));
         } else {
             trackToLine(
                     robotPosition,

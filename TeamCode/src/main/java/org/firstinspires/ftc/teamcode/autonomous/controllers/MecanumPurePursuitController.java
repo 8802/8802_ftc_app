@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous.controllers;
 
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
-import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Point;

@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.ActionAndWait;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.JoltsUntilBlockGrab;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.PointTurnWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.RamFoundationBackward;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.RamFoundationBackwardRed;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
@@ -58,8 +59,9 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                 new Waypoint(18, 40, 12, Subroutines.SET_FOUNDATION_LATCHES_OUT),
                 new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 40, 8, Math.PI * 0.5, Subroutines.SET_FOUNDATION_LATCHES_OUT),
                 GRAB_FOUNDATION_LOCATION,
-                new Waypoint(FIELD_RADIUS - 4 - (34.5/2), 48, 16, Subroutines.SMART_DROP_BLOCK_WITH_LATCHES),
-                new HeadingControlledWaypoint(0, 30, 20, Math.toRadians(250), new RamFoundationBackwardRed(Alliance.RED))
+                new Waypoint(FIELD_RADIUS - 4 - (34.5/2), 52, 16, Subroutines.SMART_DROP_BLOCK_WITH_LATCHES),
+                new HeadingControlledWaypoint(20, 36, 6, Math.toRadians(220)),
+                new PointTurnWaypoint(20, 36, 6, Math.toRadians(220), Math.toRadians(10), new RamFoundationBackwardRed(Alliance.RED))
         );
 
         /* Now, we will "charge" along two straight lines until we encounter a block. Where those
