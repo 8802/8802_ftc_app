@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.autonomous.controllers.MecanumPurePursuitController;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
@@ -22,13 +23,15 @@ import java.util.List;
 @Config
 public class PurePursuitPath {
     public static double TRACK_SPEED = 0.5;
+    public static double DEAD_MAN_SWITCH = 2000;
     private SkystoneHardware robot;
-    List<Waypoint> waypoints;
+    public List<Waypoint> waypoints;
 
     // currPoint in 0..n-2 means we're on the path from waypoints[currPoint] to
     // waypoints[currPoint + 1]. currPoint = n-1 means we're done.
-    int currPoint;
+    public int currPoint;
     boolean interrupting;
+    public ElapsedTime timeUntilDeadman;
 
     public PurePursuitPath(SkystoneHardware robot) {
         this(robot, new LinkedList<>());
@@ -48,6 +51,7 @@ public class PurePursuitPath {
         this.currPoint = 0;
         this.robot = robot;
         this.interrupting = false;
+        this.timeUntilDeadman = new ElapsedTime();
 
         if (!(waypoints.get(waypoints.size() - 1) instanceof StopWaypoint)) {
             throw new IllegalArgumentException("Final Pure Pursuit waypoint must be a StopWaypoint!");
@@ -86,6 +90,13 @@ public class PurePursuitPath {
         do {
             jumpToNextSegment = false;
             Waypoint target = waypoints.get(currPoint + 1);
+
+            // Stop waypoint deadman switch
+            if (target instanceof StopWaypoint && timeUntilDeadman.milliseconds() > DEAD_MAN_SWITCH) {
+                jumpToNextSegment = true;
+            } else if (!(target instanceof StopWaypoint) || robot.localizer.velocity().radius() > 1) {
+                timeUntilDeadman.reset();
+            }
             if (target instanceof StopWaypoint) {
                 if (robotPosition.distance(target) < ((StopWaypoint) target).allowedPositionError) {
                     jumpToNextSegment = true;
@@ -105,7 +116,7 @@ public class PurePursuitPath {
             Subroutines.Subroutine action = waypoints.get(currPoint).action;
             if (action instanceof Subroutines.RepeatedSubroutine) {
                 if (((Subroutines.RepeatedSubroutine) action).runLoop(robot)) {
-                    currPoint++;
+                    jumpToNextSegment = true;
                 }
             }
 
@@ -114,6 +125,8 @@ public class PurePursuitPath {
                 action = waypoints.get(currPoint).action;
                 if (action instanceof Subroutines.OnceOffSubroutine) {
                     ((Subroutines.OnceOffSubroutine) action).runOnce(robot);
+                } else if (action instanceof Subroutines.MetaSubroutine) {
+                    ((Subroutines.MetaSubroutine) action).runOnce(this, robot);
                 }
                 if (action instanceof Subroutines.ArrivalInterruptSubroutine) {
                     interrupting = true;

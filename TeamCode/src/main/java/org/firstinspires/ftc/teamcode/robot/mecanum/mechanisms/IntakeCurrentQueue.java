@@ -62,25 +62,4 @@ public class IntakeCurrentQueue {
         }
         return false; // For when queue is empty
     }
-
-    public boolean hasBlock() {
-        long minTime = queue.peekFirst().timestamp - (long) BLOCK_INTAKE_SPIKE_OFFSET;
-        boolean leftSpiked = false;
-        boolean rightSpiked = false;
-
-        for (TimeStampedValue tick : queue) {
-            if (tick.timestamp < minTime) {
-                break;
-            }
-
-            if (tick.value.leftMAmps > BLOCK_INTAKE_DETECT_MAMPS) {
-                leftSpiked = true;
-            }
-            if (tick.value.rightMAmps > BLOCK_INTAKE_DETECT_MAMPS) {
-                rightSpiked = true;
-            }
-        }
-
-        return leftSpiked && rightSpiked;
-    }
 }

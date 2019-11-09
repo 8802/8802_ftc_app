@@ -52,6 +52,11 @@ public class SkystoneHardware {
     private FtcDashboard dashboard;
     public TelemetryPacket packet;
 
+    public enum OpModeState {
+        GOOD, ERRORS
+    }
+    public OpModeState opModeState;
+
     private Telemetry.Item[] telOdometry;
     private Telemetry.Item[] telEncoders;
     private Telemetry.Item[] telPowers;
@@ -118,17 +123,19 @@ public class SkystoneHardware {
 
     /* Tunable parameters */
     public static double INTAKE_UNJAM_REVERSAL_TIME_MS = 200;
+    public static double HAS_BLOCK_TRAY_THRESHOLD = 1800;
+    public static double HAS_BLOCK_CLAWS_THRESHOLD = 800;
 
     /* Servo positions */
     public static double BLOCK_GRABBER_CLOSED = 0.7;
     public static double BLOCK_GRABBER_OPEN = 0.25;
 
-    public static double FOUNDATION_LATCH_OPEN = 0.0;
-    public static double FOUNDATION_LATCH_CLOSED = 0.74;
-    public static double FOUNDATION_LATCH_OUT = 0.5;
+    public static double FOUNDATION_LATCH_OPEN = 1;
+    public static double FOUNDATION_LATCH_CLOSED = 0;
+    public static double FOUNDATION_LATCH_OUT = 0.2;
     public static double FOUNDATION_LATCH_LR_OFFSET = 0.0;
 
-    public static double CAPSTONE_RETRACTED = 0.0;
+    public static double CAPSTONE_RETRACTED = 0.1;
     public static double CAPSTONE_DROPPED = 1.0;
 
     /**
@@ -212,6 +219,7 @@ public class SkystoneHardware {
 
         /* Action cache */
         actionCache = new LinkedList<>();
+        opModeState = OpModeState.GOOD;
 
         /* Telemetry */
         this.telemetry = telemetry;
@@ -407,6 +415,14 @@ public class SkystoneHardware {
         if (dashboard != null) {
             dashboard.sendTelemetryPacket(packet);
         }
+    }
+
+    public boolean hasBlockInTray() {
+        return lastChassisRead.getAnalogInputValue(0) > HAS_BLOCK_TRAY_THRESHOLD;
+    }
+
+    public boolean hasBlockInClaws() {
+        return lastChassisRead.getAnalogInputValue(2) > HAS_BLOCK_CLAWS_THRESHOLD;
     }
 
     public void setPowers(MecanumPowers powers) {

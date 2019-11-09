@@ -100,6 +100,10 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
             robot.blockGrabber.retract();
         } else if (!gamepad1.left_stick_button) {
             leftStickButtonPrev = false;
+            if (robot.hasBlockInTray() && intakeOn) {
+                intakeOn = false;
+                robot.setIntakePower(0);
+            }
         }
 
         /* Block grabber */

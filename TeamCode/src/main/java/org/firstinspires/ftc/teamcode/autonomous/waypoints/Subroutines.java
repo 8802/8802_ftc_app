@@ -3,11 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous.waypoints;
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
-import org.firstinspires.ftc.teamcode.common.elements.SkystoneState;
 import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
-
-import java.util.concurrent.Delayed;
-import java.util.concurrent.TimeUnit;
 
 @Config
 public class Subroutines {
@@ -20,7 +16,7 @@ public class Subroutines {
     }
 
     public interface MetaSubroutine extends Subroutine {
-        void runOnce(PurePursuitPath path);
+        void runOnce(PurePursuitPath path, SkystoneHardware robot);
     }
 
     public interface RepeatedSubroutine extends Subroutine {
@@ -44,6 +40,7 @@ public class Subroutines {
     public static final OnceOffSubroutine SET_FLIPPER_GRABBING = (robot) -> { robot.blockFlipper.readyBlockGrab(); };
     public static final OnceOffSubroutine SET_FLIPPER_INTAKING = (robot) -> { robot.blockFlipper.readyBlockIntake(); };
     public static final OnceOffSubroutine SET_FLIPPER_DRIVING = (robot) -> { robot.blockFlipper.readyDriving(); };
+    public static final OnceOffSubroutine SET_FLIPPER_NORM_EXTEND = (robot) -> { robot.blockFlipper.normExtend(); };
     public static final OnceOffSubroutine SET_FLIPPER_MAX_OUT = (robot) -> { robot.blockFlipper.maxExtend(); };
 
     public static final OnceOffSubroutine SET_FOUNDATION_LATCHES_DOWN = (robot) -> {
@@ -77,7 +74,7 @@ public class Subroutines {
         robot.blockFlipper.setPosition(0.2, 0.18);
     };
 
-    public static final RepeatedSubroutine CHECK_BLOCK_GRAB = (robot) -> robot.intakeCurrentQueue.hasBlock();
+    public static final RepeatedSubroutine CHECK_BLOCK_GRAB = (robot) -> robot.hasBlockInClaws();
 
     /* When this is called, we assume the flipper is in intaking position and the block grabber is
     open. TODO verify that this is the case.
@@ -102,11 +99,31 @@ public class Subroutines {
         SMART_DROP_BLOCK.runOnce(robot);
     };
 
-    public static final OnceOffSubroutine DROP_BLOCK_AND_RETRACT = (robot) -> {
-        robot.blockGrabber.retract();
-        robot.leftFoundationLatch.retract();
-        robot.rightFoundationLatch.retract();
-        robot.actionCache.add(new DelayedSubroutine(500, SET_FLIPPER_INTAKING));
-        robot.actionCache.add(new DelayedSubroutine(1000, ENABLE_INTAKE));
+    public static final OnceOffSubroutine GRAB_INTAKED_BLOCK_WITH_LATCHES = (robot) -> {
+        SET_FOUNDATION_LATCHES_DOWN.runOnce(robot);
+        GRAB_INTAKED_BLOCK.runOnce(robot);
+    };
+
+    public static final OnceOffSubroutine ASSERT_NO_BLOCK_IN_TRAY = (robot) -> {
+        if (robot.hasBlockInTray()) {
+            robot.opModeState = SkystoneHardware.OpModeState.ERRORS;
+        }
+    };
+
+    public static final MetaSubroutine SKIP_TO_END_IF_BAD_STATE = (path, robot) -> {
+        if (robot.hasBlockInTray() || robot.opModeState == SkystoneHardware.OpModeState.ERRORS) {
+            path.currPoint = path.waypoints.size() - 2;
+        }
+    };
+
+    public static final OnceOffSubroutine SMART_STOP_INTAKE = (robot) -> {
+        robot.setIntakePower(0);
+    };
+
+    public static final OnceOffSubroutine OPTIONALLY_REJECT_BLOCK = (robot) -> {
+        if (robot.hasBlockInClaws()) {
+            robot.setIntakePower(-1);
+            robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.STOP_INTAKE));
+        }
     };
 }

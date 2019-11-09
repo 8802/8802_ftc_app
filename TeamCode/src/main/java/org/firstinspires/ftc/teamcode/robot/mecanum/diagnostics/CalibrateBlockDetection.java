@@ -36,8 +36,8 @@ public class CalibrateBlockDetection extends SimulatableMecanumOpMode {
     @Override
     public void loop() {
         RevBulkData data = robot.performBulkRead();
-        boolean hasBlock = robot.intakeCurrentQueue.hasBlock();
-        robot.packet.put("hasBlock", hasBlock);
+        boolean hasBlock = robot.hasBlockInTray();
+        robot.packet.put("hasBlockInTray", hasBlock);
         if (hasBlock && !hadBlock) {
             toneGen.startTone(ToneGenerator.TONE_PROP_BEEP2, 150);
             hadBlock = true;
