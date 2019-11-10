@@ -72,7 +72,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                         3, new JoltsUntilBlockGrab(joltDirection)),
                 new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, 36, 8, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
                 // Now make our move to deposit
-                new HeadingControlledWaypoint(0, 36, 16, Math.PI),
+                new HeadingControlledWaypoint(0, 36, 16, Math.PI, Subroutines.OPTIONALLY_REJECT_BLOCK),
                 new StopWaypoint(DEPOSIT_LOCATION.x, DEPOSIT_LOCATION.y, 8,
                         Math.PI, 8, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK))
         );

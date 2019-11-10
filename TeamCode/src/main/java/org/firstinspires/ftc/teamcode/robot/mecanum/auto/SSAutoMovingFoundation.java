@@ -3,9 +3,12 @@ package org.firstinspires.ftc.teamcode.robot.mecanum.auto;
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.ActionAndWait;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.DepositUntilSuccessful;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.FoundationGrabBackupPath;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.JoltsUntilBlockGrab;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.RamFoundationBackward;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.RamFoundationBackwardRed;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
@@ -25,11 +28,11 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware.FIEL
 @Config
 public class SSAutoMovingFoundation extends PurePursuitAuto {
 
-    StopWaypoint DEPOSIT_LOCATION = new StopWaypoint(FIELD_RADIUS - 30, FIELD_RADIUS - 24, 8,
+    StopWaypoint DEPOSIT_LOCATION = new StopWaypoint(FIELD_RADIUS - 30, FIELD_RADIUS - 30, 8,
             Math.PI, 8, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK));
 
-    Waypoint GRAB_FOUNDATION_LOCATION = new StopWaypoint(FIELD_RADIUS - 4 - (34.5/2), 24,
-            8, Math.PI * 0.5, 5, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK_WITH_LATCHES));
+    Waypoint GRAB_FOUNDATION_LOCATION = new StopWaypoint(FIELD_RADIUS - 4 - (34.5/2), 30,
+            8, Math.PI * 0.5, 3, new FoundationGrabBackupPath());
 
     public static double PLUNGE_TARGET_Y = 22;
     public static double BACK_PLUNGE_TARGET_X = -FIELD_RADIUS + 13;
@@ -52,14 +55,15 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 4, -0.75 * Math.PI, Subroutines.CHECK_BLOCK_GRAB),
                 new StopWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
                         3, new JoltsUntilBlockGrab(joltDirection)),
-                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 36, 12, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
+                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 36, 12, -Math.PI),
 
                 // Now make our move to deposit
-                new HeadingControlledWaypoint(-8, 36, 12, Math.PI),
-                new HeadingControlledWaypoint(24, 36, 12, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_OUT),
+                new HeadingControlledWaypoint(-8, 36, 12, Math.PI, Subroutines.OPTIONALLY_REJECT_BLOCK),
+                new HeadingControlledWaypoint(18, 38, 12, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_OUT),
+                new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 38, 8, Math.PI * 0.5),
                 GRAB_FOUNDATION_LOCATION,
                 new Waypoint(FIELD_RADIUS - 4 - (34.5/2), 48, 16),
-                new HeadingControlledWaypoint(0, 30, 20, Math.toRadians(250), new RamFoundationBackward(ALLIANCE)),
+                new HeadingControlledWaypoint(0, 30, 20, Math.toRadians(250), new RamFoundationBackwardRed(ALLIANCE)),
                 new Waypoint(36, 36, 6),
                 new HeadingControlledWaypoint(0, 36, 6, Math.PI),
                 //new StopWaypoint(50, 54, 8, DEPOSIT_LOCATION.targetHeading, 8, Subroutines.SET_FOUNDATION_LATCHES_UP),
@@ -69,9 +73,9 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                         3, new JoltsUntilBlockGrab(joltDirection)),
                 new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, 36, 12, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
                 // Now make our move to deposit
-                new HeadingControlledWaypoint(0, 36, 16, Math.PI),
+                new HeadingControlledWaypoint(0, 36, 16, Math.PI, Subroutines.OPTIONALLY_REJECT_BLOCK),
                 new StopWaypoint(DEPOSIT_LOCATION.x, DEPOSIT_LOCATION.y, 8,
-                        Math.PI, 8, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK))
+                        Math.PI, 8, new DepositUntilSuccessful(ALLIANCE))
         );
 
         /* Now, we will "charge" along two straight lines until we encounter a block. Where those
@@ -79,22 +83,10 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
         the two skystones closest to the field wall haven't been touched.
          */
 
-        double chargePathY1 = 20;
-
         scoreSkystones.addAll(Waypoint.collate(
-                new Waypoint(36, 36, 6, Subroutines.ENABLE_INTAKE),
-                new HeadingControlledWaypoint(0, 36, 6, Math.PI),
-                new Waypoint(-24, 36, 16, Subroutines.CHECK_BLOCK_GRAB),
-                new HeadingControlledWaypoint(-24, chargePathY1, 8, Math.toRadians(210), Subroutines.CHECK_BLOCK_GRAB),
-                new StopWaypoint(-FIELD_RADIUS + 9, chargePathY1, 6, Math.toRadians(210), 3),
-                new HeadingControlledWaypoint(-8, 36, 12, Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
-                new HeadingControlledWaypoint(24, 36, 12, Math.PI),
-                new StopWaypoint(DEPOSIT_LOCATION.x - 10, DEPOSIT_LOCATION.y, 8,
-                        Math.PI, 8, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK)),
-                /* Park */
-                new HeadingControlledWaypoint(DEPOSIT_LOCATION.x, 36, 16, Math.PI),
-                new StopWaypoint(4, 36, 8, Math.PI, 0)
-                ));
+                new Waypoint(36, 36, 6),
+                new StopWaypoint(0, 36, 6, Math.PI, 0)
+        ));
 
         return scoreSkystones;
     }

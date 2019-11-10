@@ -31,6 +31,11 @@ public class RamFoundationBackwardRed implements Subroutines.ArrivalInterruptSub
         if (state == State.NOT_RUNNING) {
             robot.setPowers(new MecanumPowers(-1, -0.6, -1, -0.6));
             timer = new ElapsedTime();
+
+            if (alliance == Alliance.BLUE) {
+                Subroutines.SMART_DROP_BLOCK_WITH_LATCHES.runOnce(robot);
+            }
+
             state = State.SHOVING;
         }
 
@@ -53,7 +58,7 @@ public class RamFoundationBackwardRed implements Subroutines.ArrivalInterruptSub
         }
 
         if (state == State.REDOING_PLACEMENT) {
-            if (timer.milliseconds() > 2500) {
+            if (timer.milliseconds() > 3500) {
                 if (robot.hasBlockInTray()) {
                     timer.reset();
                     replaceBlock(robot);

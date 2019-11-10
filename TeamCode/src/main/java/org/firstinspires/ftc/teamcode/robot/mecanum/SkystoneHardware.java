@@ -132,7 +132,7 @@ public class SkystoneHardware {
 
     public static double FOUNDATION_LATCH_OPEN = 1;
     public static double FOUNDATION_LATCH_CLOSED = 0;
-    public static double FOUNDATION_LATCH_OUT = 0.2;
+    public static double FOUNDATION_LATCH_OUT = 0.25;
     public static double FOUNDATION_LATCH_LR_OFFSET = 0.0;
 
     public static double CAPSTONE_RETRACTED = 0.1;

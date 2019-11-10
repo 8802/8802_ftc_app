@@ -33,6 +33,11 @@ public class Subroutines {
     public static final OnceOffSubroutine ENABLE_INTAKE = (robot) -> { robot.setIntakePower(1); };
     public static final OnceOffSubroutine STOP_INTAKE = (robot) -> { robot.setIntakePower(0); };
     public static final OnceOffSubroutine REVERSE_INTAKE = (robot) -> { robot.setIntakePower(-1); };
+    public static final OnceOffSubroutine JOLT_INTAKE = (robot) -> {
+        robot.setIntakePower(1);
+        robot.actionCache.add(new DelayedSubroutine(300, STOP_INTAKE));
+    };
+
 
     public static final OnceOffSubroutine OPEN_CLAW = (robot) -> { robot.blockGrabber.retract(); };
     public static final OnceOffSubroutine CLOSE_CLAW = (robot) -> { robot.blockGrabber.extend(); };
@@ -83,7 +88,7 @@ public class Subroutines {
     public static final OnceOffSubroutine GRAB_INTAKED_BLOCK = (robot) -> {
         robot.blockFlipper.readyBlockGrab();
         robot.blockGrabber.extend(); // Grab the block
-        robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_DRIVING));
+        robot.actionCache.add(new DelayedSubroutine(850, Subroutines.SET_FLIPPER_DRIVING));
     };
 
     public static final OnceOffSubroutine SMART_DROP_BLOCK = (robot) -> {
@@ -124,6 +129,9 @@ public class Subroutines {
         if (robot.hasBlockInClaws()) {
             robot.setIntakePower(-1);
             robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.STOP_INTAKE));
+        } else {
+            robot.setIntakePower(1);
+            robot.actionCache.add(new DelayedSubroutine(300, Subroutines.STOP_INTAKE));
         }
     };
 }
