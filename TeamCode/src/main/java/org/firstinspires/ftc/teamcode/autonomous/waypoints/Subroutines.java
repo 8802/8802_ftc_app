@@ -46,7 +46,6 @@ public class Subroutines {
     public static final OnceOffSubroutine SET_FLIPPER_INTAKING = (robot) -> { robot.blockFlipper.readyBlockIntake(); };
     public static final OnceOffSubroutine SET_FLIPPER_DRIVING = (robot) -> { robot.blockFlipper.readyDriving(); };
     public static final OnceOffSubroutine SET_FLIPPER_NORM_EXTEND = (robot) -> { robot.blockFlipper.normExtend(); };
-    public static final OnceOffSubroutine SET_FLIPPER_MAX_OUT = (robot) -> { robot.blockFlipper.maxExtend(); };
 
     public static final OnceOffSubroutine SET_FOUNDATION_LATCHES_DOWN = (robot) -> {
         robot.leftFoundationLatch.extend();
