@@ -126,12 +126,14 @@ public class Subroutines {
     };
 
     public static final OnceOffSubroutine OPTIONALLY_REJECT_BLOCK = (robot) -> {
-        if (robot.hasBlockInClaws()) {
+        //robot.setIntakePower(1);
+        //robot.actionCache.add(new DelayedSubroutine(300, Subroutines.STOP_INTAKE));
+        /*if (robot.hasBlockInClaws()) {
             robot.setIntakePower(-1);
             robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.STOP_INTAKE));
         } else {
             robot.setIntakePower(1);
             robot.actionCache.add(new DelayedSubroutine(300, Subroutines.STOP_INTAKE));
-        }
+        }*/
     };
 }
