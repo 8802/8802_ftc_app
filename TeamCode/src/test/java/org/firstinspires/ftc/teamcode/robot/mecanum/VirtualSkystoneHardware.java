@@ -2,18 +2,24 @@ package org.firstinspires.ftc.teamcode.robot.mecanum;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.BNO055IMUImpl;
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.lynx.LynxModuleIntf;
+import com.qualcomm.hardware.lynx.commands.core.LynxGetBulkInputDataResponse;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.simulator.VirtualRobot;
+import org.firstinspires.ftc.simulator.utils.MockDcMotorEx;
+import org.firstinspires.ftc.simulator.utils.MockRevBulkDataGenerator;
+import org.firstinspires.ftc.simulator.utils.MockServoImplEx;
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
-import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.common.math.TimePose;
@@ -37,6 +43,8 @@ public class VirtualSkystoneHardware extends SkystoneHardware implements Virtual
 
     Pose position;
     Pose velocity;
+    MockRevBulkDataGenerator dataGen;
+
     double time;
     boolean slip;
     MecanumPowers wheelPowers;
@@ -55,25 +63,36 @@ public class VirtualSkystoneHardware extends SkystoneHardware implements Virtual
         this.slip = slip;
         this.position = position;
         this.velocity = new Pose(0, 0, 0);
+        this.dataGen = new MockRevBulkDataGenerator();
+        this.lastChassisRead = dataGen.mock();
     }
 
     private static HardwareMap mockHardwareMap() {
         HardwareMap mockHardwareMap = Mockito.mock(HardwareMap.class);
         Mockito.doAnswer((Answer<HardwareDevice>) invocation -> {
             Object[] args = invocation.getArguments();
+            Class<HardwareDevice> deviceClass = (Class<HardwareDevice>) args[0];
+            String deviceTag = (String) args[1];
 
-            HardwareDevice device = Mockito.mock((Class<HardwareDevice>) args[0]);
-            Mockito.doReturn(args[1]).when(device).getDeviceName();
+            /*if (deviceClass.equals(DcMotorEx.class)) {
+                return new MockDcMotorEx(deviceTag);
+            } else if (deviceClass.equals(ServoImplEx.class)) {
+                return new MockServoImplEx(deviceTag);
+            } else {*/
+                // Other devices don't have custom classes
+                HardwareDevice device = Mockito.mock(deviceClass);
+                Mockito.doReturn(args[1]).when(device).getDeviceName();
 
-            // A few devices need special functions mocked
-            if (device instanceof BNO055IMUImpl) {
-                Orientation imuOrientation = new Orientation();
-                imuOrientation.firstAngle = 0;
-                imuOrientation.secondAngle = 0;
-                imuOrientation.thirdAngle = 0;
-                Mockito.doReturn(imuOrientation).when((BNO055IMUImpl) device).getAngularOrientation();
-            }
-            return device;
+                // But occasionally we just build our custom class features into the mocks
+                if (device instanceof BNO055IMUImpl) {
+                    Orientation imuOrientation = new Orientation();
+                    imuOrientation.firstAngle = 0;
+                    imuOrientation.secondAngle = 0;
+                    imuOrientation.thirdAngle = 0;
+                    Mockito.doReturn(imuOrientation).when((BNO055IMUImpl) device).getAngularOrientation();
+                }
+                return device;
+            //}
 
         }).when(mockHardwareMap).get(Mockito.any(), Mockito.anyString());
         return mockHardwareMap;
@@ -96,7 +115,7 @@ public class VirtualSkystoneHardware extends SkystoneHardware implements Virtual
         this.localizer.virtualUpdate(new TimePose(this.position, (long) time * 1000));
         this.packet = new TelemetryPacket();
         System.out.println("Position: " + this.localizer.pose().toString());
-        return Mockito.mock(RevBulkData.class);
+        return lastChassisRead;
     }
 
     @Override
@@ -129,9 +148,9 @@ public class VirtualSkystoneHardware extends SkystoneHardware implements Virtual
     public void elapse(double secs) {
         if (
                 Math.abs(wheelPowers.frontLeft) > 1 ||
-                Math.abs(wheelPowers.frontRight) > 1 ||
-                Math.abs(wheelPowers.backLeft) > 1 ||
-                Math.abs(wheelPowers.backRight) > 1
+                        Math.abs(wheelPowers.frontRight) > 1 ||
+                        Math.abs(wheelPowers.backLeft) > 1 ||
+                        Math.abs(wheelPowers.backRight) > 1
         ) {
             throw new AssertionError();
         }
@@ -147,19 +166,19 @@ public class VirtualSkystoneHardware extends SkystoneHardware implements Virtual
         // Calculations are simple because our wheels are oriented at 45 degrees
         Pose acceleration = new Pose(
                 (errPowers.frontLeft +
-                    errPowers.frontRight +
-                    errPowers.backLeft +
-                    errPowers.backRight) / 4,
+                        errPowers.frontRight +
+                        errPowers.backLeft +
+                        errPowers.backRight) / 4,
 
                 (errPowers.frontRight +
-                    errPowers.backLeft +
-                    -errPowers.frontLeft +
-                    -errPowers.backRight) / 4,
+                        errPowers.backLeft +
+                        -errPowers.frontLeft +
+                        -errPowers.backRight) / 4,
 
-            (errPowers.frontRight +
-                     errPowers.backRight +
-                     -errPowers.frontLeft +
-                     -errPowers.backLeft) / 4
+                (errPowers.frontRight +
+                        errPowers.backRight +
+                        -errPowers.frontLeft +
+                        -errPowers.backLeft) / 4
         ).multiply(MAX_ACCERATIONS);
 
         if (slip) {
