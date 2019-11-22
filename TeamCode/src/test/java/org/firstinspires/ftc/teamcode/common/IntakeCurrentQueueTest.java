@@ -33,23 +33,4 @@ class IntakeCurrentQueueTest {
         // Assert no errors when we do things without the timestamp argument
         q.add(new IntakeCurrent(0, 0));
     }
-
-    @Test
-    void testBlockGrabDetection() {
-        IntakeCurrent baseCurrents = new IntakeCurrent(1500, 2200);
-
-        IntakeCurrentQueue q = new IntakeCurrentQueue();
-        q.add(baseCurrents, 0);
-        q.add(baseCurrents, 100);
-        assertFalse(q.hasBlock());
-
-        q.add(new IntakeCurrent(5000, 5000), 200);
-        assertTrue(q.hasBlock());
-        q.add(baseCurrents, 300);
-        q.add(baseCurrents, 400);
-
-        // Assert we don't detect a block when only one spikes
-        q.add(new IntakeCurrent(15000, 2200), 500);
-        assertFalse(q.hasBlock());
-    }
 }

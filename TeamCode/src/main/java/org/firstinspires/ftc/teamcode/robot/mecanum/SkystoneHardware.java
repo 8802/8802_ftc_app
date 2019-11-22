@@ -9,7 +9,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.BNO055IMUImpl;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -176,26 +175,26 @@ public class SkystoneHardware {
         pidLift = new SimpleLift(lift); // Also initializes lift
 
         blockGrabber = new ServoToggle(
-                hardwareMap.get(ServoImplEx.class, "blockGrabber"),
+                hardwareMap.get(Servo.class, "blockGrabber"),
                 BLOCK_GRABBER_OPEN, BLOCK_GRABBER_CLOSED);
         blockFlipper = new DepositFlipper(
-                hardwareMap.get(ServoImplEx.class, "leftBlockFlipper"),
-                hardwareMap.get(ServoImplEx.class, "rightBlockFlipper"));
+                hardwareMap.get(Servo.class, "leftBlockFlipper"),
+                hardwareMap.get(Servo.class, "rightBlockFlipper"));
 
         /* Latches */
         leftFoundationLatch = new ServoToggle(
-                hardwareMap.get(ServoImplEx.class, "leftFoundationLatch"),
+                hardwareMap.get(Servo.class, "leftFoundationLatch"),
                 FOUNDATION_LATCH_OPEN + FOUNDATION_LATCH_LR_OFFSET,
                 FOUNDATION_LATCH_CLOSED + FOUNDATION_LATCH_LR_OFFSET);
         rightFoundationLatch = new ServoToggle(
-                hardwareMap.get(ServoImplEx.class, "rightFoundationLatch"),
+                hardwareMap.get(Servo.class, "rightFoundationLatch"),
                 FOUNDATION_LATCH_OPEN - FOUNDATION_LATCH_LR_OFFSET,
                 FOUNDATION_LATCH_CLOSED - FOUNDATION_LATCH_LR_OFFSET,
                 Servo.Direction.REVERSE);
 
         /* Capstone */
         capstoneDropper = new ServoToggle(
-                hardwareMap.get(ServoImplEx.class, "capstoneDropper"),
+                hardwareMap.get(Servo.class, "capstoneDropper"),
                 CAPSTONE_RETRACTED, CAPSTONE_DROPPED);
 
         /* Hubs for bulk reads */

@@ -18,10 +18,10 @@ public class DepositFlipper {
     public static double LEFT_NORM_EXTEND = 0.82;
     public static double RIGHT_NORM_EXTEND = 0.79;
     
-    public ServoImplEx leftFlipper;
-    public ServoImplEx rightFlipper;
+    public Servo leftFlipper;
+    public Servo rightFlipper;
 
-    public DepositFlipper(ServoImplEx leftFlipper, ServoImplEx rightFlipper) {
+    public DepositFlipper(Servo leftFlipper, Servo rightFlipper) {
         this.leftFlipper = leftFlipper;
         this.rightFlipper = rightFlipper;
         rightFlipper.setDirection(Servo.Direction.REVERSE);

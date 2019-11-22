@@ -7,10 +7,10 @@ public class ServoToggle {
 
     public Double retractPosition;
     public Double extendPosition;
-    public ServoImplEx servo;
+    public Servo servo;
     private boolean extended;
 
-    public ServoToggle(ServoImplEx servo, Double retractPosition, Double extendPosition, Servo.Direction direction) {
+    public ServoToggle(Servo servo, Double retractPosition, Double extendPosition, Servo.Direction direction) {
         this.servo = servo;
         servo.setDirection(direction);
         this.retractPosition = retractPosition;
@@ -19,7 +19,7 @@ public class ServoToggle {
         servo.setPosition(retractPosition);
     }
 
-    public ServoToggle(ServoImplEx servo, Double retractPosition, Double extendPosition) {
+    public ServoToggle(Servo servo, Double retractPosition, Double extendPosition) {
         this(servo, retractPosition, extendPosition, Servo.Direction.FORWARD);
     }
 

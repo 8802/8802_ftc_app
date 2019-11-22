@@ -9,6 +9,7 @@ import com.qualcomm.hardware.lynx.commands.core.LynxGetBulkInputDataResponse;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.Range;
 
@@ -18,7 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.simulator.VirtualRobot;
 import org.firstinspires.ftc.simulator.utils.MockDcMotorEx;
 import org.firstinspires.ftc.simulator.utils.MockRevBulkDataGenerator;
-import org.firstinspires.ftc.simulator.utils.MockServoImplEx;
+import org.firstinspires.ftc.simulator.utils.MockServo;
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
@@ -74,11 +75,11 @@ public class VirtualSkystoneHardware extends SkystoneHardware implements Virtual
             Class<HardwareDevice> deviceClass = (Class<HardwareDevice>) args[0];
             String deviceTag = (String) args[1];
 
-            /*if (deviceClass.equals(DcMotorEx.class)) {
+            if (deviceClass.equals(DcMotorEx.class)) {
                 return new MockDcMotorEx(deviceTag);
-            } else if (deviceClass.equals(ServoImplEx.class)) {
-                return new MockServoImplEx(deviceTag);
-            } else {*/
+            } else if (deviceClass.equals(Servo.class)) {
+                return new MockServo(deviceTag);
+            } else {
                 // Other devices don't have custom classes
                 HardwareDevice device = Mockito.mock(deviceClass);
                 Mockito.doReturn(args[1]).when(device).getDeviceName();
@@ -92,7 +93,7 @@ public class VirtualSkystoneHardware extends SkystoneHardware implements Virtual
                     Mockito.doReturn(imuOrientation).when((BNO055IMUImpl) device).getAngularOrientation();
                 }
                 return device;
-            //}
+            }
 
         }).when(mockHardwareMap).get(Mockito.any(), Mockito.anyString());
         return mockHardwareMap;
