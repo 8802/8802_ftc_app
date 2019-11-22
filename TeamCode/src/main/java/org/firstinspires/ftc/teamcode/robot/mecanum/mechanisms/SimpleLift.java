@@ -48,6 +48,10 @@ public class SimpleLift {
     }
 
     public void goToMin() {
+        lift.setTargetPosition(0);
+    }
+
+    public void resetStacking() {
         layer = 0;
         setLiftPositionFromLayer();
     }

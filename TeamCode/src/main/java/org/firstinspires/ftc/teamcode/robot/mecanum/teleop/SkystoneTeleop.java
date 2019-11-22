@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum.teleop;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.DelayedSubroutine;
@@ -19,6 +20,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
     SkystoneHardware robot;
 
     boolean leftStickButtonPrev, rightStickButtonPrev, rightTriggerPrev, leftBumperPrev, rightBumperPrev, aPrev, yPrev, xPrev, bPrev;
+    ElapsedTime timeLeftBumperPrev;
 
     enum RightTriggerActions {
         GRAB, VERIFY, DROP;
@@ -59,6 +61,8 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         yPrev = gamepad1.y;
         xPrev = gamepad1.x;
         bPrev = gamepad1.b;
+
+        timeLeftBumperPrev = new ElapsedTime();
 
         intakeOn = false;
         nextRightTriggerAction = RightTriggerActions.GRAB;
@@ -155,11 +159,17 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         }
 
         /* Lit control */
-        if (gamepad1.left_bumper && !leftBumperPrev) {
-            leftBumperPrev = true;
-            robot.pidLift.changeLayer(-1);
-        } else if (!gamepad1.left_bumper) {
+        /* Down bumper only goes down on RELEASE */
+        if (!gamepad1.left_bumper && leftBumperPrev) {
             leftBumperPrev = false;
+            if (timeLeftBumperPrev.milliseconds() > 1000) {
+                robot.pidLift.resetStacking();
+            } else {
+                robot.pidLift.changeLayer(-1);
+            }
+        } else if (gamepad1.left_bumper) {
+            timeLeftBumperPrev.reset();
+            leftBumperPrev = true;
         }
 
         if (gamepad1.right_bumper && !rightBumperPrev) {
