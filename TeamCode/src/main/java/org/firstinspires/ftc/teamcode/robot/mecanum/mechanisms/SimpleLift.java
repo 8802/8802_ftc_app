@@ -1,12 +1,18 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+
+import static com.qualcomm.hardware.rev.RevBlinkinLedDriver.BlinkinPattern.*;
 
 @Config
 public class SimpleLift {
     public final int MAX_LAYER = 8;
+    public final RevBlinkinLedDriver.BlinkinPattern[] LAYER_PATTERNS = {
+            BLACK, RED, GOLD, GREEN, BLUE, VIOLET, WHITE, STROBE_RED, STROBE_WHITE
+    };
 
     // We separate these out to make changing them with FTCDashboard easier
     public static int LAYER_0 = 0;
@@ -14,12 +20,14 @@ public class SimpleLift {
 
 
     private DcMotorEx lift;
+    private RevBlinkinLedDriver leds;
     public int layer;
     public int targetPosition;
 
     // Also initializes the DcMotor
-    public SimpleLift(DcMotorEx lift) {
+    public SimpleLift(DcMotorEx lift, RevBlinkinLedDriver leds) {
         this.lift = lift;
+        this.leds = leds;
         lift.setPower(0); // Set power to zero before switching modes to stop jumping
         lift.setTargetPosition(LAYER_0);
         lift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
@@ -40,6 +48,7 @@ public class SimpleLift {
         // We need to create a new list each tick in case we change things in FTC Dashboard
         targetPosition = LAYER_0 + layer * LAYER_SHIFT;
         lift.setTargetPosition(targetPosition);
+        leds.setPattern(LAYER_PATTERNS[layer]);
     }
 
     public void changePosition(int delta) {

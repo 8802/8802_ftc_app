@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.BNO055IMUImpl;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -109,6 +110,8 @@ public class SkystoneHardware {
     public ServoToggle leftFoundationLatch;
     public ServoToggle rightFoundationLatch;
 
+    public RevBlinkinLedDriver leds;
+
     /* Uneditable constants */
     public final static double TRACK_WIDTH = 16.5; // in
     public final static double WHEEL_DIAMETER = 4; // in
@@ -170,9 +173,13 @@ public class SkystoneHardware {
         lastIntakeCurrent = new IntakeCurrent(0, 0);
         intakeCurrentQueue = new IntakeCurrentQueue();
 
+        /* Leds */
+        leds = hardwareMap.get(RevBlinkinLedDriver.class, "LEDs");
+        leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+
         /* Lift and block grabbers */
         lift = hardwareMap.get(DcMotorEx.class, "lift");
-        pidLift = new SimpleLift(lift); // Also initializes lift
+        pidLift = new SimpleLift(lift, leds); // Also initializes lift
 
         blockGrabber = new ServoToggle(
                 hardwareMap.get(Servo.class, "blockGrabber"),
