@@ -72,7 +72,7 @@ public class TwoWheelTrackingLocalizer {
 
         currentPosition = new Pose(start.x, start.y, start.heading);
         relativeRobotMovement = new Pose(0, 0, 0);
-        prevPositions.add(start);
+        prevPositions.add(new TimePose(relativeRobotMovement, start.time));
     }
 
     public static double encoderTicksToInches(int ticks, double wheel_radius) {
@@ -107,7 +107,7 @@ public class TwoWheelTrackingLocalizer {
 
         relativeRobotMovement = relativeRobotMovement.add(robotPoseDelta);
         currentPosition = MathUtil.relativeOdometryUpdate(currentPosition, robotPoseDelta);
-        prevPositions.add(new TimePose(currentPosition));
+        prevPositions.add(new TimePose(relativeRobotMovement));
     }
 
     public void virtualUpdate(TimePose t) {
@@ -122,7 +122,7 @@ public class TwoWheelTrackingLocalizer {
         return new Pose(currentPosition.x, currentPosition.y, currentPosition.heading);
     }
 
-    public Pose velocity() {
+    public Pose relVelocity() {
         if (prevPositions.size() < 2) {
             return new Pose(0, 0, 0);
         }

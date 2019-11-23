@@ -111,7 +111,7 @@ class TwoWheelTrackingLocalizerTest {
 
             if (i >= TwoWheelTrackingLocalizer.VELOCITY_READ_TICKS) {
                 Pose trueV = new Pose(i * 4 - 2 * TwoWheelTrackingLocalizer.VELOCITY_READ_TICKS, 0, 2);
-                assertEquals(trueV, timedLocalizer.velocity());
+                assertEquals(trueV, timedLocalizer.relVelocity());
             }
         }
     }

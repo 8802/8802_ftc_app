@@ -72,6 +72,7 @@ public class PurePursuitPath {
 
     public void update() {
         Pose robotPosition = robot.pose();
+        Pose robotVelocity = robot.localizer.relVelocity();
         // Note - our currPoint will only be the last point in the list once we're done moving
         // the robot
 
@@ -94,7 +95,7 @@ public class PurePursuitPath {
             // Stop waypoint deadman switch
             if (target instanceof StopWaypoint && timeUntilDeadman.milliseconds() > DEAD_MAN_SWITCH) {
                 jumpToNextSegment = true;
-            } else if (!(target instanceof StopWaypoint) || robot.localizer.velocity().radius() > 1) {
+            } else if (!(target instanceof StopWaypoint) || robot.localizer.relVelocity().radius() > 1) {
                 timeUntilDeadman.reset();
             }
             if (target instanceof StopWaypoint) {
@@ -143,14 +144,14 @@ public class PurePursuitPath {
         // If we're making a stop and in the stop portion of the move
         if (target instanceof StopWaypoint && robotPosition.distance(target) < target.followDistance) {
             robot.setPowers(MecanumPurePursuitController.goToPosition(
-                    robotPosition, target, TRACK_SPEED, false));
+                    robotPosition, robotVelocity, target, TRACK_SPEED, false));
             System.out.println("Locking onto point " + target.toString());
         } else if (target instanceof PointTurnWaypoint) {
             robot.setPowers(MecanumPurePursuitController.goToPosition(
-                    robotPosition, target, 1.0, true));
+                    robotPosition, robotVelocity, target, 1.0, true));
         } else {
             trackToLine(
-                    robotPosition,
+                    robotPosition, robotVelocity,
                     waypoints.get(currPoint),
                     waypoints.get(currPoint + 1));
         }
@@ -165,7 +166,7 @@ public class PurePursuitPath {
      *            turn itself in the direction of travel, while passing a heading controlled
      *            waypoint will cause the robot's heading to lock to the desired direction.
      */
-    private void trackToLine(Pose robotPosition, Waypoint start, Waypoint mid) {
+    private void trackToLine(Pose robotPosition, Pose robotVelocity, Waypoint start, Waypoint mid) {
         Line currSegment = new Line(start, mid);
         Point center = currSegment.nearestLinePoint(robotPosition);
 
@@ -178,7 +179,7 @@ public class PurePursuitPath {
         Waypoint target = mid.clone();
         target.x = intersection.x;
         target.y = intersection.y;
-        robot.setPowers(MecanumPurePursuitController.goToPosition(robotPosition,
+        robot.setPowers(MecanumPurePursuitController.goToPosition(robotPosition, robotVelocity,
                 target, TRACK_SPEED, true));
     }
 

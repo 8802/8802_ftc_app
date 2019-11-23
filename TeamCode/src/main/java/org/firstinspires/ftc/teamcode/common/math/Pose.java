@@ -18,6 +18,9 @@ public class Pose extends Point implements Cloneable {
     public Pose multiply(Pose p2) {
         return new Pose(x * p2.x, y * p2.y, heading * p2.heading);
     }
+    public Pose divideBy(Pose p2) {
+        return new Pose(x / p2.x, y / p2.y, heading / p2.heading);
+    }
     public Pose minus(Pose p2) {
         return new Pose(x - p2.x, y - p2.y, heading - p2.heading);
     }

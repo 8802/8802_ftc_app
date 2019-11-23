@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.common.elements.Alliance;
-import org.firstinspires.ftc.teamcode.common.elements.SkystoneState;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
 import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
@@ -40,7 +39,7 @@ public class RamFoundationBackwardRed implements Subroutines.ArrivalInterruptSub
         }
 
         if (state == State.SHOVING) {
-            if (robot.localizer.velocity().radius() < 1 ||
+            if (robot.localizer.relVelocity().radius() < 1 ||
                     timer.milliseconds() > 2000) {
                 robot.leftFoundationLatch.retract();
                 robot.rightFoundationLatch.retract();
