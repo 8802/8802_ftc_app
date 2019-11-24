@@ -9,8 +9,8 @@ public class DepositFlipper {
     public static double LEFT_GRABBING = 0.24;
     public static double RIGHT_GRABBING = 0.18;
 
-    public static double LEFT_INTAKING = 0.31;
-    public static double RIGHT_INTAKING = 0.25;
+    public static double LEFT_INTAKING = 0.36;
+    public static double RIGHT_INTAKING = 0.3;
 
     public static double LEFT_DRIVING = 0.62;
     public static double RIGHT_DRIVING = 0.58;

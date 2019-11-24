@@ -1,20 +1,20 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum.teleop;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.DelayedSubroutine;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
-import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
+import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.SimpleLift;
 import org.openftc.revextensions2.RevBulkData;
 
 
 @Config
-public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
+public class SkystoneTeleopCalifornia extends SimulatableMecanumOpMode {
     public static double TRIGGER_THRESHOLD = 0.2;
 
     SkystoneHardware robot;
@@ -41,11 +41,13 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
     boolean intakeOn;
 
     // Adjustable properties
-    public abstract boolean fieldCentric();
+
+    public boolean fieldCentric() {return false;}
 
     @Override
     public void init() {
         this.robot = this.getRobot();
+        robot.pidLift = new SimpleLift(robot.lift, robot.leds);
     }
 
     @Override
@@ -60,7 +62,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         yPrev = gamepad1.y;
         xPrev = gamepad1.x;
         bPrev = gamepad1.b;
-
+        
         intakeOn = false;
         nextRightTriggerAction = RightTriggerActions.GRAB;
     }

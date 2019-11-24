@@ -56,7 +56,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                 new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 4, -0.75 * Math.PI, Subroutines.CHECK_BLOCK_GRAB),
                 new StopWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
                         3, new JoltsUntilBlockGrab(joltDirection)),
-                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 41, 8, -Math.PI, new OptionallyRejectBlock()),
+                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 41, 8, -Math.PI),
 
                 // Now make our move to deposit
                 new HeadingControlledWaypoint(18, 38, 12, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_OUT),
@@ -74,7 +74,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                         3, new JoltsUntilBlockGrab(joltDirection)),
                 new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, 43, 8, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
                 // Now make our move to deposit
-                new HeadingControlledWaypoint(0, 43, 16, Math.PI, new OptionallyRejectBlock()),
+                new HeadingControlledWaypoint(0, 43, 16, Math.PI),
                 new StopWaypoint(DEPOSIT_LOCATION.x, DEPOSIT_LOCATION.y, 8,
                         Math.PI, 8, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK))
         );

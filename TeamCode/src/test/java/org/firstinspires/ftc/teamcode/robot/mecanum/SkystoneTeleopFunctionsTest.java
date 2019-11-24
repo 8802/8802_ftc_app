@@ -92,6 +92,20 @@ class SkystoneTeleopFunctionsTest {
         assertEquals(SkystoneHardware.FOUNDATION_LATCH_OPEN, robot.rightFoundationLatch.servo.getPosition());
     }
 
+    private void simulateCycle(SimulatedOpModeFactory simOpMode, SkystoneHardware robot) {
+        // Verify we're intaking right now
+        assertMotorOff(robot.intakeLeft);
+        assertMotorOff(robot.intakeRight);
+
+        simOpMode.opMode.gamepad1.left_stick_button = true;
+        simOpMode.cycle();
+        simOpMode.opMode.gamepad1.left_stick_button = false;
+        simOpMode.cycle();
+
+
+
+    }
+
     private void assertMotorOff(DcMotorEx m) {
         assertEquals(0, m.getPower());
     }

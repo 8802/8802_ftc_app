@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum.auto;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -59,6 +60,7 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
             start.heading *= -start.heading;
         }
         this.robot = this.getRobot(start);
+        robot.leds.setPattern(ALLIANCE.getLEDColor());
 
         // Start camera
         int cameraMonitorViewId = hardwareMap.appContext.getResources()

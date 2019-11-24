@@ -6,8 +6,10 @@ import org.firstinspires.ftc.teamcode.autonomous.waypoints.ActionAndWait;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.DepositUntilSuccessful;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.FoundationGrabBackupPath;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.IgnorantPointTurn;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.JoltsUntilBlockGrab;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.OptionallyRejectBlock;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.PointTurnWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.RamFoundationBackward;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.RamFoundationBackwardRed;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
@@ -29,11 +31,11 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware.FIEL
 @Config
 public class SSAutoMovingFoundation extends PurePursuitAuto {
 
-    StopWaypoint DEPOSIT_LOCATION = new StopWaypoint(FIELD_RADIUS - 30, FIELD_RADIUS - 30, 8,
+    StopWaypoint DEPOSIT_LOCATION = new StopWaypoint(FIELD_RADIUS - 30, 36, 8,
             Math.PI, 8, new ActionAndWait(1000, Subroutines.SMART_DROP_BLOCK));
 
-    Waypoint GRAB_FOUNDATION_LOCATION = new StopWaypoint(FIELD_RADIUS - 4 - (34.5/2), 30,
-            8, Math.PI * 0.5, 3, new FoundationGrabBackupPath());
+    Waypoint GRAB_FOUNDATION_LOCATION = new StopWaypoint(FIELD_RADIUS - 10 - (34.5/2), 30,
+            6, Math.PI * 0.5, 4, new FoundationGrabBackupPath());
 
     public static double PLUNGE_TARGET_Y = 22;
     public static double BACK_PLUNGE_TARGET_X = -FIELD_RADIUS + 13;
@@ -56,25 +58,24 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 4, -0.75 * Math.PI, Subroutines.CHECK_BLOCK_GRAB),
                 new StopWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
                         3, new JoltsUntilBlockGrab(joltDirection)),
-                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 36, 12, -Math.PI, new OptionallyRejectBlock()),
+                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 36, 12, -Math.PI),
 
                 // Now make our move to deposit
                 new HeadingControlledWaypoint(-8, 36, 12, Math.PI),
                 new HeadingControlledWaypoint(18, 38, 12, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_OUT),
                 new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 38, 8, Math.PI * 0.5),
                 GRAB_FOUNDATION_LOCATION,
-                new Waypoint(FIELD_RADIUS - 4 - (34.5/2), 48, 16),
-                new HeadingControlledWaypoint(0, 30, 20, Math.toRadians(250), new RamFoundationBackwardRed(ALLIANCE)),
+                new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 40, 6, Math.PI * 0.5, new IgnorantPointTurn(Math.PI, Math.toRadians(10))),
+                new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 40, 6, Math.PI * 0.5, new DepositUntilSuccessful(ALLIANCE)),
                 new Waypoint(36, 36, 6),
-                new HeadingControlledWaypoint(0, 36, 6, Math.PI),
-                //new StopWaypoint(50, 54, 8, DEPOSIT_LOCATION.targetHeading, 8, Subroutines.SET_FOUNDATION_LATCHES_UP),
+                new HeadingControlledWaypoint(-4, 36, 6, Math.PI, Subroutines.ENABLE_INTAKE),
 
-                new Waypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 6, Subroutines.ENABLE_INTAKE),
-                new StopWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
+                new HeadingControlledWaypoint(-12, 36, 6, Math.toRadians(225)),
+                new StopWaypoint(-20, 28, 4, Math.toRadians(225),
                         3, new JoltsUntilBlockGrab(joltDirection)),
                 new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, 36, 12, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
                 // Now make our move to deposit
-                new HeadingControlledWaypoint(0, 36, 16, Math.PI, new OptionallyRejectBlock()),
+                new HeadingControlledWaypoint(0, 36, 16, Math.PI),
                 new StopWaypoint(DEPOSIT_LOCATION.x, DEPOSIT_LOCATION.y, 8,
                         Math.PI, 8, new DepositUntilSuccessful(ALLIANCE))
         );

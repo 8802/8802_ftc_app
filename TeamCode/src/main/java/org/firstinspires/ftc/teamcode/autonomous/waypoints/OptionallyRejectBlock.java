@@ -8,10 +8,6 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 
 @Config
 public class OptionallyRejectBlock implements Subroutines.ArrivalInterruptSubroutine {
-    public static double JOLT_MS = 500;
-    public static double PAUSE_MS = 300;
-    public static double MAX_JOLTS = 1;
-
     ElapsedTime elapsedTime;
     ElapsedTime timeSinceDoubleBlock;
 

@@ -80,6 +80,23 @@ public class Subroutines {
 
     public static final RepeatedSubroutine CHECK_BLOCK_GRAB = (robot) -> robot.hasBlockInClaws();
 
+    public static final OnceOffSubroutine STOP_OP_MODE_IF_DOUBLED_BLOCK = (robot) -> {
+        if (robot.hasBlockInClaws()) {
+            // TODO add code to stop robot
+        } else {
+            robot.setIntakePower(0);
+        }
+    };
+
+    public static final OnceOffSubroutine REJECT_DOUBLED_BLOCK = (robot) -> {
+        if (!robot.hasBlockInClaws()) {
+                robot.setIntakePower(0);
+        } else { // If we have the doubled block
+            robot.setIntakePower(-1);
+            robot.actionCache.add(new DelayedSubroutine(500, STOP_OP_MODE_IF_DOUBLED_BLOCK));
+        }
+    };
+
     /* When this is called, we assume the flipper is in intaking position and the block grabber is
     open. TODO verify that this is the case.
      */

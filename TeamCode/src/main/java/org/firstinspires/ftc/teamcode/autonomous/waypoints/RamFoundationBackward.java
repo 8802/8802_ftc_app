@@ -11,17 +11,15 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 public class RamFoundationBackward implements Subroutines.ArrivalInterruptSubroutine {
 
     ElapsedTime timer;
-    Alliance alliance;
 
-    public RamFoundationBackward(Alliance alliance) {
-        this.alliance = alliance;
+    public RamFoundationBackward() {
         this.timer = null;
     }
 
     @Override
     public boolean runCycle(SkystoneHardware robot) {
         if (this.timer == null) {
-            robot.setPowers(new MecanumPowers(-1, -0.55, -1, -0.55));
+            robot.setPowers(new MecanumPowers(-0.5, -0.5, -0.5, -0.5));
             this.timer = new ElapsedTime();
         }
 

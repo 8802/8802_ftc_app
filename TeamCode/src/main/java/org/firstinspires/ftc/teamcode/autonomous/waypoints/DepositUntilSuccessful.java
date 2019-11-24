@@ -27,13 +27,13 @@ public class DepositUntilSuccessful implements Subroutines.ArrivalInterruptSubro
             Subroutines.SMART_DROP_BLOCK.runOnce(robot);
         }
 
-        if (timer.milliseconds() > 3500) {
-            if (robot.hasBlockInTray()) {
-                timer.reset();
-                replaceBlock(robot);
-            } else {
-                return true;
-            }
+        if (timer.milliseconds() > 2000 && !robot.hasBlockInTray()) {
+            return true;
+        }
+
+        if (timer.milliseconds() > 2500 && robot.hasBlockInTray()) {
+            timer.reset();
+            replaceBlock(robot);
         }
         return false;
     }

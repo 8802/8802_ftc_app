@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 
 public class MecanumPurePursuitController {
     // How far we slip if we're moving with max power in each of these directions
-    public static Pose SLIP_DISTANCES = new Pose(22, 5, Math.toRadians(30));
-    //public static Pose SLIP_DISTANCES = new Pose(1, 1, Math.toRadians(1));
+    //public static Pose SLIP_DISTANCES = new Pose(22, 5, Math.toRadians(30));
+    public static Pose SLIP_DISTANCES = new Pose(1, 1, Math.toRadians(1));
     public static Pose MAX_VELOCITY = new Pose(48, 60, 5); // in/sec
     public static double MIN_TRANSLATION_POWERS = 0.3;
     public static double CUTOFF_MOTOR_POWER = 0.05;

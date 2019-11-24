@@ -44,7 +44,7 @@ public class SimpleLift {
         setLiftPositionFromLayer();
     }
 
-    private void setLiftPositionFromLayer() {
+    void setLiftPositionFromLayer() {
         // We need to create a new list each tick in case we change things in FTC Dashboard
         targetPosition = LAYER_0 + layer * LAYER_SHIFT;
         lift.setTargetPosition(targetPosition);
