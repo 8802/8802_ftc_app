@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum.teleop;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.DelayedSubroutine;
@@ -14,6 +15,7 @@ import org.openftc.revextensions2.RevBulkData;
 
 
 @Config
+@TeleOp
 public class SkystoneTeleopCalifornia extends SimulatableMecanumOpMode {
     public static double TRIGGER_THRESHOLD = 0.2;
 

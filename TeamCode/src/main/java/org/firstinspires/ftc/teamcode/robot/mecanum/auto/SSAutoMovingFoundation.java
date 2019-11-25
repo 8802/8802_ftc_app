@@ -49,16 +49,17 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
     @Override
     public List<Waypoint> getPurePursuitWaypoints() {
         MecanumPowers joltDirection = (ALLIANCE == Alliance.BLUE) ? MecanumUtil.FORWARD_RIGHT : MecanumUtil.FORWARD_LEFT;
+        double skystoneOffset = SKYSTONE.index * 8;
 
         LinkedList<Waypoint> scoreSkystones = Waypoint.collate(
                 new Waypoint(DEFAULT_START_POSITION, 4),
 
                 // We want to move in strictly on the y-axis WRT the field to grab block,
                 // which means robot must be at 45 degrees
-                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 48, 4, -0.75 * Math.PI, Subroutines.CHECK_BLOCK_GRAB),
-                new StopWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
+                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + skystoneOffset, 48, 4, -0.75 * Math.PI, Subroutines.CHECK_BLOCK_GRAB),
+                new StopWaypoint(BACK_PLUNGE_TARGET_X + skystoneOffset, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
                         3, new JoltsUntilBlockGrab(joltDirection)),
-                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + SKYSTONE.index * 8, 36, 12, -Math.PI),
+                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + skystoneOffset, 36, 12, -Math.PI),
 
                 // Now make our move to deposit
                 new HeadingControlledWaypoint(-8, 36, 12, Math.PI),
@@ -66,14 +67,13 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 38, 8, Math.PI * 0.5),
                 GRAB_FOUNDATION_LOCATION,
                 new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 40, 6, Math.PI * 0.5, new IgnorantPointTurn(Math.PI, Math.toRadians(10))),
-                new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 40, 6, Math.PI * 0.5, new DepositUntilSuccessful(ALLIANCE)),
                 new Waypoint(36, 36, 6),
-                new HeadingControlledWaypoint(-4, 36, 6, Math.PI, Subroutines.ENABLE_INTAKE),
+                new HeadingControlledWaypoint(-20 + skystoneOffset, 36, 6, Math.PI, Subroutines.ENABLE_INTAKE),
 
-                new HeadingControlledWaypoint(-12, 36, 6, Math.toRadians(225)),
-                new StopWaypoint(-20, 28, 4, Math.toRadians(225),
+                new HeadingControlledWaypoint(-28 + skystoneOffset, 36, 6, Math.toRadians(225)),
+                new StopWaypoint(-36 + skystoneOffset, 28, 4, Math.toRadians(225),
                         3, new JoltsUntilBlockGrab(joltDirection)),
-                new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + SKYSTONE.index * 8, 36, 12, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
+                new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + skystoneOffset, 36, 12, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
                 // Now make our move to deposit
                 new HeadingControlledWaypoint(0, 36, 16, Math.PI),
                 new StopWaypoint(DEPOSIT_LOCATION.x, DEPOSIT_LOCATION.y, 8,
