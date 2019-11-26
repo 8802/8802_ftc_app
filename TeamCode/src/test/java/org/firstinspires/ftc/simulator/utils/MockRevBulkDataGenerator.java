@@ -10,9 +10,9 @@ import org.openftc.revextensions2.RevBulkData;
 public class MockRevBulkDataGenerator {
 
 
-    int[] encoderVals;
-    int[] analogInputs;
-    boolean[] digitalInputs;
+    public int[] encoderVals;
+    public int[] analogInputs;
+    public boolean[] digitalInputs;
 
     public MockRevBulkDataGenerator() {
         encoderVals = new int[] {0, 0, 0, 0};

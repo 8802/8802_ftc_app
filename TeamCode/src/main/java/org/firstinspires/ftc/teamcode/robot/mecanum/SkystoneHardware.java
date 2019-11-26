@@ -125,7 +125,10 @@ public class SkystoneHardware {
 
     /* Tunable parameters */
     public static double INTAKE_UNJAM_REVERSAL_TIME_MS = 200;
+
+    public static int TRAY_DETECTOR_PORT = 0;
     public static double HAS_BLOCK_TRAY_THRESHOLD = 1800;
+    public static int CLAWS_DETECTOR_PORT = 2;
     public static double HAS_BLOCK_CLAWS_THRESHOLD = 800;
 
     /* Servo positions */
@@ -424,11 +427,11 @@ public class SkystoneHardware {
     }
 
     public boolean hasBlockInTray() {
-        return lastChassisRead.getAnalogInputValue(0) > HAS_BLOCK_TRAY_THRESHOLD;
+        return lastChassisRead.getAnalogInputValue(0) > TRAY_DETECTOR_PORT;
     }
 
     public boolean hasBlockInClaws() {
-        return lastChassisRead.getAnalogInputValue(2) > HAS_BLOCK_CLAWS_THRESHOLD;
+        return lastChassisRead.getAnalogInputValue(2) > CLAWS_DETECTOR_PORT;
     }
 
     public void setPowers(MecanumPowers powers) {
