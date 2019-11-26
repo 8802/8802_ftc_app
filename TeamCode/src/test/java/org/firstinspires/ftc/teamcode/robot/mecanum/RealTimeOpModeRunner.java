@@ -14,7 +14,6 @@ import java.io.IOException;
 class RealTimeOpModeRunner {
     final static double FRAMERATE = 60;
 
-    @Test
     void testOpMode() throws IOException {
         SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(BlindThreeBlockRed.class);
         simOpMode.opMode.start();

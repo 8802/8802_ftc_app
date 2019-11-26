@@ -22,6 +22,10 @@ public class TwoWheelTrackingLocalizer {
     public static double LATERAL_WHEEL_RADIUS = 1.193055;
     public static int VELOCITY_READ_TICKS = 5;
 
+    public static int PARALLEL_ENCODER_PORT = 0;
+    public static int LATERAL_ENCODER_PORT = 1;
+
+
     static final double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
     public static double PARALLEL_Y_POS = 7.25;
@@ -46,8 +50,8 @@ public class TwoWheelTrackingLocalizer {
         Array2DRowRealMatrix inverseMatrix = new Array2DRowRealMatrix(3, 3);
 
         EncoderWheel[] WHEELS = {
-                new EncoderWheel(0, PARALLEL_Y_POS, Math.toRadians(180), 0, 0), // parallel
-                new EncoderWheel(LATERAL_X_POS, 0, Math.toRadians(90), 1, 1), // lateral
+                new EncoderWheel(0, PARALLEL_Y_POS, Math.toRadians(180), 0), // parallel
+                new EncoderWheel(LATERAL_X_POS, 0, Math.toRadians(90), 1), // lateral
         };
 
         for (EncoderWheel wheelPosition : WHEELS) {
@@ -84,17 +88,18 @@ public class TwoWheelTrackingLocalizer {
     }
 
     public void update(RevBulkData data, double heading) {
+
         double[] deltas = new double[] {
-                encoderTicksToInches(data.getMotorCurrentPosition(0) - prevWheelPositions[0],
+                encoderTicksToInches(data.getMotorCurrentPosition(PARALLEL_ENCODER_PORT) - prevWheelPositions[0],
                         PARALLEL_WHEEL_RADIUS),
-                encoderTicksToInches(data.getMotorCurrentPosition(1) - prevWheelPositions[1],
+                encoderTicksToInches(data.getMotorCurrentPosition(LATERAL_ENCODER_PORT) - prevWheelPositions[1],
                         LATERAL_WHEEL_RADIUS),
                 MathUtil.angleWrap(heading - prevHeading)
         };
 
-        prevWheelPositions[0] = data.getMotorCurrentPosition(0);
+        prevWheelPositions[0] = data.getMotorCurrentPosition(PARALLEL_ENCODER_PORT);
         prevHeading = heading;
-        prevWheelPositions[1] = data.getMotorCurrentPosition(1);
+        prevWheelPositions[1] = data.getMotorCurrentPosition(LATERAL_ENCODER_PORT);
 
         RealMatrix m = MatrixUtils.createRealMatrix(new double[][] {deltas});
 

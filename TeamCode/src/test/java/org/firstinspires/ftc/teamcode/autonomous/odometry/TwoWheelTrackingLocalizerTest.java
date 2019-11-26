@@ -16,8 +16,11 @@ class TwoWheelTrackingLocalizerTest {
 
     // Lateral encoder is on port 2 instead of port 1 because port 1 is
     // reserved for the second parallel encoder, which we just aren't using here
-    private RevBulkData genFakeData(int parallelEncoder, int latEncoder) {
-        int[] encoderVals = new int[] {parallelEncoder, 0, latEncoder, 0};
+    private RevBulkData genFakeData(int parallelEncoder, int lateralEncoder) {
+        int[] encoderVals = new int[4];
+        encoderVals[TwoWheelTrackingLocalizer.PARALLEL_ENCODER_PORT] = parallelEncoder;
+        encoderVals[TwoWheelTrackingLocalizer.LATERAL_ENCODER_PORT] = lateralEncoder;
+
         RevBulkData data = Mockito.mock(RevBulkData.class);
         Mockito.when(data.getMotorCurrentPosition(Mockito.anyInt()))
                 .thenAnswer(invocation ->
@@ -38,9 +41,9 @@ class TwoWheelTrackingLocalizerTest {
         // Move forward 24 inches
         TwoWheelTrackingLocalizer straightLocalizer = getNewLocalizer();
         for (int i = 1; i <= 10; i++) {
-            int distance = TwoWheelTrackingLocalizer.inchesToEncoderTicks(24 * i);
+            int distance = TwoWheelTrackingLocalizer.inchesToEncoderTicks(-24 * i);
             straightLocalizer.update(genFakeData(distance, 0), 0);
-        }
+    }
         // Because we're rounding inchesToEncoderTicks to an int, we'll usually be off by ~0.001
         assertTrue(roughApproxEquals(straightLocalizer.pose(), new Pose(24 * 10, 0, 0)));
 
@@ -59,7 +62,7 @@ class TwoWheelTrackingLocalizerTest {
 
         TwoWheelTrackingLocalizer spinLocalizer = getNewLocalizer();
         for (int i = 1; i <= 100; i ++) {
-            RevBulkData fakeSpinData = genFakeData(parallelSpinDist*i, lateralSpinDist*i);
+            RevBulkData fakeSpinData = genFakeData(-parallelSpinDist*i, lateralSpinDist*i);
             spinLocalizer.update(fakeSpinData, -i * spinAngle);
             assertTrue(roughApproxEquals(spinLocalizer.pose(), new Pose(0, 0, -i * spinAngle)));
         }
@@ -87,7 +90,7 @@ class TwoWheelTrackingLocalizerTest {
     private void moveOneSquareLeg(TwoWheelTrackingLocalizer localizer) {
         int distance = TwoWheelTrackingLocalizer.inchesToEncoderTicks(24);
         totalSquareParallel += distance;
-        localizer.update(genFakeData(totalSquareParallel, totalSquareLateral), totalHeading);
+        localizer.update(genFakeData(-totalSquareParallel, totalSquareLateral), totalHeading);
 
 
         totalSquareParallel += TwoWheelTrackingLocalizer.inchesToEncoderTicks(
@@ -95,7 +98,7 @@ class TwoWheelTrackingLocalizerTest {
         totalSquareLateral += TwoWheelTrackingLocalizer.inchesToEncoderTicks(
                 TwoWheelTrackingLocalizer.LATERAL_X_POS * Math.PI / 2);
         totalHeading += Math.PI / 2;
-        localizer.update(genFakeData(totalSquareParallel, totalSquareLateral), totalHeading);
+        localizer.update(genFakeData(-totalSquareParallel, totalSquareLateral), totalHeading);
     }
 
     @Test

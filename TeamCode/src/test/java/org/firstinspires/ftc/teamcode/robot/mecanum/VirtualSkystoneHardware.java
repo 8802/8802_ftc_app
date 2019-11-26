@@ -115,14 +115,12 @@ public class VirtualSkystoneHardware extends SkystoneHardware implements Virtual
     public RevBulkData performBulkRead() {
         this.localizer.virtualUpdate(new TimePose(this.position, (long) time * 1000));
         this.packet = new TelemetryPacket();
-        System.out.println("Position: " + this.localizer.pose().toString());
         return lastChassisRead;
     }
 
     @Override
     public void setPowers(MecanumPowers powers) {
         this.wheelPowers = powers;
-        System.out.println("Powers: " + powers.toString());
     }
 
     // Just throw away calls to these functions
