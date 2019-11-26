@@ -73,9 +73,8 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         robot.sendDashboardTelemetryPacket();
 
         /* Drive code */
-        double slowScale = ((1 - gamepad1.left_trigger) * 0.7 + 0.3);
-        double leftX = MecanumUtil.deadZone(-gamepad1.left_stick_x, 0.05) * slowScale;
-        double leftY = MecanumUtil.deadZone(-gamepad1.left_stick_y, 0.05) * slowScale;
+        double leftX = MecanumUtil.deadZone(-gamepad1.left_stick_x, 0.05);
+        double leftY = MecanumUtil.deadZone(-gamepad1.left_stick_y, 0.05);
         double angle = -Math.atan2(leftY, leftX) + Math.PI / 2;
         if (fieldCentric()) {
             angle -= robot.pose().heading;
@@ -87,7 +86,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         // Exponentiate our turn
         double turn = Math.copySign(
                 Math.pow(MecanumUtil.deadZone(-gamepad1.right_stick_x, 0.05), 2),
-                -gamepad1.right_stick_x) * slowScale;
+                -gamepad1.right_stick_x);
 
         MecanumPowers powers = MecanumUtil.powersFromAngle(angle, driveScale, turn);
         robot.setPowers(powers);
