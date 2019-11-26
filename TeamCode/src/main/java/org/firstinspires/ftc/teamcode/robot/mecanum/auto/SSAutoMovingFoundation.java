@@ -6,17 +6,12 @@ import org.firstinspires.ftc.teamcode.autonomous.waypoints.ActionAndWait;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.DepositUntilSuccessful;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.FoundationGrabBackupPath;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
-import org.firstinspires.ftc.teamcode.autonomous.waypoints.IgnorantPointTurn;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.FoundationMovePointTurn;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.JoltsUntilBlockGrab;
-import org.firstinspires.ftc.teamcode.autonomous.waypoints.OptionallyRejectBlock;
-import org.firstinspires.ftc.teamcode.autonomous.waypoints.PointTurnWaypoint;
-import org.firstinspires.ftc.teamcode.autonomous.waypoints.RamFoundationBackward;
-import org.firstinspires.ftc.teamcode.autonomous.waypoints.RamFoundationBackwardRed;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
 import org.firstinspires.ftc.teamcode.common.elements.Alliance;
-import org.firstinspires.ftc.teamcode.common.elements.SkystoneState;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
@@ -62,11 +57,12 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + skystoneOffset, 36, 12, -Math.PI),
 
                 // Now make our move to deposit
-                new HeadingControlledWaypoint(-8, 36, 12, Math.PI),
+                new HeadingControlledWaypoint(-8, 36, 12, Math.PI, Subroutines.GRAB_BLOCK_NO_EXTEND),
                 new HeadingControlledWaypoint(18, 38, 12, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_OUT),
                 new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 38, 8, Math.PI * 0.5),
                 GRAB_FOUNDATION_LOCATION,
-                new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 40, 6, Math.PI * 0.5, new IgnorantPointTurn(Math.PI, Math.toRadians(10))),
+                new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 40, 6, Math.PI * 0.5, new FoundationMovePointTurn(Math.PI, Math.toRadians(10))),
+                new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x + 0.01, 40.01, 6, Math.PI * 0.5, new DepositUntilSuccessful(ALLIANCE)),
                 new Waypoint(36, 36, 6),
                 new HeadingControlledWaypoint(-20 + skystoneOffset, 36, 6, Math.PI, Subroutines.ENABLE_INTAKE),
 
@@ -86,8 +82,22 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
          */
 
         scoreSkystones.addAll(Waypoint.collate(
-                new Waypoint(36, 36, 6),
-                new StopWaypoint(0, 36, 6, Math.PI, 0)
+                new HeadingControlledWaypoint(36, 39, 6, Math.PI),
+                new HeadingControlledWaypoint(-20 + skystoneOffset, 39, 8, Math.PI, Subroutines.ENABLE_INTAKE),
+                new HeadingControlledWaypoint(-28 + skystoneOffset, 39, 8, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
+                new HeadingControlledWaypoint(-44 + skystoneOffset, 20, 8, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
+                new HeadingControlledWaypoint(-60, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
+
+                new Waypoint(-28 + skystoneOffset, 36, 8),
+                new HeadingControlledWaypoint(-20 + skystoneOffset, 39, 8, Math.PI),
+                new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.LIFT_LEVEL_ONE),
+                new StopWaypoint(DEPOSIT_LOCATION.x, DEPOSIT_LOCATION.y, 8,
+                        Math.PI, 8, new DepositUntilSuccessful(ALLIANCE))
+        ));
+
+        scoreSkystones.addAll(Waypoint.collate(
+                new Waypoint(36, 39, 6),
+                new StopWaypoint(0, 39, 6, Math.PI, 3)
         ));
 
         return scoreSkystones;

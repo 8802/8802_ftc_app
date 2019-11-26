@@ -15,7 +15,7 @@ public class DepositFlipper {
     public static double LEFT_DRIVING = 0.62;
     public static double RIGHT_DRIVING = 0.58;
 
-    public static double LEFT_NORM_EXTEND = 0.82;
+    public static double LEFT_NORM_EXTEND = 0.85;
     public static double RIGHT_NORM_EXTEND = 0.79;
     
     public Servo leftFlipper;

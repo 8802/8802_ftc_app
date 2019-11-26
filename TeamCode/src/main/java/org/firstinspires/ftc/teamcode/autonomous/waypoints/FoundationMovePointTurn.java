@@ -10,13 +10,13 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
 import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 
 @Config
-public class IgnorantPointTurn implements Subroutines.ArrivalInterruptSubroutine {
+public class FoundationMovePointTurn implements Subroutines.ArrivalInterruptSubroutine {
     public static double REDUCTION_DIST = Math.PI/3;
 
     double targetHeading;
     double allowedError;
 
-    public IgnorantPointTurn(double targetHeading, double allowedError) {
+    public FoundationMovePointTurn(double targetHeading, double allowedError) {
         this.targetHeading = targetHeading;
         this.allowedError = allowedError;
     }
@@ -30,8 +30,10 @@ public class IgnorantPointTurn implements Subroutines.ArrivalInterruptSubroutine
         robot.setPowers(new MecanumPowers(poseTurnPower));
 
         if (Math.abs(currentHeading - targetHeading) < allowedError) {
+
             robot.leftFoundationLatch.retract();
             robot.rightFoundationLatch.retract();
+            // Decide if we should
             return true;
         }
         return false;
