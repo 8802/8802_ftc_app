@@ -14,8 +14,9 @@ import java.io.IOException;
 class RealTimeOpModeRunner {
     final static double FRAMERATE = 60;
 
+    @Test
     void testOpMode() throws IOException {
-        SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(BlindThreeBlockRed.class);
+        SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(BlindThreeBlockBlue.class);
         simOpMode.opMode.start();
         TXHandler udpServer = new TXHandler(-1);
         RXThread udpClient = new RXThread(simOpMode.opMode.gamepad1, simOpMode.opMode.gamepad2);

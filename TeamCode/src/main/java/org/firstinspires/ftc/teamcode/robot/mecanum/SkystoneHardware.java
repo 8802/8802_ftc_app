@@ -427,11 +427,11 @@ public class SkystoneHardware {
     }
 
     public boolean hasBlockInTray() {
-        return lastChassisRead.getAnalogInputValue(0) > TRAY_DETECTOR_PORT;
+        return lastChassisRead.getAnalogInputValue(TRAY_DETECTOR_PORT) > HAS_BLOCK_TRAY_THRESHOLD;
     }
 
     public boolean hasBlockInClaws() {
-        return lastChassisRead.getAnalogInputValue(2) > CLAWS_DETECTOR_PORT;
+        return lastChassisRead.getAnalogInputValue(CLAWS_DETECTOR_PORT) > HAS_BLOCK_CLAWS_THRESHOLD;
     }
 
     public void setPowers(MecanumPowers powers) {

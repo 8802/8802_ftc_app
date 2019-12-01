@@ -54,16 +54,17 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + skystoneOffset, 48, 4, -0.75 * Math.PI, Subroutines.CHECK_BLOCK_GRAB),
                 new StopWaypoint(BACK_PLUNGE_TARGET_X + skystoneOffset, PLUNGE_TARGET_Y, 4, -0.75 * Math.PI,
                         3, new JoltsUntilBlockGrab(joltDirection)),
-                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + skystoneOffset, 36, 12, -Math.PI),
+
+                new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + skystoneOffset, 40, 10, -0.75 * Math.PI),
 
                 // Now make our move to deposit
                 new HeadingControlledWaypoint(-8, 36, 12, Math.PI, Subroutines.GRAB_BLOCK_NO_EXTEND),
                 new HeadingControlledWaypoint(18, 38, 12, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_OUT),
                 new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 38, 8, Math.PI * 0.5),
                 GRAB_FOUNDATION_LOCATION,
-                new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 40, 6, Math.PI * 0.5, new FoundationMovePointTurn(Math.PI, Math.toRadians(10))),
-                new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x + 0.01, 40.01, 6, Math.PI * 0.5, new DepositUntilSuccessful(ALLIANCE)),
-                new Waypoint(36, 36, 6),
+                new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 44, 6, Math.PI * 0.5, new FoundationMovePointTurn(Math.PI, Math.toRadians(10))),
+                new HeadingControlledWaypoint(36, 36, 6, Math.PI),
+                new HeadingControlledWaypoint(12, 36, 6, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_UP),
                 new HeadingControlledWaypoint(-20 + skystoneOffset, 36, 6, Math.PI, Subroutines.ENABLE_INTAKE),
 
                 new HeadingControlledWaypoint(-28 + skystoneOffset, 36, 6, Math.toRadians(225)),
@@ -73,7 +74,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 // Now make our move to deposit
                 new HeadingControlledWaypoint(0, 36, 16, Math.PI),
                 new StopWaypoint(DEPOSIT_LOCATION.x, DEPOSIT_LOCATION.y, 8,
-                        Math.PI, 8, new DepositUntilSuccessful(ALLIANCE))
+                        Math.PI, 8, new DepositUntilSuccessful(0))
         );
 
         /* Now, we will "charge" along two straight lines until we encounter a block. Where those
@@ -92,7 +93,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 new HeadingControlledWaypoint(-20 + skystoneOffset, 39, 8, Math.PI),
                 new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.LIFT_LEVEL_ONE),
                 new StopWaypoint(DEPOSIT_LOCATION.x, DEPOSIT_LOCATION.y, 8,
-                        Math.PI, 8, new DepositUntilSuccessful(ALLIANCE))
+                        Math.PI, 8, new DepositUntilSuccessful(1))
         ));
 
         scoreSkystones.addAll(Waypoint.collate(

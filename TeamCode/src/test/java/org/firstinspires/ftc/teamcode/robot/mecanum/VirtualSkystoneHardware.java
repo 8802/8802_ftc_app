@@ -145,6 +145,7 @@ public class VirtualSkystoneHardware extends SkystoneHardware implements Virtual
 
     @Override
     public void elapse(double secs) {
+        System.out.println(wheelPowers);
         if (
                 Math.abs(wheelPowers.frontLeft) > 1 ||
                         Math.abs(wheelPowers.frontRight) > 1 ||

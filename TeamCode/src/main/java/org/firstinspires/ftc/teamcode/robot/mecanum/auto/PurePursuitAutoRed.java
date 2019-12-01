@@ -24,10 +24,6 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware.FIEL
 public abstract class PurePursuitAutoRed extends SimulatableMecanumOpMode {
     Pose DEFAULT_START_POSITION = new Pose(-FIELD_RADIUS + 22.75 + 9, -FIELD_RADIUS + 9, 1 * Math.PI / 2);
 
-    public static int CAMERA_WIDTH = 800;
-    public static int CAMERA_HEIGHT = 448;
-
-
     SkystoneHardware robot;
     PurePursuitPath followPath;
 
@@ -45,36 +41,22 @@ public abstract class PurePursuitAutoRed extends SimulatableMecanumOpMode {
     public void init() {
         Pose start = getBlueStartPosition().clone();
         this.robot = this.getRobot(start);
-
-        // Start camera
-        int cameraMonitorViewId = hardwareMap.appContext.getResources()
-                .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = new OpenCvInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        webcam.openCameraDevice();
-        this.detector = new ImprovedSkystoneDetector(ALLIANCE);
-        this.detector.useDefaults();
-        webcam.setPipeline(detector);
-        webcam.startStreaming(320, 240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+        startPhoneCamDetector(ALLIANCE);
         telemetry.clearAll();
     }
 
     @Override
     public void init_loop() {
-        telemetry.log().add(detector.getSkystoneState().toString());
+        //telemetry.log().add(getSkystoneState().toString());
         telemetry.update();
-        /*telemetry.addData("Block location", detector.getSkystoneState().toString());
-        telemetry.addData("Stone Position X", detector.getScreenPosition().x);
-        telemetry.addData("Stone Position Y", detector.getScreenPosition().y);
-        telemetry.addData("FPS", String.format(Locale.US, "%.2f", webcam.getFps()));
-        telemetry.update();*/
     }
 
     @Override
     public void start() {
         telemetry.clearAll();
         robot.initBulkReadTelemetry();
-        SKYSTONE = detector.getSkystoneState();
-        webcam.stopStreaming();
+        SKYSTONE = getSkystoneState();
+        stopPhoneCamDetector();
         followPath = new PurePursuitPath(robot, getPurePursuitWaypoints());
         // We design all paths for blue side, and then flip them for red
         followPath.reverse();

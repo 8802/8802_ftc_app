@@ -3,16 +3,19 @@ package org.firstinspires.ftc.simulator;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
+import org.firstinspires.ftc.teamcode.common.elements.SkystoneState;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.robot.mecanum.VirtualSkystoneHardware;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
+import org.openftc.easyopencv.OpenCvCamera;
 
 public class SimulatedOpModeFactory {
     double FRAMERATE = 20;
     final static int INIT_ITERATIONS = 40;
     final static int RUN_ITERATIONS = 400;
+    final static SkystoneState SKYSTONE = SkystoneState.MIDDLE;
 
     public SimulatableMecanumOpMode opMode; // Pointer to our op mode
     public VirtualSkystoneHardware robot; // Pointer to our virtual robot
@@ -39,6 +42,10 @@ public class SimulatedOpModeFactory {
             this.robot = new VirtualSkystoneHardware((Pose) args[0]);
             return this.robot;
         }).when(opMode).getRobot(Mockito.any());
+
+        Mockito.doNothing().when(opMode).startPhoneCamDetector(Mockito.any());
+        Mockito.doReturn(SKYSTONE).when(opMode).getSkystoneState();
+        Mockito.doNothing().when(opMode).stopPhoneCamDetector();
 
         Mockito.doAnswer(invocation -> {
             stopRequested = true;
