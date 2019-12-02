@@ -70,9 +70,9 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                         3, new JoltsUntilBlockGrab(joltDirection)),
                 new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + skystoneOffset, 36, 12, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
                 // Now make our move to deposit
-                new HeadingControlledWaypoint(0, 36, 16, Math.PI),
+                new HeadingControlledWaypoint(0, 36, 12, Math.PI, Subroutines.LIFT_LEVEL_ONE),
                 new StopWaypoint(20, 36, 8,
-                        Math.PI, 8, new DepositUntilSuccessful(0))
+                        Math.PI, 8, new DepositUntilSuccessful())
         );
 
         /* What we do now depends on what blocks we grabbed first, since if we grabbed
@@ -106,7 +106,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
         scoreSkystones.addAll(Waypoint.collate(
                 new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.LIFT_LEVEL_ONE),
                 new StopWaypoint(40, 36, 8,
-                        Math.PI, 8, new DepositUntilSuccessful(1))
+                        Math.PI, 8, new DepositUntilSuccessful())
         ));
 
         scoreSkystones.addAll(Waypoint.collate(

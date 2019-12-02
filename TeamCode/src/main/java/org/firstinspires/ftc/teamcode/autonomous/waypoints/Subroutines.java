@@ -75,7 +75,7 @@ public class Subroutines {
     };
 
     public static final OnceOffSubroutine LIFT_TO_ZERO = (robot) -> {
-        robot.pidLift.goToMin();
+        robot.pidLift.setLayer(0);
     };
 
     public static final OnceOffSubroutine LOWER_FLIPPER_LOW = (robot) -> {
@@ -117,7 +117,7 @@ public class Subroutines {
         robot.actionCache.add(new DelayedSubroutine(850, Subroutines.SET_FLIPPER_INTAKING));
     };
 
-        public static final OnceOffSubroutine SMART_DROP_BLOCK = (robot) -> {
+    public static final OnceOffSubroutine SMART_DROP_BLOCK = (robot) -> {
         robot.blockFlipper.normExtend();
         robot.blockGrabber.retract();
         robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_LITTLE));

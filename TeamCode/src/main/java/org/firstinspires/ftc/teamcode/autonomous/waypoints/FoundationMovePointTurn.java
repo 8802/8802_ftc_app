@@ -14,7 +14,7 @@ public class FoundationMovePointTurn implements Subroutines.ArrivalInterruptSubr
         TURNING, CHECKING, REDROPPING
     }
     public static double REDUCTION_DIST = Math.PI/3;
-    public static int TIME_UNTIL_FIRST_CHECK_MS = 500;
+    public static int TIME_UNTIL_FIRST_CHECK_MS = 1000;
     public static int TIME_UNTIL_SUBSEQUENT_CHECKS_MS = 1500;
 
     double targetHeading;
@@ -39,6 +39,7 @@ public class FoundationMovePointTurn implements Subroutines.ArrivalInterruptSubr
 
             if (Math.abs(currentHeading - targetHeading) < allowedError) {
                 mode = Mode.CHECKING;
+                // We can't call this earlier or we'll slide and lose the block
                 Subroutines.SMART_DROP_BLOCK.runOnce(robot);
                 robot.setPowers(MecanumUtil.STOP);
                 checkAtTime = ms() + TIME_UNTIL_FIRST_CHECK_MS;
