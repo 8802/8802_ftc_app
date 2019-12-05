@@ -11,13 +11,9 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 @Config
 public class DepositUntilSuccessful implements Subroutines.ArrivalInterruptSubroutine {
 
-    public static int MS_UNTIL_DRIVE_AWAY = 1500;
-
     ElapsedTime timer;
-    Alliance alliance;
 
-    public DepositUntilSuccessful(Alliance alliance) {
-        this.alliance = alliance;
+    public DepositUntilSuccessful() {
         this.timer = null;
     }
 
@@ -29,14 +25,15 @@ public class DepositUntilSuccessful implements Subroutines.ArrivalInterruptSubro
             Subroutines.SMART_DROP_BLOCK.runOnce(robot);
         }
 
-        if (timer.milliseconds() > MS_UNTIL_DRIVE_AWAY && !robot.hasBlockInTray()) {
-            if (robot.hasBlockInTray()) {
-                timer.reset();
-                replaceBlock(robot);
-            } else { // If we placed successfully
-                return true;
-            }
+        if (timer.milliseconds() > 2500 && !robot.hasBlockInTray()) {
+            return true;
         }
+
+        if (timer.milliseconds() > 3000 && robot.hasBlockInTray()) {
+            timer.reset();
+            replaceBlock(robot);
+        }
+
         return false;
     }
 
