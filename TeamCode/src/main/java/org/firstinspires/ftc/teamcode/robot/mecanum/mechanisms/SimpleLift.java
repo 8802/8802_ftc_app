@@ -84,8 +84,6 @@ public class SimpleLift {
                 lift.setTargetPosition(LAYER_0);
             }
         }
-        this.rapidLowering = false;
-        lift.setTargetPosition(0);
     }
 
     private void endRapidDescent() {

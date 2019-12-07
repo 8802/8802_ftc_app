@@ -171,6 +171,9 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
             rightBumperPrev = false;
         }
 
+        // Recalculates sudden drop
+        robot.pidLift.update();
+
         /* Misc servos */
         if (gamepad1.y && !yPrev) {
             yPrev = true;
