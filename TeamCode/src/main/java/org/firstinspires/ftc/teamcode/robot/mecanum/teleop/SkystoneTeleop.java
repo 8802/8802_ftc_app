@@ -144,7 +144,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
                     robot.blockGrabber.retract();
                     robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_LITTLE));
                     robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.SET_FLIPPER_INTAKING));
-                    robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.LIFT_TO_ZERO));
+                    robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.LOWER_LIFT_WITH_CACHE));
                     robot.actionCache.add(new DelayedSubroutine(1500, Subroutines.ENABLE_INTAKE));
                     break;
             }

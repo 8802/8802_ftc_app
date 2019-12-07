@@ -74,8 +74,12 @@ public class Subroutines {
         robot.pidLift.changePosition(-LIFT_RAISE_AMOUNT);
     };
 
-    public static final OnceOffSubroutine LIFT_TO_ZERO = (robot) -> {
+    public static final OnceOffSubroutine LOWER_LIFT_WITH_CACHE = (robot) -> {
         robot.pidLift.goToMin();
+    };
+
+    public static final OnceOffSubroutine LIFT_TO_LAYER_ZERO = (robot) -> {
+        robot.pidLift.setLayer(0);
     };
 
     public static final OnceOffSubroutine LOWER_FLIPPER_LOW = (robot) -> {
@@ -89,15 +93,6 @@ public class Subroutines {
             // TODO add code to stop robot
         } else {
             robot.setIntakePower(0);
-        }
-    };
-
-    public static final OnceOffSubroutine REJECT_DOUBLED_BLOCK = (robot) -> {
-        if (!robot.hasBlockInClaws()) {
-                robot.setIntakePower(0);
-        } else { // If we have the doubled block
-            robot.setIntakePower(-1);
-            robot.actionCache.add(new DelayedSubroutine(500, STOP_OP_MODE_IF_DOUBLED_BLOCK));
         }
     };
 
@@ -122,44 +117,11 @@ public class Subroutines {
         robot.blockGrabber.retract();
         robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_LITTLE));
         robot.actionCache.add(new DelayedSubroutine(750, Subroutines.SET_FLIPPER_INTAKING));
-        robot.actionCache.add(new DelayedSubroutine(750, Subroutines.LIFT_TO_ZERO));
-    };
-
-    public static final OnceOffSubroutine SMART_DROP_BLOCK_WITH_LATCHES = (robot) -> {
-        SET_FOUNDATION_LATCHES_DOWN.runOnce(robot);
-        SMART_DROP_BLOCK.runOnce(robot);
+        robot.actionCache.add(new DelayedSubroutine(750, Subroutines.LIFT_TO_LAYER_ZERO));
     };
 
     public static final OnceOffSubroutine GRAB_INTAKED_BLOCK_WITH_LATCHES = (robot) -> {
         SET_FOUNDATION_LATCHES_DOWN.runOnce(robot);
         GRAB_INTAKED_BLOCK.runOnce(robot);
-    };
-
-    public static final OnceOffSubroutine ASSERT_NO_BLOCK_IN_TRAY = (robot) -> {
-        if (robot.hasBlockInTray()) {
-            robot.opModeState = SkystoneHardware.OpModeState.ERRORS;
-        }
-    };
-
-    public static final MetaSubroutine SKIP_TO_END_IF_BAD_STATE = (path, robot) -> {
-        if (robot.hasBlockInTray() || robot.opModeState == SkystoneHardware.OpModeState.ERRORS) {
-            path.currPoint = path.waypoints.size() - 2;
-        }
-    };
-
-    public static final OnceOffSubroutine SMART_STOP_INTAKE = (robot) -> {
-        robot.setIntakePower(0);
-    };
-
-    public static final OnceOffSubroutine OPTIONALLY_REJECT_BLOCK = (robot) -> {
-        //robot.setIntakePower(1);
-        //robot.actionCache.add(new DelayedSubroutine(300, Subroutines.STOP_INTAKE));
-        /*if (robot.hasBlockInClaws()) {
-            robot.setIntakePower(-1);
-            robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.STOP_INTAKE));
-        } else {
-            robot.setIntakePower(1);
-            robot.actionCache.add(new DelayedSubroutine(300, Subroutines.STOP_INTAKE));
-        }*/
     };
 }

@@ -17,12 +17,14 @@ public class SimpleLift {
     // We separate these out to make changing them with FTCDashboard easier
     public static int LAYER_0 = 0;
     public static int LAYER_SHIFT = 500;
+    public static int STOP_RAPID_DESCENT = 500;
 
 
     private DcMotorEx lift;
     private RevBlinkinLedDriver leds;
     public int layer;
     public int targetPosition;
+    private boolean rapidLowering;
 
     // Also initializes the DcMotor
     public SimpleLift(DcMotorEx lift, RevBlinkinLedDriver leds) {
@@ -34,6 +36,7 @@ public class SimpleLift {
         lift.setPower(1);
         this.layer = 0;
         this.targetPosition = LAYER_0;
+        this.rapidLowering = false;
     }
 
     public void changeLayer(int addend) {
@@ -50,23 +53,47 @@ public class SimpleLift {
     }
 
     void setLiftPositionFromLayer() {
-        // We need to create a new list each tick in case we change things in FTC Dashboard
+        endRapidDescent();
         targetPosition = LAYER_0 + layer * LAYER_SHIFT;
         lift.setTargetPosition(targetPosition);
         leds.setPattern(LAYER_PATTERNS[layer]);
     }
 
     public void changePosition(int delta) {
+        endRapidDescent();
         targetPosition += delta;
         lift.setTargetPosition(targetPosition);
     }
 
     public void goToMin() {
+        if (lift.getCurrentPosition() < STOP_RAPID_DESCENT) {
+            endRapidDescent();
+            lift.setTargetPosition(LAYER_0);
+        } else {
+            // Otherwise, go fast
+            rapidLowering = true;
+            lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            lift.setPower(-1);
+        }
+    }
+
+    public void update() {
+        if (rapidLowering) {
+            if (lift.getCurrentPosition() < STOP_RAPID_DESCENT) {
+                endRapidDescent();
+                lift.setTargetPosition(LAYER_0);
+            }
+        }
+        this.rapidLowering = false;
         lift.setTargetPosition(0);
     }
 
-    public void resetStacking() {
-        layer = 0;
-        setLiftPositionFromLayer();
+    private void endRapidDescent() {
+        if (rapidLowering) {
+            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lift.setPower(1);
+            this.rapidLowering = false;
+        }
+
     }
 }

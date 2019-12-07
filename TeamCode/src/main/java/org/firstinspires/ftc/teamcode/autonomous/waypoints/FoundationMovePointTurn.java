@@ -65,7 +65,7 @@ public class FoundationMovePointTurn implements Subroutines.ArrivalInterruptSubr
                 robot.actionCache.add(new DelayedSubroutine(1250, Subroutines.LIFT_A_LITTLE));
                 robot.actionCache.add(new DelayedSubroutine(1500, Subroutines.SET_FOUNDATION_LATCHES_UP));
                 robot.actionCache.add(new DelayedSubroutine(1750, Subroutines.SET_FLIPPER_INTAKING));
-                robot.actionCache.add(new DelayedSubroutine(1750, Subroutines.LIFT_TO_ZERO));
+                robot.actionCache.add(new DelayedSubroutine(1750, Subroutines.LIFT_TO_LAYER_ZERO));
             } else {
                 // If we don't have a block in the tray, meaning we placed successfully:
                 return true;

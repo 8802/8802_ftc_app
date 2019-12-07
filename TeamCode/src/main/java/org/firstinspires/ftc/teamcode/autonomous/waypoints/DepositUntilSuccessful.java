@@ -44,6 +44,6 @@ public class DepositUntilSuccessful implements Subroutines.ArrivalInterruptSubro
         robot.actionCache.add(new DelayedSubroutine(1400, Subroutines.OPEN_CLAW));
         robot.actionCache.add(new DelayedSubroutine(1650, Subroutines.LIFT_A_LITTLE));
         robot.actionCache.add(new DelayedSubroutine(2150, Subroutines.SET_FLIPPER_INTAKING));
-        robot.actionCache.add(new DelayedSubroutine(2150, Subroutines.LIFT_TO_ZERO));
+        robot.actionCache.add(new DelayedSubroutine(2150, Subroutines.LIFT_TO_LAYER_ZERO));
     }
 }
