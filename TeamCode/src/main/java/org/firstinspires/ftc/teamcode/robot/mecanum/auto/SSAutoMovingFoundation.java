@@ -61,7 +61,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 GRAB_FOUNDATION_LOCATION,
                 new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 44, 6, Math.PI * 0.5, new FoundationMovePointTurn(Math.PI, Math.toRadians(10))),
                 new HeadingControlledWaypoint(36, 36, 6, Math.PI),
-                new HeadingControlledWaypoint(12, 36, 6, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_UP),
+                new HeadingControlledWaypoint(12, 36, 6, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_UP), /* Latches are already up */
                 new HeadingControlledWaypoint(-20 + skystoneOffset, 36, 6, Math.PI, Subroutines.ENABLE_INTAKE),
 
                 new HeadingControlledWaypoint(-28 + skystoneOffset, 36, 6, Math.toRadians(225)),
@@ -70,7 +70,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + skystoneOffset, 36, 12, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
                 // Now make our move to deposit
                 new HeadingControlledWaypoint(0, 36, 12, Math.PI, Subroutines.LIFT_LEVEL_ONE),
-                new StopWaypoint(20, 36, 8,
+                new StopWaypoint(40, 36, 8,
                         Math.PI, 8, new DepositUntilSuccessful())
         );
 

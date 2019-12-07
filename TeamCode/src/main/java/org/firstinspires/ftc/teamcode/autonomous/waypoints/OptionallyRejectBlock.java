@@ -17,6 +17,11 @@ public class OptionallyRejectBlock implements Subroutines.ArrivalInterruptSubrou
 
     @Override
     public boolean runCycle(SkystoneHardware robot) {
+        // If we don't have a doubled block, we're good
+        if (!robot.hasBlockInClaws()) {
+            robot.setIntakePower(1);
+            return true;
+        }
         if (elapsedTime == null) {
             robot.setPowers(MecanumUtil.STOP);
             elapsedTime = new ElapsedTime();

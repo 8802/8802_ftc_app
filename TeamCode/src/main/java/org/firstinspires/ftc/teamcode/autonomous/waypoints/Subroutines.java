@@ -75,7 +75,7 @@ public class Subroutines {
     };
 
     public static final OnceOffSubroutine LIFT_TO_ZERO = (robot) -> {
-        robot.pidLift.setLayer(0);
+        robot.pidLift.goToMin();
     };
 
     public static final OnceOffSubroutine LOWER_FLIPPER_LOW = (robot) -> {

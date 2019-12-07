@@ -132,8 +132,8 @@ public class SkystoneHardware {
     public static double HAS_BLOCK_CLAWS_THRESHOLD = 800;
 
     /* Servo positions */
-    public static double BLOCK_GRABBER_CLOSED = 0.65;
-    public static double BLOCK_GRABBER_OPEN = 0.25;
+    public static double BLOCK_GRABBER_CLOSED = 0.6;
+    public static double BLOCK_GRABBER_OPEN = 0.2;
 
     public static double FOUNDATION_LATCH_OPEN = 1;
     public static double FOUNDATION_LATCH_CLOSED = 0;

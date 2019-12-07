@@ -59,7 +59,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                 GRAB_FOUNDATION_LOCATION,
                 new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 50, 6, Math.PI * 0.5, new FoundationMovePointTurn(Math.PI, Math.toRadians(10))),
                 new HeadingControlledWaypoint(36, 39, 10, Math.PI),
-                new HeadingControlledWaypoint(12, 39, 6, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_UP),
+                new HeadingControlledWaypoint(12, 39, 6, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_UP), /* Latches are already up */
                 new HeadingControlledWaypoint(-25 + skystoneOffset, 39, 6, Math.PI, Subroutines.ENABLE_INTAKE),
 
                 new HeadingControlledWaypoint(-33 + skystoneOffset, 39, 6, Math.toRadians(225)),
@@ -68,7 +68,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                 new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X - 5 + skystoneOffset, 39, 12, Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
                 // Now make our move to deposit
                 new HeadingControlledWaypoint(0, 39, 12, Math.PI),
-                new StopWaypoint(20, 39, 8,
+                new StopWaypoint(40, 39, 8,
                         Math.PI, 8, new DepositUntilSuccessful())
         );
 

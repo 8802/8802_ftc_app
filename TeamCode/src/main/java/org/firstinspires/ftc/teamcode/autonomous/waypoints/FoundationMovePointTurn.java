@@ -63,6 +63,7 @@ public class FoundationMovePointTurn implements Subroutines.ArrivalInterruptSubr
                 robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.SET_FLIPPER_NORM_EXTEND));
                 robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.OPEN_CLAW));
                 robot.actionCache.add(new DelayedSubroutine(1250, Subroutines.LIFT_A_LITTLE));
+                robot.actionCache.add(new DelayedSubroutine(1500, Subroutines.SET_FOUNDATION_LATCHES_UP));
                 robot.actionCache.add(new DelayedSubroutine(1750, Subroutines.SET_FLIPPER_INTAKING));
                 robot.actionCache.add(new DelayedSubroutine(1750, Subroutines.LIFT_TO_ZERO));
             } else {
