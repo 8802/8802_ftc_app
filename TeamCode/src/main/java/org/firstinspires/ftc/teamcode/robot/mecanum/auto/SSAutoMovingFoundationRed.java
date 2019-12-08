@@ -5,12 +5,14 @@ import com.acmerobotics.dashboard.config.Config;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.DepositUntilSuccessful;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.FoundationGrabBackupPath;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.FoundationMovePointTurn;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.GrabBlockOptionallyRejectDouble;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.JoltsUntilBlockGrab;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
 import org.firstinspires.ftc.teamcode.common.elements.Alliance;
+import org.firstinspires.ftc.teamcode.common.elements.SkystoneState;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
@@ -53,7 +55,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                 new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + skystoneOffset, 41, 8, -0.75 * Math.PI),
 
                 // Now make our move to deposit
-                new HeadingControlledWaypoint(-8, 36, 12, Math.PI, Subroutines.GRAB_BLOCK_NO_EXTEND),
+                new HeadingControlledWaypoint(-20, 36, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                 new HeadingControlledWaypoint(18, 38, 12, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_OUT),
                 new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 38, 8, Math.PI * 0.5),
                 GRAB_FOUNDATION_LOCATION,
@@ -65,18 +67,48 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                 new HeadingControlledWaypoint(-33 + skystoneOffset, 39, 6, Math.toRadians(225)),
                 new StopWaypoint(-41 + skystoneOffset, 28, 4, Math.toRadians(225),
                         3, new JoltsUntilBlockGrab(joltDirection)),
-                new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X - 5 + skystoneOffset, 39, 12, Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
+                new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X - 5 + skystoneOffset, 39, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_INTAKED_BLOCK)),
                 // Now make our move to deposit
                 new HeadingControlledWaypoint(0, 39, 12, Math.PI),
-                new StopWaypoint(40, 39, 8,
+                new StopWaypoint(36, 39, 8,
                         Math.PI, 8, new DepositUntilSuccessful())
         );
 
+        if (SKYSTONE == SkystoneState.LOWER) {
+            scoreSkystones.addAll(Waypoint.collate(
+                    new HeadingControlledWaypoint(36, 39, 6, Math.PI),
+                    new HeadingControlledWaypoint(-20 + skystoneOffset, 39, 8, Math.PI, Subroutines.ENABLE_INTAKE),
+                    new HeadingControlledWaypoint(-28 + skystoneOffset, 39, 8, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
+                    new HeadingControlledWaypoint(-44 + skystoneOffset, 20, 8, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
+                    new HeadingControlledWaypoint(-65, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
+
+                    new Waypoint(-28 + skystoneOffset, 36, 8, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_INTAKED_BLOCK_AND_LIFT)),
+                    new HeadingControlledWaypoint(0, 39, 8, Math.PI)
+            ));
+        } else if (SKYSTONE == SkystoneState.MIDDLE || SKYSTONE == SkystoneState.UPPER) {
+            double shift = (SKYSTONE == SkystoneState.MIDDLE) ? SkystoneState.SKYSTONE_LENGTH : 0;
+            scoreSkystones.addAll(Waypoint.collate(
+                    new HeadingControlledWaypoint(-32, 36, 12, Math.PI, Subroutines.ENABLE_INTAKE),
+                    new HeadingControlledWaypoint(-42, 36, 6, Math.PI, Subroutines.ENABLE_INTAKE),
+
+                    new HeadingControlledWaypoint(-50, 36, 6, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
+                    new StopWaypoint(-58, 28, 4, Math.toRadians(225),
+                            3, new JoltsUntilBlockGrab(joltDirection)),
+                    new HeadingControlledWaypoint(-54, 36, 12, -Math.PI),
+                    new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_INTAKED_BLOCK_AND_LIFT))
+            ));
+        }
+
         scoreSkystones.addAll(Waypoint.collate(
-                new Waypoint(19, 39, 6),
-                new StopWaypoint(0, 39, 6, Math.PI, 3)
+                new StopWaypoint(36, 36, 8,
+                        Math.PI, 8, new DepositUntilSuccessful())
         ));
 
+        scoreSkystones.addAll(Waypoint.collate(
+                new Waypoint(36, 39, 6),
+                new StopWaypoint(0, 39, 6, Math.PI, 3)
+        ));
+        
         return scoreSkystones;
     }
 
