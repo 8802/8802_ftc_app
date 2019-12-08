@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.autonomous.waypoints.FoundationGrabBackupP
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.FoundationMovePointTurn;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.JoltsUntilBlockGrab;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.GrabBlockOptionallyRejectDouble;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
@@ -55,7 +56,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 new HeadingControlledWaypoint(BACK_PLUNGE_TARGET_X + skystoneOffset, 40, 10, -0.75 * Math.PI),
 
                 // Now make our move to deposit
-                new HeadingControlledWaypoint(-8, 36, 12, Math.PI, Subroutines.GRAB_BLOCK_NO_EXTEND),
+                new HeadingControlledWaypoint(-20, 36, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                 new HeadingControlledWaypoint(18, 38, 12, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_OUT),
                 new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 38, 8, Math.PI * 0.5),
                 GRAB_FOUNDATION_LOCATION,
@@ -67,10 +68,10 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 new HeadingControlledWaypoint(-28 + skystoneOffset, 36, 6, Math.toRadians(225)),
                 new StopWaypoint(-36 + skystoneOffset, 28, 4, Math.toRadians(225),
                         3, new JoltsUntilBlockGrab(joltDirection)),
-                new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + skystoneOffset, 36, 12, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK),
+                new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + skystoneOffset, 36, 12, -Math.PI),
                 // Now make our move to deposit
-                new HeadingControlledWaypoint(0, 36, 12, Math.PI, Subroutines.LIFT_LEVEL_ONE),
-                new StopWaypoint(40, 36, 8,
+                new HeadingControlledWaypoint(0, 36, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_INTAKED_BLOCK)),
+                new StopWaypoint(36, 36, 8,
                         Math.PI, 8, new DepositUntilSuccessful())
         );
 
@@ -86,8 +87,8 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                     new HeadingControlledWaypoint(-44 + skystoneOffset, 20, 8, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
                     new HeadingControlledWaypoint(-65, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
 
-                    new Waypoint(-28 + skystoneOffset, 36, 8),
-                    new HeadingControlledWaypoint(-20 + skystoneOffset, 39, 8, Math.PI, Subroutines.GRAB_INTAKED_BLOCK)
+                    new Waypoint(-28 + skystoneOffset, 36, 8, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_INTAKED_BLOCK_AND_LIFT)),
+                    new HeadingControlledWaypoint(0, 39, 8, Math.PI)
             ));
         } else if (SKYSTONE == SkystoneState.MIDDLE || SKYSTONE == SkystoneState.UPPER) {
             double shift = (SKYSTONE == SkystoneState.MIDDLE) ? SkystoneState.SKYSTONE_LENGTH : 0;
@@ -98,13 +99,13 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                     new HeadingControlledWaypoint(-50, 36, 6, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
                     new StopWaypoint(-58, 28, 4, Math.toRadians(225),
                             3, new JoltsUntilBlockGrab(joltDirection)),
-                    new HeadingControlledWaypoint(-54, 36, 12, -Math.PI, Subroutines.GRAB_INTAKED_BLOCK)
+                    new HeadingControlledWaypoint(-54, 36, 12, -Math.PI),
+                    new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_INTAKED_BLOCK_AND_LIFT))
             ));
         }
 
         scoreSkystones.addAll(Waypoint.collate(
-                new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.LIFT_LEVEL_ONE),
-                new StopWaypoint(40, 36, 8,
+                new StopWaypoint(36, 36, 8,
                         Math.PI, 8, new DepositUntilSuccessful())
         ));
 

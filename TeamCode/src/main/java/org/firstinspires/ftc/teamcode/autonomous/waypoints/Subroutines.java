@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 @Config
 public class Subroutines {
     public static int LIFT_RAISE_AMOUNT = 800;
+    public static int HIGH_LIFT_RAISE_AMOUNT = 1200;
 
     public interface Subroutine {}
 
@@ -62,6 +63,14 @@ public class Subroutines {
         robot.rightFoundationLatch.servo.setPosition(SkystoneHardware.FOUNDATION_LATCH_OUT);
     };
 
+    public static final OnceOffSubroutine SET_CAPSTONE_IN = (robot) -> {
+        robot.capstoneDropper.retract();
+    };
+
+    public static final OnceOffSubroutine SET_CAPSTONE_OUT = (robot) -> {
+        robot.capstoneDropper.extend();
+    };
+
     public static final OnceOffSubroutine LIFT_LEVEL_ONE = (robot) -> {
         robot.pidLift.setLayer(1);
     };
@@ -70,8 +79,16 @@ public class Subroutines {
         robot.pidLift.changePosition(LIFT_RAISE_AMOUNT);
     };
 
+    public static final OnceOffSubroutine LIFT_A_FAIR_BIT = (robot) -> {
+        robot.pidLift.changePosition(HIGH_LIFT_RAISE_AMOUNT);
+    };
+
     public static final OnceOffSubroutine LOWER_A_LITTLE = (robot) -> {
         robot.pidLift.changePosition(-LIFT_RAISE_AMOUNT);
+    };
+
+    public static final OnceOffSubroutine LOWER_A_FAIR_BIT = (robot) -> {
+        robot.pidLift.changePosition(-HIGH_LIFT_RAISE_AMOUNT);
     };
 
     public static final OnceOffSubroutine LOWER_LIFT_WITH_CACHE = (robot) -> {
@@ -104,6 +121,13 @@ public class Subroutines {
         robot.blockFlipper.readyBlockGrab();
         robot.blockGrabber.extend(); // Grab the block
         robot.actionCache.add(new DelayedSubroutine(850, Subroutines.SET_FLIPPER_DRIVING));
+    };
+
+    public static final OnceOffSubroutine GRAB_INTAKED_BLOCK_AND_LIFT = (robot) -> {
+        robot.blockFlipper.readyBlockGrab();
+        robot.blockGrabber.extend(); // Grab the block
+        robot.actionCache.add(new DelayedSubroutine(850, Subroutines.SET_FLIPPER_DRIVING));
+        robot.actionCache.add(new DelayedSubroutine(850, Subroutines.LIFT_LEVEL_ONE));
     };
 
     public static final OnceOffSubroutine GRAB_BLOCK_NO_EXTEND = (robot) -> {

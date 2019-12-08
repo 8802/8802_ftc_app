@@ -11,11 +11,12 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 @Config
 public class FoundationMovePointTurn implements Subroutines.ArrivalInterruptSubroutine {
     enum Mode {
-        TURNING, CHECKING, REDROPPING
+        TURNING, CHECKING, WAITING
     }
     public static double REDUCTION_DIST = Math.PI/3;
     public static int TIME_UNTIL_FIRST_CHECK_MS = 1000;
     public static int TIME_UNTIL_SUBSEQUENT_CHECKS_MS = 1500;
+    public static int TIME_UNTIL_DRIVE_AWAY = 500;
 
     double targetHeading;
     double allowedError;
@@ -63,16 +64,19 @@ public class FoundationMovePointTurn implements Subroutines.ArrivalInterruptSubr
                 robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.SET_FLIPPER_NORM_EXTEND));
                 robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.OPEN_CLAW));
                 robot.actionCache.add(new DelayedSubroutine(1250, Subroutines.LIFT_A_LITTLE));
-                robot.actionCache.add(new DelayedSubroutine(1500, Subroutines.SET_FOUNDATION_LATCHES_UP));
                 robot.actionCache.add(new DelayedSubroutine(1750, Subroutines.SET_FLIPPER_INTAKING));
                 robot.actionCache.add(new DelayedSubroutine(1750, Subroutines.LIFT_TO_LAYER_ZERO));
             } else {
-                // If we don't have a block in the tray, meaning we placed successfully:
-                return true;
-                // Don't lift the latches and don't worry about the fact we haven't finished placing
-                // yet, because we're just going to back up with the foundation.
+                mode = Mode.WAITING;
+                checkAtTime = ms() + TIME_UNTIL_DRIVE_AWAY;
+                Subroutines.SET_FOUNDATION_LATCHES_UP.runOnce(robot);
             }
         }
+
+        if (mode == Mode.WAITING && ms() > checkAtTime) {
+            return true;
+        }
+
         return false;
     }
 

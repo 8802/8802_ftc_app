@@ -129,7 +129,7 @@ public class SkystoneHardware {
     public static int TRAY_DETECTOR_PORT = 0;
     public static double HAS_BLOCK_TRAY_THRESHOLD = 1800;
     public static int CLAWS_DETECTOR_PORT = 2;
-    public static double HAS_BLOCK_CLAWS_THRESHOLD = 800;
+    public static double HAS_BLOCK_CLAWS_THRESHOLD = 75;
 
     /* Servo positions */
     public static double BLOCK_GRABBER_CLOSED = 0.6;

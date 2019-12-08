@@ -19,7 +19,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
 
     SkystoneHardware robot;
 
-    boolean leftStickButtonPrev, rightStickButtonPrev, rightTriggerPrev, leftBumperPrev, rightBumperPrev, aPrev, yPrev, xPrev, bPrev;
+    boolean leftStickButtonPrev, rightStickButtonPrev, rightTriggerPrev, leftBumperPrev, rightBumperPrev, aPrev, yPrev, xPrev, bPrev, downPrev;
 
     enum RightTriggerActions {
         GRAB, VERIFY, DROP;
@@ -60,6 +60,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         yPrev = gamepad1.y;
         xPrev = gamepad1.x;
         bPrev = gamepad1.b;
+        downPrev = gamepad1.dpad_down;
 
         intakeOn = false;
         nextRightTriggerAction = RightTriggerActions.GRAB;
@@ -142,17 +143,39 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
 
                 case DROP:
                     robot.blockGrabber.retract();
-                    robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_LITTLE));
-                    robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.SET_FLIPPER_INTAKING));
-                    robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.LOWER_LIFT_WITH_CACHE));
-                    robot.actionCache.add(new DelayedSubroutine(1500, Subroutines.ENABLE_INTAKE));
+                    if (robot.pidLift.layer <= 7) {
+                        robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_LITTLE));
+                        robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.SET_FLIPPER_INTAKING));
+                        robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.LOWER_LIFT_WITH_CACHE));
+                        robot.actionCache.add(new DelayedSubroutine(1500, Subroutines.ENABLE_INTAKE));
+                    } else {
+                        robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_FAIR_BIT));
+                        robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.SET_FLIPPER_INTAKING));
+                        robot.actionCache.add(new DelayedSubroutine(2000, Subroutines.LOWER_LIFT_WITH_CACHE));
+                        robot.actionCache.add(new DelayedSubroutine(2500, Subroutines.ENABLE_INTAKE));
+                    }
                     break;
             }
 
             nextRightTriggerAction = nextRightTriggerAction.next();
-            rightTriggerPrev = true;
+            rightTriggerPrev = true; // TODO remove
         } else if (!rightTrigger) {
             rightTriggerPrev = false;
+        }
+
+        // Dpad down is an alternative block deposit button, that does everything RT does but doesn't lower lift
+        if (gamepad1.dpad_down && !downPrev) {
+            downPrev = true;
+            if (nextRightTriggerAction == RightTriggerActions.DROP) { // We only do stuff in this state
+                nextRightTriggerAction = nextRightTriggerAction.next();
+                robot.blockGrabber.retract();
+                robot.capstoneDropper.extend();
+                robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_FAIR_BIT));
+                robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.SET_FLIPPER_INTAKING));
+                robot.actionCache.add(new DelayedSubroutine(2000, Subroutines.LOWER_A_FAIR_BIT));
+            }
+        } else if (!gamepad1.dpad_down) {
+            downPrev = false;
         }
 
         /* Lit control */

@@ -9,15 +9,13 @@ import static com.qualcomm.hardware.rev.RevBlinkinLedDriver.BlinkinPattern.*;
 
 @Config
 public class SimpleLift {
-    public final int MAX_LAYER = 8;
-    public final RevBlinkinLedDriver.BlinkinPattern[] LAYER_PATTERNS = {
-            BLACK, RED, GOLD, GREEN, BLUE, VIOLET, WHITE, STROBE_RED, STROBE_WHITE
-    };
-
+    public static int MAX_LAYER = 9;
     // We separate these out to make changing them with FTCDashboard easier
     public static int LAYER_0 = 0;
-    public static int LAYER_SHIFT = 500;
-    public static int STOP_RAPID_DESCENT = 500;
+    public static int LAYER_SHIFT = 450;
+    public static int UPPER_LAYERS_SHIFT = 200;
+    public static int UPPER_LAYERS_START = 5;
+    public static int STOP_RAPID_DESCENT = 350;
 
 
     private DcMotorEx lift;
@@ -40,10 +38,9 @@ public class SimpleLift {
     }
 
     public void changeLayer(int addend) {
-        if (addend + layer < 0 || addend + layer > MAX_LAYER) {
-            return; // Don't change anything if we would go out of bounds
+        if (addend + layer >= 0 || addend + layer <= MAX_LAYER) {
+            layer += addend;
         }
-        layer += addend;
         setLiftPositionFromLayer();
     }
 
@@ -55,8 +52,10 @@ public class SimpleLift {
     void setLiftPositionFromLayer() {
         endRapidDescent();
         targetPosition = LAYER_0 + layer * LAYER_SHIFT;
+        if (layer >= UPPER_LAYERS_START) {
+            targetPosition += UPPER_LAYERS_SHIFT;
+        }
         lift.setTargetPosition(targetPosition);
-        leds.setPattern(LAYER_PATTERNS[layer]);
     }
 
     public void changePosition(int delta) {

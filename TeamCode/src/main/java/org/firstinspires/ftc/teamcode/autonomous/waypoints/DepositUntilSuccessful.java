@@ -20,7 +20,7 @@ public class DepositUntilSuccessful implements Subroutines.ArrivalInterruptSubro
     @Override
     public boolean runCycle(SkystoneHardware robot) {
         if (timer == null) {
-            robot.setPowers(MecanumUtil.STOP);
+            robot.setPowers(new MecanumPowers(-0.3, 0, 0));
             timer = new ElapsedTime();
             Subroutines.SMART_DROP_BLOCK.runOnce(robot);
         }
