@@ -12,9 +12,11 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 public class DepositUntilSuccessful implements Subroutines.ArrivalInterruptSubroutine {
 
     ElapsedTime timer;
+    int attempt;
 
     public DepositUntilSuccessful() {
         this.timer = null;
+        this.attempt = 0;
     }
 
     @Override
@@ -23,15 +25,24 @@ public class DepositUntilSuccessful implements Subroutines.ArrivalInterruptSubro
             robot.setPowers(new MecanumPowers(-0.3, 0, 0));
             timer = new ElapsedTime();
             Subroutines.SMART_DROP_BLOCK.runOnce(robot);
+            attempt = 1;
         }
 
-        if (timer.milliseconds() > 2500 && !robot.hasBlockInTray()) {
-            return true;
+        // TODO wait longer if this is our second time
+        if (attempt == 1) {
+            if (timer.milliseconds() > 2000 && !robot.hasBlockInTray()) {
+                return true;
+            }
+        } else {
+            if (timer.milliseconds() > 3000 && !robot.hasBlockInTray()) {
+                return true;
+            }
         }
 
         if (timer.milliseconds() > 3000 && robot.hasBlockInTray()) {
             timer.reset();
             replaceBlock(robot);
+            attempt += 1;
         }
 
         return false;

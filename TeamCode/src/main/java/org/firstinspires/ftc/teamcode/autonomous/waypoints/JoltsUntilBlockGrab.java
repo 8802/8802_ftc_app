@@ -25,8 +25,6 @@ public class JoltsUntilBlockGrab implements Subroutines.ArrivalInterruptSubrouti
     @Override
     public boolean runCycle(SkystoneHardware robot) {
         if (robot.hasBlockInClaws() || robot.hasBlockInTray()) {
-            /* TODO re-add intake reverse once intake works more reliably */
-            //robot.actionCache.add(new DelayedSubroutine(600, Subroutines.REVERSE_INTAKE));
             robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.STOP_INTAKE));
             return true; // Advance to next motion path
         }

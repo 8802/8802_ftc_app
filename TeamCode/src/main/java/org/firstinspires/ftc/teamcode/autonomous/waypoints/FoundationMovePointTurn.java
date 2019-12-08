@@ -14,8 +14,8 @@ public class FoundationMovePointTurn implements Subroutines.ArrivalInterruptSubr
         TURNING, CHECKING, WAITING
     }
     public static double REDUCTION_DIST = Math.PI/3;
-    public static int TIME_UNTIL_FIRST_CHECK_MS = 1000;
-    public static int TIME_UNTIL_SUBSEQUENT_CHECKS_MS = 1500;
+    public static int TIME_UNTIL_FIRST_CHECK_MS = 1500;
+    public static int TIME_UNTIL_SUBSEQUENT_CHECKS_MS = 2000;
     public static int TIME_UNTIL_DRIVE_AWAY = 500;
 
     double targetHeading;

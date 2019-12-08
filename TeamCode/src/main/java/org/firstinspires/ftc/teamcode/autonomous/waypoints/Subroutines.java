@@ -105,6 +105,17 @@ public class Subroutines {
 
     public static final RepeatedSubroutine CHECK_BLOCK_GRAB = (robot) -> robot.hasBlockInClaws();
 
+    public static final RepeatedSubroutine CHECK_BLOCK_GRAB_OR_TRAY = (robot) -> {
+        boolean result = robot.hasBlockInClaws() || robot.hasBlockInTray();
+        System.out.println(System.currentTimeMillis());
+        if (result) {
+            System.out.println("Ran CHECK_BLOCK_GRAB_WITH_TRAY and got result 'true'");
+        } else {
+            System.out.println("Ran CHECK_BLOCK_GRAB_WITH_TRAY and got result 'false'");
+        }
+        return result;
+    };
+
     public static final OnceOffSubroutine STOP_OP_MODE_IF_DOUBLED_BLOCK = (robot) -> {
         if (robot.hasBlockInClaws()) {
             // TODO add code to stop robot
