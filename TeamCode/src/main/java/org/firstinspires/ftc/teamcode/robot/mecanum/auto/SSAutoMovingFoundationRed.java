@@ -29,11 +29,11 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware.FIEL
 @Config
 public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
 
-    Waypoint GRAB_FOUNDATION_LOCATION = new StopWaypoint(FIELD_RADIUS - 10 - (34.5/2), 30,
+    Waypoint GRAB_FOUNDATION_LOCATION = new StopWaypoint(FIELD_RADIUS - 9 - (34.5/2), 34,
             6, Math.PI * 0.5, 4, new FoundationGrabBackupPath());
 
     public static double PLUNGE_TARGET_Y = 22;
-    public static double BACK_PLUNGE_TARGET_X = -FIELD_RADIUS + 13;
+    public static double BACK_PLUNGE_TARGET_X = -FIELD_RADIUS + 15;
     public static double FRONT_PLUNGE_TARGET_X = -FIELD_RADIUS + 38;
 
     @Override
@@ -59,7 +59,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                 // Now make our move to deposit
                 new HeadingControlledWaypoint(-20, 36, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                 new HeadingControlledWaypoint(18, 38, 12, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_OUT),
-                new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 38, 8, Math.PI * 0.5),
+                new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 39, 8, Math.PI * 0.5),
                 GRAB_FOUNDATION_LOCATION,
                 new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 53, 6, Math.PI * 0.5, new FoundationMovePointTurn(Math.PI, Math.toRadians(10))),
                 new HeadingControlledWaypoint(36, 39, 10, Math.PI),
@@ -76,7 +76,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                         Math.PI, 8, new DepositUntilSuccessful())
         );
 
-        if (SKYSTONE == SkystoneState.MIDDLE || SKYSTONE == SkystoneState.UPPER) {
+        /*if (SKYSTONE == SkystoneState.MIDDLE || SKYSTONE == SkystoneState.UPPER) {
             double shift = -4;
             scoreSkystones.addAll(Waypoint.collate(
                     new HeadingControlledWaypoint(-40 + shift, 36, 12, Math.PI, Subroutines.ENABLE_INTAKE),
@@ -93,11 +93,11 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
         scoreSkystones.addAll(Waypoint.collate(
                 new StopWaypoint(36, 39, 8,
                         Math.PI, 8, new DepositUntilSuccessful())
-        ));
+        ));*/
 
         scoreSkystones.addAll(Waypoint.collate(
-                new HeadingControlledWaypoint(18, 39, 8, Math.PI),
-                new StopWaypoint(0, 39, 6, Math.PI, 3)
+                new HeadingControlledWaypoint(18, 38, 8, Math.PI),
+                new StopWaypoint(0, 38, 6, Math.PI, 3)
         ));
 
         return scoreSkystones;

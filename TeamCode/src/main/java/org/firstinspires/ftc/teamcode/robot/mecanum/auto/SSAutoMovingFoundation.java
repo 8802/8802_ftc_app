@@ -31,7 +31,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
             6, Math.PI * 0.5, 4, new FoundationGrabBackupPath());
 
     public static double PLUNGE_TARGET_Y = 22;
-    public static double BACK_PLUNGE_TARGET_X = -FIELD_RADIUS + 13;
+    public static double BACK_PLUNGE_TARGET_X = -FIELD_RADIUS + 15;
     public static double FRONT_PLUNGE_TARGET_X = -FIELD_RADIUS + 38;
 
     @Override
