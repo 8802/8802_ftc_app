@@ -85,8 +85,8 @@ public class SkystoneHardware {
     private MecanumPowers powers;
 
     /* Components */
-    private ExpansionHubEx chassisHub;
-    private ExpansionHubEx mechanicHub;
+    public ExpansionHubEx chassisHub;
+    public ExpansionHubEx mechanicHub;
     public BNO055IMU imu;
     public WebcamName camera;
 
@@ -95,9 +95,9 @@ public class SkystoneHardware {
     public DcMotorEx backLeft;
     public DcMotorEx backRight;
 
+    public List<DcMotorEx> allMotors;
+    public List<Servo> allServos;
     public List<DcMotorEx> chassisMotors;
-    public List<DcMotorEx> leftChassisMotors;
-    public List<DcMotorEx> rightChassisMotors;
 
     public DcMotorEx intakeLeft;
     public DcMotorEx intakeRight;
@@ -166,8 +166,6 @@ public class SkystoneHardware {
         powers = new MecanumPowers(0, 0, 0, 0);
         // Set up fast access lists
         chassisMotors = Arrays.asList(frontLeft, frontRight, backLeft, backRight);
-        leftChassisMotors = Arrays.asList(frontLeft, backLeft);
-        rightChassisMotors = Arrays.asList(frontRight, backRight);
 
         /* Intake */
         intakeLeft = hardwareMap.get(DcMotorEx.class, "intakeLeft");
@@ -183,6 +181,9 @@ public class SkystoneHardware {
         /* Lift and block grabbers */
         lift = hardwareMap.get(DcMotorEx.class, "lift");
         pidLift = new SimpleLift(lift, leds); // Also initializes lift
+
+        allMotors = Arrays.asList(intakeLeft, intakeRight, lift);
+        allMotors.addAll(chassisMotors);
 
         blockGrabber = new ServoToggle(
                 hardwareMap.get(Servo.class, "blockGrabber"),
@@ -206,6 +207,9 @@ public class SkystoneHardware {
         capstoneDropper = new ServoToggle(
                 hardwareMap.get(Servo.class, "capstoneDropper"),
                 CAPSTONE_RETRACTED, CAPSTONE_DROPPED);
+
+        allServos = Arrays.asList(blockFlipper.leftFlipper, blockFlipper.rightFlipper,
+                leftFoundationLatch.servo, rightFoundationLatch.servo, blockGrabber.servo, capstoneDropper.servo);
 
         /* Hubs for bulk reads */
         chassisHub = hardwareMap.get(ExpansionHubEx.class, "chassisHub");
