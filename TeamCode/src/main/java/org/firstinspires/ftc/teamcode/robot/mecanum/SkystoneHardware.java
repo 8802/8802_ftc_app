@@ -28,6 +28,7 @@ import org.firstinspires.ftc.teamcode.autonomous.waypoints.DelayedSubroutine;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.common.LoadTimer;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.DepositFlipper;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.DoubleMotorLift;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrentQueue;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.common.math.TimePose;
@@ -101,7 +102,9 @@ public class SkystoneHardware {
 
     public DcMotorEx intakeLeft;
     public DcMotorEx intakeRight;
-    public DcMotorEx lift;
+    public DcMotorEx liftLeft;
+    public DcMotorEx liftRight;
+    public DoubleMotorLift lift;
 
     public ServoToggle blockGrabber;
     public DepositFlipper blockFlipper;
@@ -170,6 +173,8 @@ public class SkystoneHardware {
         /* Intake */
         intakeLeft = hardwareMap.get(DcMotorEx.class, "intakeLeft");
         intakeRight = hardwareMap.get(DcMotorEx.class, "intakeRight");
+        liftLeft = hardwareMap.get(DcMotorEx.class, "liftLeft");
+        liftRight = hardwareMap.get(DcMotorEx.class, "liftRight");
         intakeLeft.setDirection(DcMotor.Direction.REVERSE);
         lastIntakeCurrent = new IntakeCurrent(0, 0);
         intakeCurrentQueue = new IntakeCurrentQueue();
@@ -179,11 +184,10 @@ public class SkystoneHardware {
         leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
 
         /* Lift and block grabbers */
-        lift = hardwareMap.get(DcMotorEx.class, "lift");
+        lift = new DoubleMotorLift(liftLeft, liftRight);
         pidLift = new SimpleLift(lift, leds); // Also initializes lift
 
-        allMotors = Arrays.asList(intakeLeft, intakeRight, lift);
-        allMotors.addAll(chassisMotors);
+        allMotors = Arrays.asList(frontLeft, backLeft, frontRight, backRight, intakeLeft, intakeRight, liftLeft, liftRight);
 
         blockGrabber = new ServoToggle(
                 hardwareMap.get(Servo.class, "blockGrabber"),
@@ -389,6 +393,9 @@ public class SkystoneHardware {
                 iterator.remove();
             }
         }
+
+        // Update our lift
+        lift.update();
 
         // Adjust elapsed time
         double elapsed = ((System.nanoTime() - lastTelemetryUpdate) / 1000000.0);

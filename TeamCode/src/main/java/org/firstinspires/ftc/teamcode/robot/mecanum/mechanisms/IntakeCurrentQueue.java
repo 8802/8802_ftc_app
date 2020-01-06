@@ -62,4 +62,8 @@ public class IntakeCurrentQueue {
         }
         return false; // For when queue is empty
     }
+
+    public boolean hasBlock() {
+        return queue.peekFirst().value.leftMAmps > BLOCK_INTAKE_DETECT_MAMPS && queue.peekFirst().value.rightMAmps > BLOCK_INTAKE_DETECT_MAMPS;
+    }
 }

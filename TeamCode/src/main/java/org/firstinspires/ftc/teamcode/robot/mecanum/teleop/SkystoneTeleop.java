@@ -16,6 +16,7 @@ import org.openftc.revextensions2.RevBulkData;
 @Config
 public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
     public static double TRIGGER_THRESHOLD = 0.2;
+    public static double INTAKE_POWER = 0.5;
 
     SkystoneHardware robot;
 
@@ -97,7 +98,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         if (gamepad1.left_stick_button && !leftStickButtonPrev) {
             leftStickButtonPrev = true;
             intakeOn = !intakeOn; // Toggle intake
-            robot.setIntakePower(intakeOn ? 1 : 0);
+            robot.setIntakePower(intakeOn ? INTAKE_POWER : 0);
             robot.blockGrabber.retract();
         } else if (!gamepad1.left_stick_button) {
             leftStickButtonPrev = false;
@@ -158,7 +159,6 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
             }
 
             nextRightTriggerAction = nextRightTriggerAction.next();
-            rightTriggerPrev = true; // TODO remove
         } else if (!rightTrigger) {
             rightTriggerPrev = false;
         }
@@ -193,9 +193,6 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         } else if (!gamepad1.right_bumper) {
             rightBumperPrev = false;
         }
-
-        // Recalculates sudden drop
-        robot.pidLift.update();
 
         /* Misc servos */
         if (gamepad1.y && !yPrev) {

@@ -50,8 +50,8 @@ public abstract class SelfTest extends LinearOpMode {
     public static double INTAKE_RUNNING_MIN_POWER = 1; // Amps
     public static double INTAKE_RUNNING_MAX_POWER = 8; // Amps
 
-    public static int MIN_LIFT_MAX_HEIGHT_ENCODER_TICKS = 3600;
-    public static int MAX_LIFT_ZERO_ENCODER_TICKS = 50;
+    public static int MIN_LIFT_MAX_HEIGHT_ENCODER_TICKS = 60000;
+    public static int MAX_LIFT_ZERO_ENCODER_TICKS = 300;
     public static int MIN_LIFT_STALL_POWER = 4; // Amps, note motor will not be operating at full power
 
     public static double MAX_HOLDING_SERVO_AMPS = 0.5;
@@ -100,6 +100,9 @@ public abstract class SelfTest extends LinearOpMode {
         verifyHubOperational(robot.chassisHub);
         verifyHubOperational(robot.mechanicHub);
 
+        // Verify sensors read they're not being pressed
+        verifySensorsWork();
+
         // Drive motor forward and verify all motors draw right amount of current
         verifyDriveForwardWorks();
 
@@ -108,10 +111,15 @@ public abstract class SelfTest extends LinearOpMode {
         verifyIntakeWorks(robot.intakeRight, "intakeRight");
 
         // Lift motors are plugged in and encoder works
-        verifyLiftWorks();
+        //verifyLiftWorks();
 
         // Verify each servo motor works
-
+        double chassisHubPower = averageHubTotalCurrent(robot.chassisHub);
+        double mechanicHubPower = averageHubTotalCurrent(robot.mechanicHub);
+        verifyServoWorks(robot.leftFoundationLatch, "leftFoundationLatch", robot.mechanicHub, mechanicHubPower);
+        verifyServoWorks(robot.rightFoundationLatch, "rightFoundationLatch", robot.chassisHub, chassisHubPower);
+        verifyServoWorks(robot.blockGrabber, "blockGrabber", robot.mechanicHub, mechanicHubPower);
+        verifyServoWorks(robot.capstoneDropper, "capstoneDropper", robot.chassisHub, chassisHubPower);
     }
 
     private void addResult(String message, boolean good) {
@@ -122,51 +130,91 @@ public abstract class SelfTest extends LinearOpMode {
         log.add(output);
     }
 
-    private void averageHubTotalCurrent(ExpansionHubEx hub) {
+    // The goal of this function is to verify the flipper works in normal operation, NOT to stress
+    // test our flipper servos. It would suck if running the self test broke the robot.
+    private void verifyFlippersWork() {
+        // Make sure we don't get a voltage drop
+
+        robot.blockFlipper.leftFlipper.getController().pwmEnable();
+        robot.blockFlipper.rightFlipper.getController().pwmEnable();
+
+        robot.blockFlipper.readyBlockIntake();
 
     }
 
-    private void verifyServoWorks(ServoToggle s, ExpansionHubEx hub) throws InterruptedException {
-        // The problem here
-        for (int i = 0; i < )
-        double prevAmps = hub.getTotalModuleCurrentDraw(ExpansionHubEx.CurrentDrawUnits.AMPS);
+    private void verifySensorsWork() {
+        robot.lastChassisRead = robot.chassisHub.getBulkInputData();
+        addResult("Block claws analog input reports voltage " +
+                        robot.lastChassisRead.getAnalogInputValue(robot.CLAWS_DETECTOR_PORT) +
+                        "/4096",
+                !robot.hasBlockInClaws());
+        addResult("Tray analog input reports voltage " +
+                        robot.lastChassisRead.getAnalogInputValue(robot.TRAY_DETECTOR_PORT) +
+                        "/4096",
+                !robot.hasBlockInTray());
+    }
+
+    private double averageHubTotalCurrent(ExpansionHubEx hub) {
+        double sum = 0;
+        for (int i = 0; i < CURRENT_READ_ITERATIONS; i++) {
+            sum += hub.getTotalModuleCurrentDraw(ExpansionHubEx.CurrentDrawUnits.MILLIAMPS);
+        }
+        return sum / CURRENT_READ_ITERATIONS;
+    }
+
+    private void verifyServoWorks(ServoToggle s, String name, ExpansionHubEx hub, double offCurrent) throws InterruptedException {
         s.servo.getController().pwmEnable();
         s.retract();
-        wait(100);
+        wait(1000);
+        double retracted = averageHubTotalCurrent(hub) - offCurrent;
         s.extend();
-
+        wait(100);
+        double running = averageHubTotalCurrent(hub) - offCurrent;
+        wait(900);
+        double extended = averageHubTotalCurrent(hub) - offCurrent;
         s.servo.getController().pwmDisable();
+
+        addResult("Servo " + name + " draws " + running + " mA while running",
+                running < MAX_HOLDING_SERVO_AMPS && running > MIN_HOLDING_SERVO_AMPS);
+        addResult("Servo " + name + " draws " + retracted + " mA while retracted",
+                retracted < MAX_HOLDING_SERVO_AMPS && retracted > MIN_HOLDING_SERVO_AMPS);
+        addResult("Servo " + name + " draws " + extended + " mA while extended",
+                extended < MAX_HOLDING_SERVO_AMPS && extended > MIN_HOLDING_SERVO_AMPS);
     }
 
     private void verifyLiftWorks() throws InterruptedException {
-        robot.lift.setMotorEnable();
-        robot.lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.lift.setPower(0);
+        robot.liftLeft.setMotorEnable();
+        robot.liftRight.setMotorEnable();
+        robot.liftLeft.setPower(0);
+        robot.liftRight.setPower(0);
         wait(250);
-        double current = getCurrent(robot.lift);
+
+        double current = getCurrent(robot.liftLeft) + getCurrent(robot.liftRight);
         int currentMA = (int) current * 1000;
         addResult("Depowered lift is drawing " + currentMA + " mA",
                 current < MOTOR_MAX_DISABLED_POWER);
 
-        robot.lift.setPower(0.75);
+        robot.liftLeft.setPower(0.4);
+        robot.liftRight.setPower(0.4);
         wait(5000);
 
-        int position = robot.lift.getCurrentPosition();
+        int position = robot.liftLeft.getCurrentPosition();
         addResult("Lift max up position is " + position + " ticks",
                 position > MIN_LIFT_MAX_HEIGHT_ENCODER_TICKS);
-        current = getCurrent(robot.lift);
+        current = getCurrent(robot.liftLeft) + getCurrent(robot.liftRight);
         addResult("Stalling lift is drawing " + current + " A",
                 current > MIN_LIFT_STALL_POWER);
 
-        robot.lift.setPower(-1);
+        robot.liftLeft.setPower(-0.1);
+        robot.liftRight.setPower(-0.1);
         wait(2000);
 
-        position = robot.lift.getCurrentPosition();
+        position = robot.liftLeft.getCurrentPosition();
         addResult("Lift max down position is " + position + " ticks",
                 position < MAX_LIFT_ZERO_ENCODER_TICKS);
 
-        robot.lift.setPower(0);
-        robot.lift.setMotorDisable();
+        robot.liftLeft.setMotorDisable();
+        robot.liftRight.setMotorDisable();
     }
 
     private void verifyIntakeWorks(DcMotorEx m, String deviceName) throws InterruptedException {
