@@ -11,8 +11,10 @@ import static com.qualcomm.hardware.rev.RevBlinkinLedDriver.BlinkinPattern.*;
 public class SimpleLift {
     public static int MAX_LAYER = 9;
     // We separate these out to make changing them with FTCDashboard easier
-    public static int LAYER_0 = 0;
-    public static int LAYER_SHIFT = 5000;
+    public static int LAYER_0 = 4500;
+    public static int DROP_LAYER_0 = 0;
+    public static int GRABBING = 0;
+    public static int LAYER_SHIFT = 7000;
     public static int UPPER_LAYERS_SHIFT = 0;
     public static int UPPER_LAYERS_START = 5;
 
@@ -40,8 +42,16 @@ public class SimpleLift {
         setLiftPositionFromLayer();
     }
 
-    void setLiftPositionFromLayer() {
+    public void setLiftPositionFromLayer() {
         targetPosition = LAYER_0 + layer * LAYER_SHIFT;
+        if (layer >= UPPER_LAYERS_START) {
+            targetPosition += UPPER_LAYERS_SHIFT;
+        }
+        lift.setTarget(targetPosition);
+    }
+
+    public void setLiftPositionWithoutRaise() {
+        targetPosition = DROP_LAYER_0 + layer * LAYER_SHIFT;
         if (layer >= UPPER_LAYERS_START) {
             targetPosition += UPPER_LAYERS_SHIFT;
         }
@@ -53,7 +63,7 @@ public class SimpleLift {
         lift.setTarget(targetPosition);
     }
 
-    public void goToMin() {
-        lift.setTarget(LAYER_0);
+    public void cacheToGrabbing() {
+        lift.setTarget(GRABBING);
     }
 }

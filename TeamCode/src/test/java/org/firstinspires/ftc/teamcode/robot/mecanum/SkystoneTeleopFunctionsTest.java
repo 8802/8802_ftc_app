@@ -4,12 +4,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.simulator.SimulatedOpModeFactory;
-import org.firstinspires.ftc.simulator.utils.MockDcMotorEx;
-import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.DepositFlipper;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.SimpleLift;
-import org.firstinspires.ftc.teamcode.robot.mecanum.teleop.SkystoneRobotCentric;
+import org.firstinspires.ftc.teamcode.robot.mecanum.teleop.SkystoneTeleop;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -25,7 +23,7 @@ class SkystoneTeleopFunctionsTest {
 
     @Test
     void opModeTest() {
-        SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(SkystoneRobotCentric.class);
+        SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(SkystoneTeleop.class);
         simOpMode.opMode.start();
 
         testStartingPosition(simOpMode, simOpMode.robot);

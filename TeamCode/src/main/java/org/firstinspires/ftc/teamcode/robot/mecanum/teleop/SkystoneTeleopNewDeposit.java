@@ -2,22 +2,21 @@ package org.firstinspires.ftc.teamcode.robot.mecanum.teleop;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.DelayedSubroutine;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
-import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
+import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 import org.openftc.revextensions2.RevBulkData;
 
 
 @Config
 @TeleOp(name="Robot centric teleop")
-public class SkystoneTeleop extends SimulatableMecanumOpMode {
+public class SkystoneTeleopNewDeposit extends SimulatableMecanumOpMode {
     public static double TRIGGER_THRESHOLD = 0.2;
     public static double INTAKE_POWER = 0.65;
     public static double LEFT_TRIGGER_X_POW = 2;
@@ -134,16 +133,17 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
                 case GRAB:
                     if (robot.blockGrabber.extended()) {
                         // If we've already grabbed the block, just flip out
-                        robot.blockFlipper.readyDriving();
+                        robot.blockFlipper.normExtend();
                     } else {
                         robot.blockFlipper.readyBlockGrab();
                         robot.blockGrabber.extend(); // Grab the block
-                        robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_DRIVING));
+                        robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_NORM_EXTEND));
                     }
+                    robot.actionCache.add(new DelayedSubroutine(600, (robot) -> { robot.pidLift.changeLayer(1); }));
                     break;
 
                 case VERIFY:
-                    robot.blockFlipper.normExtend();
+                    robot.pidLift.setLiftPositionWithoutRaise();
                     break;
 
                 case DROP:

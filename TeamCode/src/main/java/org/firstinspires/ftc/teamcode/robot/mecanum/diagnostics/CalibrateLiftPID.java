@@ -37,8 +37,9 @@ public class CalibrateLiftPID extends LinearOpMode {
 
             doublePIDLift.setTarget(target);
             packet.put("power", doublePIDLift.update());
-
             packet.put("error", doublePIDLift.prev_error);
+            packet.put("period", doublePIDLift.dt);
+            packet.put("frequency", 1 / doublePIDLift.dt);
             packet.put("integral", doublePIDLift.integral);
             packet.put("derivative", doublePIDLift.derivative);
             dashboard.sendTelemetryPacket(packet);

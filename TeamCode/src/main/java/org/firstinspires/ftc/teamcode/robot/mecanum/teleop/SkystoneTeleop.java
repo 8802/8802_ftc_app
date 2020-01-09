@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum.teleop;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.DelayedSubroutine;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
+import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
@@ -14,9 +16,12 @@ import org.openftc.revextensions2.RevBulkData;
 
 
 @Config
-public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
+@TeleOp(name="Robot centric teleop")
+public class SkystoneTeleop extends SimulatableMecanumOpMode {
     public static double TRIGGER_THRESHOLD = 0.2;
-    public static double INTAKE_POWER = 0.5;
+    public static double INTAKE_POWER = 0.65;
+    public static double LEFT_TRIGGER_X_POW = 2;
+    public static double LEFT_TRIGGER_Y_POW = 2;
 
     SkystoneHardware robot;
 
@@ -42,7 +47,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
     boolean intakeOn;
 
     // Adjustable properties
-    public abstract boolean fieldCentric();
+    public boolean fieldCentric() {return false;}
 
     @Override
     public void init() {
@@ -75,8 +80,8 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         robot.sendDashboardTelemetryPacket();
 
         /* Drive code */
-        double leftX = MecanumUtil.deadZone(-gamepad1.left_stick_x, 0.05);
-        double leftY = MecanumUtil.deadZone(-gamepad1.left_stick_y, 0.05);
+        double leftX = MathUtil.powRetainingSign(MecanumUtil.deadZone(-gamepad1.left_stick_x, 0.05), LEFT_TRIGGER_X_POW);
+        double leftY = MathUtil.powRetainingSign(MecanumUtil.deadZone(-gamepad1.left_stick_y, 0.05), LEFT_TRIGGER_Y_POW);
         double angle = -Math.atan2(leftY, leftX) + Math.PI / 2;
         if (fieldCentric()) {
             angle -= robot.pose().heading;
@@ -99,7 +104,6 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
             leftStickButtonPrev = true;
             intakeOn = !intakeOn; // Toggle intake
             robot.setIntakePower(intakeOn ? INTAKE_POWER : 0);
-            robot.blockGrabber.retract();
         } else if (!gamepad1.left_stick_button) {
             leftStickButtonPrev = false;
             if (robot.hasBlockInTray() && intakeOn) {
@@ -146,14 +150,14 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
                     robot.blockGrabber.retract();
                     if (robot.pidLift.layer <= 7) {
                         robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_LITTLE));
-                        robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.SET_FLIPPER_INTAKING));
-                        robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.LOWER_LIFT_WITH_CACHE));
-                        robot.actionCache.add(new DelayedSubroutine(1500, Subroutines.ENABLE_INTAKE));
+                        robot.actionCache.add(new DelayedSubroutine(625, Subroutines.SET_FLIPPER_INTAKING));
+                        robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.LOWER_LIFT_TO_ZERO));
+                        robot.actionCache.add(new DelayedSubroutine(1500, (robot) -> { robot.setIntakePower(INTAKE_POWER); }));
                     } else {
                         robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_FAIR_BIT));
-                        robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.SET_FLIPPER_INTAKING));
-                        robot.actionCache.add(new DelayedSubroutine(2000, Subroutines.LOWER_LIFT_WITH_CACHE));
-                        robot.actionCache.add(new DelayedSubroutine(2500, Subroutines.ENABLE_INTAKE));
+                        robot.actionCache.add(new DelayedSubroutine(750, Subroutines.SET_FLIPPER_INTAKING));
+                        robot.actionCache.add(new DelayedSubroutine(2000, Subroutines.LOWER_LIFT_TO_ZERO));
+                        robot.actionCache.add(new DelayedSubroutine(2500, (robot) -> { robot.setIntakePower(INTAKE_POWER); }));
                     }
                     break;
             }

@@ -6,11 +6,11 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 @Config
 public class DepositFlipper {
-    public static double LEFT_GRABBING = 0.26;
-    public static double RIGHT_GRABBING = 0.2;
+    public static double LEFT_GRABBING = 0.31;
+    public static double RIGHT_GRABBING = 0.25;
 
-    public static double LEFT_INTAKING = 0.37;
-    public static double RIGHT_INTAKING = 0.32;
+    public static double LEFT_INTAKING = 0.42;
+    public static double RIGHT_INTAKING = 0.37;
 
     public static double LEFT_DRIVING = 0.64;
     public static double RIGHT_DRIVING = 0.6;

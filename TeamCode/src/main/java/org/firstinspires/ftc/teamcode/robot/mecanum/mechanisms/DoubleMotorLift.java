@@ -9,9 +9,9 @@ import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 
 @Config
 public class DoubleMotorLift {
-    public static double K_P = 0.0001;
+    public static double K_P = 0.0003;
     public static double K_I = 0;
-    public static double K_D = -2e-8;
+    public static double K_D = 0.000002;
     public static double G_STATIC = 0.15;
 
     public static int FULL_THROTTLE_FLOOR = 10000;
@@ -28,6 +28,7 @@ public class DoubleMotorLift {
     public int integral;
     public double derivative;
     public int prev_error;
+    public double dt;
 
     public DoubleMotorLift(DcMotor left, DcMotor right) {
         this.left = left;
@@ -43,6 +44,7 @@ public class DoubleMotorLift {
         target = 0;
         integral = 0;
         prev_error = 0;
+        dt = 0;
     }
 
     public void setTarget(int target) {
@@ -56,7 +58,7 @@ public class DoubleMotorLift {
 
     public double update() {
         // Update time
-        double dt = timer.seconds();
+        dt = timer.seconds();
         timer.reset();
 
         // X, V, A
@@ -76,7 +78,7 @@ public class DoubleMotorLift {
             output = Math.max(-SLOW_MAX_SPEED, output);
         }
 
-        if (target == 0 && error < BOTTOM_DISABLE_THRESHOLD) {
+        if (target == 0 && Math.abs(error) < BOTTOM_DISABLE_THRESHOLD) {
             output = 0;
         }
 
