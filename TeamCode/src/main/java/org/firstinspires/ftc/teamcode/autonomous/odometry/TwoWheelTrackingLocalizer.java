@@ -18,8 +18,8 @@ import java.util.LinkedList;
 @Config
 public class TwoWheelTrackingLocalizer {
     static final double TICKS_PER_REV = 4 * 600;
-    public static double PARALLEL_WHEEL_RADIUS = 1.193055;
-    public static double LATERAL_WHEEL_RADIUS = 1.193055;
+    public static double PARALLEL_TICKS_PER_INCH = 1111.587;
+    public static double LATERAL_TICKS_PER_INCH = 1111.587;
     public static int VELOCITY_READ_TICKS = 5;
 
     public static int PARALLEL_ENCODER_PORT = 0;
@@ -28,8 +28,8 @@ public class TwoWheelTrackingLocalizer {
 
     static final double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double PARALLEL_Y_POS = 7.25;
-    public static double LATERAL_X_POS = -3.00;
+    public static double PARALLEL_Y_POS = 7.7038;
+    public static double LATERAL_X_POS = -2.8408;
 
     DecompositionSolver forwardSolver;
 
@@ -50,8 +50,8 @@ public class TwoWheelTrackingLocalizer {
         Array2DRowRealMatrix inverseMatrix = new Array2DRowRealMatrix(3, 3);
 
         EncoderWheel[] WHEELS = {
-                new EncoderWheel(0, PARALLEL_Y_POS, Math.toRadians(180), 0), // parallel
-                new EncoderWheel(LATERAL_X_POS, 0, Math.toRadians(90), 1), // lateral
+                new EncoderWheel(0, PARALLEL_Y_POS, Math.toRadians(0), 0), // parallel
+                new EncoderWheel(LATERAL_X_POS, 0, Math.toRadians(-90), 1), // lateral
         };
 
         for (EncoderWheel wheelPosition : WHEELS) {
@@ -79,21 +79,21 @@ public class TwoWheelTrackingLocalizer {
         prevPositions.add(new TimePose(relativeRobotMovement, start.time));
     }
 
-    public static double encoderTicksToInches(int ticks, double wheel_radius) {
-        return wheel_radius * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
+    public static double encoderTicksToInches(int ticks, double ticksPerInch) {
+        return ticks / ticksPerInch;
     }
 
     public static int inchesToEncoderTicks(double inches) {
-        return (int) Math.round(inches * TICKS_PER_REV / (PARALLEL_WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO));
+        return (int) (inches * PARALLEL_TICKS_PER_INCH);
     }
 
     public void update(RevBulkData data, double heading) {
 
         double[] deltas = new double[] {
                 encoderTicksToInches(data.getMotorCurrentPosition(PARALLEL_ENCODER_PORT) - prevWheelPositions[0],
-                        PARALLEL_WHEEL_RADIUS),
+                        PARALLEL_TICKS_PER_INCH),
                 encoderTicksToInches(data.getMotorCurrentPosition(LATERAL_ENCODER_PORT) - prevWheelPositions[1],
-                        LATERAL_WHEEL_RADIUS),
+                        LATERAL_TICKS_PER_INCH),
                 MathUtil.angleWrap(heading - prevHeading)
         };
 
