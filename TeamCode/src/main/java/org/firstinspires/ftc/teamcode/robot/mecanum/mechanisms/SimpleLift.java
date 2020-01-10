@@ -24,7 +24,7 @@ public class SimpleLift {
     public int targetPosition;
 
     // Also initializes the DcMotor
-    public SimpleLift(DoubleMotorLift lift, RevBlinkinLedDriver leds) {
+    public SimpleLift(DoubleMotorLift lift) {
         this.lift = lift;
         this.layer = 0;
         this.targetPosition = LAYER_0;

@@ -112,8 +112,8 @@ public class SkystoneHardware {
     public ServoToggle capstoneDropper;
     public ServoToggle leftFoundationLatch;
     public ServoToggle rightFoundationLatch;
-
-    public RevBlinkinLedDriver leds;
+    public ServoToggle leftFang;
+    public ServoToggle rightFang;
 
     /* Uneditable constants */
     public final static double TRACK_WIDTH = 16.5; // in
@@ -142,6 +142,10 @@ public class SkystoneHardware {
     public static double FOUNDATION_LATCH_CLOSED = 0;
     public static double FOUNDATION_LATCH_OUT = 0.25;
     public static double FOUNDATION_LATCH_LR_OFFSET = 0.0;
+
+    public static double FANGS_RAISED = 0.5;
+    public static double FANGS_CLOSED = 0.4;
+    public static double FANGS_LR_OFFSET = 0.0;
 
     public static double CAPSTONE_RETRACTED = 0.16;
     public static double CAPSTONE_DROPPED = 1.0;
@@ -179,13 +183,9 @@ public class SkystoneHardware {
         lastIntakeCurrent = new IntakeCurrent(0, 0);
         intakeCurrentQueue = new IntakeCurrentQueue();
 
-        /* Leds */
-        leds = hardwareMap.get(RevBlinkinLedDriver.class, "LEDs");
-        leds.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLACK);
-
         /* Lift and block grabbers */
         lift = new DoubleMotorLift(liftLeft, liftRight);
-        pidLift = new SimpleLift(lift, leds); // Also initializes lift
+        pidLift = new SimpleLift(lift); // Also initializes lift
 
         allMotors = Arrays.asList(frontLeft, backLeft, frontRight, backRight, intakeLeft, intakeRight, liftLeft, liftRight);
 
@@ -207,6 +207,16 @@ public class SkystoneHardware {
                 FOUNDATION_LATCH_CLOSED - FOUNDATION_LATCH_LR_OFFSET,
                 Servo.Direction.REVERSE);
 
+        /* Latches */
+        leftFang = new ServoToggle(
+                hardwareMap.get(Servo.class, "leftFoundationLatch"),
+                FANGS_RAISED + FANGS_LR_OFFSET,
+                FANGS_CLOSED + FANGS_LR_OFFSET,
+                Servo.Direction.REVERSE);
+        rightFang = new ServoToggle(
+                hardwareMap.get(Servo.class, "rightFoundationLatch"),
+                FANGS_RAISED - FANGS_LR_OFFSET,
+                FANGS_CLOSED - FANGS_LR_OFFSET);
         /* Capstone */
         capstoneDropper = new ServoToggle(
                 hardwareMap.get(Servo.class, "capstoneDropper"),

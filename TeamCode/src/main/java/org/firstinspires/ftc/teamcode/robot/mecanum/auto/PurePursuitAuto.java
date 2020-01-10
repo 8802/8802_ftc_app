@@ -56,7 +56,6 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
             start.heading *= -start.heading;
         }
         this.robot = this.getRobot(start);
-        robot.leds.setPattern(ALLIANCE.getLEDColor());
         startPhoneCamDetector(ALLIANCE);
         telemetry.clearAll();
     }

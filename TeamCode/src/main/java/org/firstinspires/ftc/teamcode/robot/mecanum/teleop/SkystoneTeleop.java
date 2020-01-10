@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum.teleop;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -17,6 +18,7 @@ import org.openftc.revextensions2.RevBulkData;
 
 @Config
 @TeleOp(name="Robot centric teleop")
+@Disabled
 public class SkystoneTeleop extends SimulatableMecanumOpMode {
     public static double TRIGGER_THRESHOLD = 0.2;
     public static double INTAKE_POWER = 0.65;
