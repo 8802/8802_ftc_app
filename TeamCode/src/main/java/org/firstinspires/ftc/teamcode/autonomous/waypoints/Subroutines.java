@@ -81,6 +81,10 @@ public class Subroutines {
         robot.pidLift.setLayer(1);
     };
 
+    public static final OnceOffSubroutine LIFT_LEVEL_TWO = (robot) -> {
+        robot.pidLift.setLayer(2);
+    };
+
     public static final OnceOffSubroutine LIFT_A_LITTLE = (robot) -> {
         robot.pidLift.changePosition(LIFT_RAISE_AMOUNT);
     };
@@ -146,6 +150,14 @@ public class Subroutines {
         robot.actionCache.add(new DelayedSubroutine(850, Subroutines.SET_FLIPPER_DRIVING));
         robot.actionCache.add(new DelayedSubroutine(850, Subroutines.LIFT_LEVEL_ONE));
     };
+
+    public static final OnceOffSubroutine GRAB_INTAKED_BLOCK_AND_LIFT_LEVEL_2 = (robot) -> {
+        robot.blockFlipper.readyBlockGrab();
+        robot.blockGrabber.extend(); // Grab the block
+        robot.actionCache.add(new DelayedSubroutine(850, Subroutines.SET_FLIPPER_DRIVING));
+        robot.actionCache.add(new DelayedSubroutine(850, Subroutines.LIFT_LEVEL_TWO));
+    };
+
 
     public static final OnceOffSubroutine GRAB_BLOCK_NO_EXTEND = (robot) -> {
         robot.blockFlipper.readyBlockGrab();
