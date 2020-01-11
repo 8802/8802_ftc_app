@@ -24,7 +24,11 @@ public class DepositUntilSuccessful implements Subroutines.ArrivalInterruptSubro
         if (timer == null) {
             robot.setPowers(new MecanumPowers(-0.3, 0, 0));
             timer = new ElapsedTime();
-            Subroutines.SMART_DROP_BLOCK.runOnce(robot);
+            robot.blockFlipper.normExtend();
+            robot.actionCache.add(new DelayedSubroutine(500, Subroutines.OPEN_CLAW));
+            robot.actionCache.add(new DelayedSubroutine(750, Subroutines.LIFT_A_LITTLE));
+            robot.actionCache.add(new DelayedSubroutine(1250, Subroutines.SET_FLIPPER_INTAKING));
+            robot.actionCache.add(new DelayedSubroutine(1250, Subroutines.LOWER_LIFT_TO_GRABBING));
             attempt = 1;
         }
 
@@ -55,6 +59,6 @@ public class DepositUntilSuccessful implements Subroutines.ArrivalInterruptSubro
         robot.actionCache.add(new DelayedSubroutine(1400, Subroutines.OPEN_CLAW));
         robot.actionCache.add(new DelayedSubroutine(1650, Subroutines.LIFT_A_LITTLE));
         robot.actionCache.add(new DelayedSubroutine(2150, Subroutines.SET_FLIPPER_INTAKING));
-        robot.actionCache.add(new DelayedSubroutine(2150, Subroutines.LIFT_TO_LAYER_ZERO));
+        robot.actionCache.add(new DelayedSubroutine(2150, Subroutines.LOWER_LIFT_TO_GRABBING));
     }
 }

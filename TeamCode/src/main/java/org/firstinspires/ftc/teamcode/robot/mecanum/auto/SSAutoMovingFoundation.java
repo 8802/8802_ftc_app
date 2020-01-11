@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robot.mecanum.auto;
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.DepositUntilSuccessful;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.FirstBlockDepositStop;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.FoundationGrabBackupPath;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.FoundationMovePointTurn;
@@ -31,8 +32,9 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
             6, Math.PI * 0.5, 4, new FoundationGrabBackupPath());
 
     public static double PLUNGE_TARGET_Y = 22;
-    public static double BACK_PLUNGE_TARGET_X = -FIELD_RADIUS + 15;
+    public static double BACK_PLUNGE_TARGET_X = -FIELD_RADIUS + 13;
     public static double FRONT_PLUNGE_TARGET_X = -FIELD_RADIUS + 38;
+    public static double LIFT_MAX_POWER = 0.6;
 
     @Override
     public Pose getBlueStartPosition() {
@@ -60,15 +62,14 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 new HeadingControlledWaypoint(18, 38, 12, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_OUT),
                 new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 38, 8, Math.PI * 0.5),
                 GRAB_FOUNDATION_LOCATION,
-                new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 44, 6, Math.PI * 0.5, new FoundationMovePointTurn(Math.PI, Math.toRadians(10))),
-                new HeadingControlledWaypoint(36, 36, 6, Math.PI),
-                new HeadingControlledWaypoint(12, 36, 6, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_UP), /* Latches are already up */
+                new HeadingControlledWaypoint(20, 36, 6, Math.PI,  new FirstBlockDepositStop()),
+                new HeadingControlledWaypoint(0, 36, 6, Math.PI),
                 new HeadingControlledWaypoint(-20 + skystoneOffset, 36, 6, Math.PI, Subroutines.ENABLE_INTAKE),
 
                 new HeadingControlledWaypoint(-28 + skystoneOffset, 36, 6, Math.toRadians(225)),
                 new StopWaypoint(-36 + skystoneOffset, 28, 4, Math.toRadians(225),
                         3, new JoltsUntilBlockGrab(joltDirection)),
-                new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + skystoneOffset, 36, 12, -Math.PI),
+                new HeadingControlledWaypoint(FRONT_PLUNGE_TARGET_X + skystoneOffset, 36, 12, -Math.PI, Subroutines.SET_FANGS_UP),
                 // Now make our move to deposit
                 new HeadingControlledWaypoint(0, 36, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_INTAKED_BLOCK)),
                 new StopWaypoint(36, 36, 8,
@@ -97,14 +98,30 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                     new HeadingControlledWaypoint(-42, 36, 6, Math.PI, Subroutines.ENABLE_INTAKE),
 
                     new HeadingControlledWaypoint(-50, 36, 6, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
-                    new StopWaypoint(-58, 28, 4, Math.toRadians(225),
-                            3, new JoltsUntilBlockGrab(joltDirection)),
-                    new HeadingControlledWaypoint(-54, 36, 12, -Math.PI),
+                    new StopWaypoint(-58, 25, 4, Math.toRadians(225),
+                            3, new JoltsUntilBlockGrab(MecanumUtil.FORWARD)),
+                    new HeadingControlledWaypoint(-54, 36, 12, Math.PI),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_INTAKED_BLOCK_AND_LIFT))
             ));
         }
 
         scoreSkystones.addAll(Waypoint.collate(
+                new StopWaypoint(36, 36, 8,
+                        Math.PI, 8, new DepositUntilSuccessful())
+        ));
+
+        /* Now we just do all that again, but with the fangs down */
+        scoreSkystones.addAll(Waypoint.collate(
+                new HeadingControlledWaypoint(36, 39, 6, Math.PI),
+                new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_DOWN),
+                new HeadingControlledWaypoint(-20, 39, 8, Math.PI, Subroutines.ENABLE_INTAKE),
+                new HeadingControlledWaypoint(-28, 39, 8, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
+                new HeadingControlledWaypoint(-44, 20, 8, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
+                new HeadingControlledWaypoint(-65, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
+
+                new Waypoint(-28 + skystoneOffset, 39, 8),
+                new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_INTAKED_BLOCK_AND_LIFT))
+                new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_UP),
                 new StopWaypoint(36, 36, 8,
                         Math.PI, 8, new DepositUntilSuccessful())
         ));
@@ -120,6 +137,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
     @Override
     public void start() {
         super.start();
-        robot.setIntakePower(1);
+        robot.pidLift.lift.setMaxPower(LIFT_MAX_POWER);
+        Subroutines.ENABLE_INTAKE.runOnce(robot);
     }
 }

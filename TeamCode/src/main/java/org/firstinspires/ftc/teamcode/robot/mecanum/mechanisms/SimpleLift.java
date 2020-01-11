@@ -19,7 +19,7 @@ public class SimpleLift {
     public static int UPPER_LAYERS_START = 5;
 
 
-    private DoubleMotorLift lift;
+    public DoubleMotorLift lift;
     public int layer;
     public int targetPosition;
 

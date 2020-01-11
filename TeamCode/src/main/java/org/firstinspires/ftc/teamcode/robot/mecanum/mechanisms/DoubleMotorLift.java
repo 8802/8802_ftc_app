@@ -23,6 +23,7 @@ public class DoubleMotorLift {
     public DcMotor left;
     public DcMotor right;
     ElapsedTime timer;
+    double maxPower;
 
     public int target;
     public int integral;
@@ -45,6 +46,7 @@ public class DoubleMotorLift {
         integral = 0;
         prev_error = 0;
         dt = 0;
+        maxPower = 1;
     }
 
     public void setTarget(int target) {
@@ -54,6 +56,10 @@ public class DoubleMotorLift {
             target = MAX_POS;
         }
         this.target = target;
+    }
+
+    public void setMaxPower(double power) {
+        maxPower = power;
     }
 
     public double update() {
@@ -69,7 +75,7 @@ public class DoubleMotorLift {
         prev_error = error;
 
         double output = K_P * error + K_I * integral + K_D * derivative + G_STATIC;
-        output = MathUtil.clamp(output);
+        output = Math.max(-maxPower, Math.min(maxPower, output));
 
         /* If we're in the bottom or top of lift, cut power to prevent destroying the thing */
         if (output > 0 && position > FULL_THROTTLE_CEIL) {

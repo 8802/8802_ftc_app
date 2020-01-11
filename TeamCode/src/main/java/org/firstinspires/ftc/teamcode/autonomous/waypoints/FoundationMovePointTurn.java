@@ -65,7 +65,7 @@ public class FoundationMovePointTurn implements Subroutines.ArrivalInterruptSubr
                 robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.OPEN_CLAW));
                 robot.actionCache.add(new DelayedSubroutine(1250, Subroutines.LIFT_A_LITTLE));
                 robot.actionCache.add(new DelayedSubroutine(1750, Subroutines.SET_FLIPPER_INTAKING));
-                robot.actionCache.add(new DelayedSubroutine(1750, Subroutines.LIFT_TO_LAYER_ZERO));
+                robot.actionCache.add(new DelayedSubroutine(1750, Subroutines.LOWER_LIFT_TO_GRABBING));
             } else {
                 mode = Mode.WAITING;
                 checkAtTime = ms() + TIME_UNTIL_DRIVE_AWAY;

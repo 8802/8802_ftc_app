@@ -24,8 +24,8 @@ import java.util.List;
 
 @Config
 public class ImprovedSkystoneDetector extends DogeCVDetector {
-    public static double START_ROW_FRAC = 0.5;
-    public static double END_ROW_FRAC = 0.75;
+    public static double START_ROW_FRAC = 0.65;
+    public static double END_ROW_FRAC = 0.9;
     public static double START_COL_FRAC = 0.28;
     public static double END_COL_FRAC = 0.88;
 

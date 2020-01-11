@@ -28,6 +28,10 @@ public class ServoToggle {
         servo.setPosition(target());
     }
 
+    public void normalize() {
+        servo.setPosition(target());
+    }
+
     public void extend() {
         if (!extended) {
             toggle();

@@ -119,7 +119,6 @@ public abstract class SelfTest extends LinearOpMode {
         verifyServoWorks(robot.leftFoundationLatch, "leftFoundationLatch", robot.mechanicHub, mechanicHubPower);
         verifyServoWorks(robot.rightFoundationLatch, "rightFoundationLatch", robot.chassisHub, chassisHubPower);
         verifyServoWorks(robot.blockGrabber, "blockGrabber", robot.mechanicHub, mechanicHubPower);
-        verifyServoWorks(robot.capstoneDropper, "capstoneDropper", robot.chassisHub, chassisHubPower);
     }
 
     private void addResult(String message, boolean good) {

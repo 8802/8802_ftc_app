@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 public class Subroutines {
     public static int LIFT_RAISE_AMOUNT = 8000;
     public static int HIGH_LIFT_RAISE_AMOUNT = 10000;
+    public static double INTAKE_SPEED = 0.65;
 
     public interface Subroutine {}
 
@@ -31,7 +32,7 @@ public class Subroutines {
         boolean runCycle(SkystoneHardware robot); // Returns whether it's complete
     }
 
-    public static final OnceOffSubroutine ENABLE_INTAKE = (robot) -> { robot.setIntakePower(1); };
+    public static final OnceOffSubroutine ENABLE_INTAKE = (robot) -> { robot.setIntakePower(INTAKE_SPEED); };
     public static final OnceOffSubroutine STOP_INTAKE = (robot) -> { robot.setIntakePower(0); };
     public static final OnceOffSubroutine REVERSE_INTAKE = (robot) -> { robot.setIntakePower(-1); };
     public static final OnceOffSubroutine JOLT_INTAKE = (robot) -> {
@@ -42,6 +43,9 @@ public class Subroutines {
 
     public static final OnceOffSubroutine OPEN_CLAW = (robot) -> { robot.blockGrabber.retract(); };
     public static final OnceOffSubroutine CLOSE_CLAW = (robot) -> { robot.blockGrabber.extend(); };
+    public static final OnceOffSubroutine CAPSTONE_CLAW = (robot) -> {
+        robot.blockGrabber.servo.setPosition(SkystoneHardware.BLOCK_GRABBER_CAPSTONE);
+    };
 
     public static final OnceOffSubroutine SET_FLIPPER_GRABBING = (robot) -> { robot.blockFlipper.readyBlockGrab(); };
     public static final OnceOffSubroutine SET_FLIPPER_INTAKING = (robot) -> { robot.blockFlipper.readyBlockIntake(); };
@@ -63,12 +67,14 @@ public class Subroutines {
         robot.rightFoundationLatch.servo.setPosition(SkystoneHardware.FOUNDATION_LATCH_OUT);
     };
 
-    public static final OnceOffSubroutine SET_CAPSTONE_IN = (robot) -> {
-        robot.capstoneDropper.retract();
+    public static final OnceOffSubroutine SET_FANGS_DOWN = (robot) -> {
+        robot.leftFang.extend();
+        robot.rightFang.extend();
     };
 
-    public static final OnceOffSubroutine SET_CAPSTONE_OUT = (robot) -> {
-        robot.capstoneDropper.extend();
+    public static final OnceOffSubroutine SET_FANGS_UP = (robot) -> {
+        robot.leftFang.retract();
+        robot.rightFang.retract();
     };
 
     public static final OnceOffSubroutine LIFT_LEVEL_ONE = (robot) -> {
@@ -91,7 +97,7 @@ public class Subroutines {
         robot.pidLift.changePosition(-HIGH_LIFT_RAISE_AMOUNT);
     };
 
-    public static final OnceOffSubroutine LOWER_LIFT_TO_ZERO = (robot) -> {
+    public static final OnceOffSubroutine LOWER_LIFT_TO_GRABBING = (robot) -> {
         robot.pidLift.cacheToGrabbing();
     };
 
@@ -152,7 +158,7 @@ public class Subroutines {
         robot.blockGrabber.retract();
         robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_LITTLE));
         robot.actionCache.add(new DelayedSubroutine(750, Subroutines.SET_FLIPPER_INTAKING));
-        robot.actionCache.add(new DelayedSubroutine(750, Subroutines.LIFT_TO_LAYER_ZERO));
+        robot.actionCache.add(new DelayedSubroutine(750, Subroutines.LOWER_LIFT_TO_GRABBING));
     };
 
     public static final OnceOffSubroutine GRAB_INTAKED_BLOCK_WITH_LATCHES = (robot) -> {

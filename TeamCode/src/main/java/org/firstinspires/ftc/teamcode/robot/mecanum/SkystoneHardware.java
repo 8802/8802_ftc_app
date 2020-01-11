@@ -109,7 +109,6 @@ public class SkystoneHardware {
     public ServoToggle blockGrabber;
     public DepositFlipper blockFlipper;
 
-    public ServoToggle capstoneDropper;
     public ServoToggle leftFoundationLatch;
     public ServoToggle rightFoundationLatch;
     public ServoToggle leftFang;
@@ -130,25 +129,23 @@ public class SkystoneHardware {
     public static double INTAKE_UNJAM_REVERSAL_TIME_MS = 200;
 
     public static int TRAY_DETECTOR_PORT = 0;
-    public static double HAS_BLOCK_TRAY_THRESHOLD = 400;
-    public static int CLAWS_DETECTOR_PORT = 2;
-    public static double HAS_BLOCK_CLAWS_THRESHOLD = 75;
+    public static double HAS_BLOCK_TRAY_THRESHOLD = 150;
+    public static int CLAWS_DETECTOR_PORT = 1;
+    public static double HAS_BLOCK_CLAWS_THRESHOLD = 150;
 
     /* Servo positions */
-    public static double BLOCK_GRABBER_CLOSED = 0.6;
-    public static double BLOCK_GRABBER_OPEN = 0.2;
+    public static double BLOCK_GRABBER_CLOSED = 1.0;
+    public static double BLOCK_GRABBER_OPEN = 0.6;
+    public static double BLOCK_GRABBER_CAPSTONE = 0.16;
 
     public static double FOUNDATION_LATCH_OPEN = 1;
     public static double FOUNDATION_LATCH_CLOSED = 0;
     public static double FOUNDATION_LATCH_OUT = 0.25;
     public static double FOUNDATION_LATCH_LR_OFFSET = 0.0;
 
-    public static double FANGS_RAISED = 0.5;
-    public static double FANGS_CLOSED = 0.4;
-    public static double FANGS_LR_OFFSET = 0.0;
-
-    public static double CAPSTONE_RETRACTED = 0.16;
-    public static double CAPSTONE_DROPPED = 1.0;
+    public static double FANGS_RAISED = 0.55;
+    public static double FANGS_CLOSED = 0.2;
+    public static double FANGS_LR_OFFSET = -0.13;
 
     /**
      * Instantiates a <b>real</b> SkystoneHardware object that will try to communicate with the REV
@@ -207,23 +204,19 @@ public class SkystoneHardware {
                 FOUNDATION_LATCH_CLOSED - FOUNDATION_LATCH_LR_OFFSET,
                 Servo.Direction.REVERSE);
 
-        /* Latches */
+        /* Fangs */
         leftFang = new ServoToggle(
-                hardwareMap.get(Servo.class, "leftFoundationLatch"),
+                hardwareMap.get(Servo.class, "leftFang"),
                 FANGS_RAISED + FANGS_LR_OFFSET,
                 FANGS_CLOSED + FANGS_LR_OFFSET,
                 Servo.Direction.REVERSE);
         rightFang = new ServoToggle(
-                hardwareMap.get(Servo.class, "rightFoundationLatch"),
+                hardwareMap.get(Servo.class, "rightFang"),
                 FANGS_RAISED - FANGS_LR_OFFSET,
                 FANGS_CLOSED - FANGS_LR_OFFSET);
-        /* Capstone */
-        capstoneDropper = new ServoToggle(
-                hardwareMap.get(Servo.class, "capstoneDropper"),
-                CAPSTONE_RETRACTED, CAPSTONE_DROPPED);
 
         allServos = Arrays.asList(blockFlipper.leftFlipper, blockFlipper.rightFlipper,
-                leftFoundationLatch.servo, rightFoundationLatch.servo, blockGrabber.servo, capstoneDropper.servo);
+                leftFoundationLatch.servo, rightFoundationLatch.servo, blockGrabber.servo, leftFang.servo, rightFang.servo);
 
         /* Hubs for bulk reads */
         chassisHub = hardwareMap.get(ExpansionHubEx.class, "chassisHub");
@@ -432,8 +425,10 @@ public class SkystoneHardware {
         leftFoundationLatch.extendPosition = FOUNDATION_LATCH_CLOSED + FOUNDATION_LATCH_LR_OFFSET;
         rightFoundationLatch.retractPosition = FOUNDATION_LATCH_OPEN - FOUNDATION_LATCH_LR_OFFSET;
         rightFoundationLatch.extendPosition = FOUNDATION_LATCH_CLOSED - FOUNDATION_LATCH_LR_OFFSET;
-        capstoneDropper.retractPosition = CAPSTONE_RETRACTED;
-        capstoneDropper.extendPosition = CAPSTONE_DROPPED;
+        leftFang.retractPosition = FANGS_RAISED + FANGS_LR_OFFSET;
+        leftFang.extendPosition = FANGS_CLOSED + FANGS_LR_OFFSET;
+        rightFang.retractPosition = FANGS_RAISED - FANGS_LR_OFFSET;
+        rightFang.extendPosition = FANGS_CLOSED - FANGS_LR_OFFSET;
 
         lastTelemetryUpdate = System.nanoTime();
         return lastChassisRead;
@@ -448,11 +443,20 @@ public class SkystoneHardware {
     }
 
     public boolean hasBlockInTray() {
-        return lastChassisRead.getAnalogInputValue(TRAY_DETECTOR_PORT) > HAS_BLOCK_TRAY_THRESHOLD;
+        return lastChassisRead.getAnalogInputValue(TRAY_DETECTOR_PORT) < HAS_BLOCK_TRAY_THRESHOLD;
     }
 
     public boolean hasBlockInClaws() {
-        return lastChassisRead.getAnalogInputValue(CLAWS_DETECTOR_PORT) > HAS_BLOCK_CLAWS_THRESHOLD;
+        return lastChassisRead.getAnalogInputValue(CLAWS_DETECTOR_PORT) < HAS_BLOCK_CLAWS_THRESHOLD;
+    }
+
+    public boolean hasAction(String tag) {
+        for (DelayedSubroutine s : actionCache) {
+            if (tag.equals(s.tag)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setPowers(MecanumPowers powers) {
