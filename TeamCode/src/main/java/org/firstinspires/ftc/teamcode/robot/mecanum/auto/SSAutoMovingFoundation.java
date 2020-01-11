@@ -81,8 +81,9 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 new HeadingControlledWaypoint(frontPlungeTarget + 8, 36, 6, Math.toRadians(225)),
                 new StopWaypoint(frontPlungeTarget, 28, 4, Math.toRadians(225),
                         3, new JoltsUntilBlockGrab(joltDirection)),
-                new HeadingControlledWaypoint(frontPlungeTarget + 4, 36, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_INTAKED_BLOCK_AND_LIFT)),
+                new HeadingControlledWaypoint(frontPlungeTarget + 4, 36, 12, Math.PI),
                 // Now make our move to deposit
+                new HeadingControlledWaypoint(-4, 36, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_INTAKED_BLOCK_AND_LIFT)),
                 new HeadingControlledWaypoint(0, 36, 12, Math.PI),
                 new StopWaypoint(36, 36, 8,
                         Math.PI, 8, new DepositUntilSuccessful())
@@ -105,7 +106,6 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_UP)
             ));
         } else if (SKYSTONE == SkystoneState.MIDDLE || SKYSTONE == SkystoneState.UPPER) {
-            double shift = (SKYSTONE == SkystoneState.MIDDLE) ? SkystoneState.SKYSTONE_LENGTH : 0;
             scoreSkystones.addAll(Waypoint.collate(
                     new HeadingControlledWaypoint(-32, 36, 12, Math.PI, Subroutines.ENABLE_INTAKE),
                     new HeadingControlledWaypoint(-42, 36, 6, Math.PI, Subroutines.ENABLE_INTAKE),
@@ -123,12 +123,17 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                         Math.PI, 8, new DepositUntilSuccessful())
         ));
 
+        double startSwoop = -6;
+        if (SKYSTONE == SkystoneState.LOWER) { // If we already did a swoop, shift it down
+            startSwoop = -18;
+        }
+
         /* Now we just do all that again, but with the fangs down */
         scoreSkystones.addAll(Waypoint.collate(
                 new HeadingControlledWaypoint(36, 39, 6, Math.PI),
                 new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_DOWN),
-                new HeadingControlledWaypoint(-6, 39, 8, Math.toRadians(225), Subroutines.ENABLE_INTAKE),
-                new HeadingControlledWaypoint(-33, 12, 8, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
+                new HeadingControlledWaypoint(startSwoop, 39, 8, Math.toRadians(225), Subroutines.ENABLE_INTAKE),
+                new HeadingControlledWaypoint(startSwoop - 27, 12, 8, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
                 new HeadingControlledWaypoint(-53, 12, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
 
                 new Waypoint(-28, 39, 8),

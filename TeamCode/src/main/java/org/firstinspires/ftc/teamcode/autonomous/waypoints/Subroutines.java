@@ -147,14 +147,14 @@ public class Subroutines {
     public static final OnceOffSubroutine GRAB_INTAKED_BLOCK_AND_LIFT = (robot) -> {
         robot.blockFlipper.readyBlockGrab();
         robot.blockGrabber.extend(); // Grab the block
-        robot.actionCache.add(new DelayedSubroutine(850, Subroutines.SET_FLIPPER_DRIVING));
+        robot.actionCache.add(new DelayedSubroutine(850, Subroutines.SET_FLIPPER_NORM_EXTEND));
         robot.actionCache.add(new DelayedSubroutine(850, Subroutines.LIFT_LEVEL_ONE));
     };
 
     public static final OnceOffSubroutine GRAB_INTAKED_BLOCK_AND_LIFT_LEVEL_2 = (robot) -> {
         robot.blockFlipper.readyBlockGrab();
         robot.blockGrabber.extend(); // Grab the block
-        robot.actionCache.add(new DelayedSubroutine(850, Subroutines.SET_FLIPPER_DRIVING));
+        robot.actionCache.add(new DelayedSubroutine(850, Subroutines.SET_FLIPPER_NORM_EXTEND));
         robot.actionCache.add(new DelayedSubroutine(850, Subroutines.LIFT_LEVEL_TWO));
     };
 
