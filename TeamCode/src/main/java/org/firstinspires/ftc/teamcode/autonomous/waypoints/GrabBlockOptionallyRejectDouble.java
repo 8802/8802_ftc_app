@@ -28,7 +28,6 @@ public class GrabBlockOptionallyRejectDouble implements Subroutines.ArrivalInter
     public boolean runCycle(SkystoneHardware robot) {
         if (noBlockIterations == -1) {
             noBlockIterations = 0;
-            Subroutines.GRAB_INTAKED_BLOCK.runOnce(robot);
             if (grabBlock != null) {
                 // TODO ensure this doesn't lift before we cross the bridge
                 grabBlock.runOnce(robot);

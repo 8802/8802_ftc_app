@@ -162,7 +162,6 @@ public class Subroutines {
     public static final OnceOffSubroutine GRAB_BLOCK_NO_EXTEND = (robot) -> {
         robot.blockFlipper.readyBlockGrab();
         robot.blockGrabber.extend(); // Grab the block
-        robot.actionCache.add(new DelayedSubroutine(850, Subroutines.SET_FLIPPER_INTAKING));
     };
 
     public static final OnceOffSubroutine SMART_DROP_BLOCK = (robot) -> {
