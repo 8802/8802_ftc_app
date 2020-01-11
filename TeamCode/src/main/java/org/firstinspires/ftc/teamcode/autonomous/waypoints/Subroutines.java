@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 @Config
 public class Subroutines {
     public static int LIFT_RAISE_AMOUNT = 8000;
-    public static int HIGH_LIFT_RAISE_AMOUNT = 10000;
+    public static int HIGH_LIFT_RAISE_AMOUNT = 14000;
     public static double INTAKE_SPEED = 0.65;
 
     public interface Subroutine {}

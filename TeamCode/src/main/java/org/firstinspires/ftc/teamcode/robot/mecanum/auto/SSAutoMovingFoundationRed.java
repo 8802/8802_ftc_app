@@ -73,7 +73,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                 // Now make our move to deposit
                 new HeadingControlledWaypoint(0, 39, 12, Math.PI),
                 new StopWaypoint(39, 39, 8,
-                        Math.PI, 8, new DepositUntilSuccessful())
+                        Math.PI, 8, new DepositUntilSuccessful(new MecanumPowers(-0.3, 0, 0)))
         );
 
         /*if (SKYSTONE == SkystoneState.MIDDLE || SKYSTONE == SkystoneState.UPPER) {

@@ -13,22 +13,35 @@ public class DepositUntilSuccessful implements Subroutines.ArrivalInterruptSubro
 
     ElapsedTime timer;
     int attempt;
+    MecanumPowers driveDir;
+    boolean overshoot;
 
-    public DepositUntilSuccessful() {
+    public DepositUntilSuccessful(MecanumPowers driveDir) {
+        this(driveDir, false);
+    }
+
+    public DepositUntilSuccessful(MecanumPowers driveDir, boolean overshoot) {
         this.timer = null;
         this.attempt = 0;
+        this.driveDir = driveDir;
+        this.overshoot = overshoot;
     }
 
     @Override
     public boolean runCycle(SkystoneHardware robot) {
         if (timer == null) {
-            robot.setPowers(new MecanumPowers(-0.3, 0, 0));
+            robot.setPowers(driveDir);
             timer = new ElapsedTime();
             robot.blockFlipper.normExtend();
             robot.actionCache.add(new DelayedSubroutine(500, Subroutines.OPEN_CLAW));
-            robot.actionCache.add(new DelayedSubroutine(750, Subroutines.LIFT_A_LITTLE));
             robot.actionCache.add(new DelayedSubroutine(1250, Subroutines.SET_FLIPPER_INTAKING));
-            robot.actionCache.add(new DelayedSubroutine(1250, Subroutines.LOWER_LIFT_TO_GRABBING));
+            if (overshoot) {
+                robot.actionCache.add(new DelayedSubroutine(750, Subroutines.LIFT_A_FAIR_BIT));
+                robot.actionCache.add(new DelayedSubroutine(1600, Subroutines.LOWER_LIFT_TO_GRABBING));
+            } else {
+                robot.actionCache.add(new DelayedSubroutine(750, Subroutines.LIFT_A_LITTLE));
+                robot.actionCache.add(new DelayedSubroutine(1250, Subroutines.LOWER_LIFT_TO_GRABBING));
+            }
             attempt = 1;
         }
 

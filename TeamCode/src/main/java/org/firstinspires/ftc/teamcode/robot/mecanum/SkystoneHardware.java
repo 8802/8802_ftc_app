@@ -53,11 +53,6 @@ public class SkystoneHardware {
     private FtcDashboard dashboard;
     public TelemetryPacket packet;
 
-    public enum OpModeState {
-        GOOD, ERRORS
-    }
-    public OpModeState opModeState;
-
     private Telemetry.Item[] telOdometry;
     private Telemetry.Item[] telEncoders;
     private Telemetry.Item[] telPowers;
@@ -239,7 +234,6 @@ public class SkystoneHardware {
 
         /* Action cache */
         actionCache = new LinkedList<>();
-        opModeState = OpModeState.GOOD;
 
         /* Telemetry */
         this.telemetry = telemetry;
