@@ -188,31 +188,30 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
 
         if (gamepad1.dpad_up && !upPrev) {
             upPrev = true;
-            // If we don't have a block, then do a different grab sequence
-            if (!robot.blockGrabber.extended() && nextRightTriggerAction == RightTriggerActions.GRAB) {
-                // If we've already grabbed the block, just flip out
-                robot.blockFlipper.readyBlockGrab();
-                robot.blockGrabber.extend(); // Grab the block
-                robot.actionCache.add(new DelayedSubroutine(600, Subroutines.CAPSTONE_CLAW));
-                robot.actionCache.add(new DelayedSubroutine(2000, Subroutines.OPEN_CLAW));
-            } else {
-                // If we're already there, let go
-                if (robot.blockGrabber.servo.getPosition() == robot.BLOCK_GRABBER_CAPSTONE) {
-                    robot.blockGrabber.normalize();
+            if (!gamepad1.a) {
+                // If we don't have a block, then do a different grab sequence
+                if (!robot.blockGrabber.extended() && nextRightTriggerAction == RightTriggerActions.GRAB) {
+                    // If we've already grabbed the block, just flip out
+                    robot.blockFlipper.readyBlockGrab();
+                    robot.blockGrabber.extend(); // Grab the block
+                    robot.actionCache.add(new DelayedSubroutine(600, Subroutines.CAPSTONE_CLAW));
+                    robot.actionCache.add(new DelayedSubroutine(2000, Subroutines.OPEN_CLAW));
                 } else {
-                    robot.blockGrabber.servo.setPosition(robot.BLOCK_GRABBER_CAPSTONE);
+                    // If we're already there, let go
+                    if (robot.blockGrabber.servo.getPosition() == robot.BLOCK_GRABBER_CAPSTONE) {
+                        robot.blockGrabber.normalize();
+                    } else {
+                        robot.blockGrabber.servo.setPosition(robot.BLOCK_GRABBER_CAPSTONE);
+                    }
                 }
             }
         } else if (!gamepad1.dpad_up) {
             upPrev = false;
         }
 
-        if (gamepad1.dpad_down && !downPrev) {
-            downPrev = true;
-            robot.leftFang.toggle();
-            robot.rightFang.toggle();
-        } else if (!gamepad1.dpad_down) {
-            downPrev = false;
+        // Dpad right resets tower size
+        if (gamepad1.dpad_right && gamepad1.a) {
+            robot.pidLift.layer = 0;
         }
 
         if (gamepad1.b && !bPrev) {

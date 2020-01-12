@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robot.mecanum.teleop;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -32,7 +33,8 @@ List of checks self-test should perform:
  */
 
 @Config
-public abstract class SelfTest extends LinearOpMode {
+@TeleOp
+public class SelfTest extends LinearOpMode {
 
     public static double MONITOR_12V_MIN_VOLTAGE = 12; // Volts
     public static double MONITOR_5V_MIN_VOLTAGE = 5; // Volts
@@ -57,6 +59,8 @@ public abstract class SelfTest extends LinearOpMode {
     public static double MAX_HOLDING_SERVO_AMPS = 0.5;
     public static double MIN_HOLDING_SERVO_AMPS = 0.1;
     public static int CURRENT_READ_ITERATIONS = 30;
+
+    public static int EXPECT_ENCODER_WHEEL_DIST = 5000;
 
 
     SkystoneHardware robot;
@@ -97,28 +101,23 @@ public abstract class SelfTest extends LinearOpMode {
         waitForStart();
 
         // Verify modules work properly while no power is flowing
-        verifyHubOperational(robot.chassisHub);
-        verifyHubOperational(robot.mechanicHub);
+        //verifyHubOperational(robot.chassisHub);
+        //verifyHubOperational(robot.mechanicHub);
 
         // Verify sensors read they're not being pressed
         verifySensorsWork();
 
-        // Drive motor forward and verify all motors draw right amount of current
-        verifyDriveForwardWorks();
+        // Have user push encoder wheels
+        verifyEncoderWheelsWork();
 
-        // Intake motors are plugged in
-        verifyIntakeWorks(robot.intakeLeft, "intakeLeft");
-        verifyIntakeWorks(robot.intakeRight, "intakeRight");
-
-        // Lift motors are plugged in and encoder works
-        //verifyLiftWorks();
-
-        // Verify each servo motor works
-        double chassisHubPower = averageHubTotalCurrent(robot.chassisHub);
-        double mechanicHubPower = averageHubTotalCurrent(robot.mechanicHub);
-        verifyServoWorks(robot.leftFoundationLatch, "leftFoundationLatch", robot.mechanicHub, mechanicHubPower);
-        verifyServoWorks(robot.rightFoundationLatch, "rightFoundationLatch", robot.chassisHub, chassisHubPower);
-        verifyServoWorks(robot.blockGrabber, "blockGrabber", robot.mechanicHub, mechanicHubPower);
+        if (errors.size() == 0) {
+            log.add("Sensors are working properly. You may stop the program");
+        } else {
+            log.add("--------------------");
+            log.add("  FAILURE DETECTED  ");
+            log.add("--------------------");
+        }
+        sleep(30000);
     }
 
     private void addResult(String message, boolean good) {
@@ -151,6 +150,26 @@ public abstract class SelfTest extends LinearOpMode {
                         robot.lastChassisRead.getAnalogInputValue(robot.TRAY_DETECTOR_PORT) +
                         "/4096",
                 !robot.hasBlockInTray());
+    }
+
+    private void verifyEncoderWheelsWork() {
+        log.add("Please push the robot so its encoder wheels move");
+        robot.lastChassisRead = robot.chassisHub.getBulkInputData();
+        int parallel = robot.lastChassisRead.getMotorCurrentPosition(0);
+        int lateral = robot.lastChassisRead.getMotorCurrentPosition(1);
+        while(opModeIsActive() &&
+                (Math.abs(robot.lastChassisRead.getMotorCurrentPosition(0) - parallel) < EXPECT_ENCODER_WHEEL_DIST ||
+                Math.abs(robot.lastChassisRead.getMotorCurrentPosition(1) - lateral) < EXPECT_ENCODER_WHEEL_DIST)) {
+            robot.lastChassisRead = robot.chassisHub.getBulkInputData();
+        }
+        addResult("Parallel encoder wheel moved " +
+                        (robot.lastChassisRead.getMotorCurrentPosition(0) - parallel) +
+                        " ticks",
+                Math.abs(robot.lastChassisRead.getMotorCurrentPosition(0) - parallel) > EXPECT_ENCODER_WHEEL_DIST);
+        addResult("Lateral encoder wheel moved " +
+                        (robot.lastChassisRead.getMotorCurrentPosition(1) - lateral) +
+                        " ticks",
+                Math.abs(robot.lastChassisRead.getMotorCurrentPosition(1) - lateral) > EXPECT_ENCODER_WHEEL_DIST);
     }
 
     private double averageHubTotalCurrent(ExpansionHubEx hub) {

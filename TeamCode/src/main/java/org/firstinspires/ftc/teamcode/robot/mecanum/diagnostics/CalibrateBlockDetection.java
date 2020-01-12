@@ -20,6 +20,7 @@ import org.openftc.revextensions2.RevBulkData;
 import java.util.concurrent.Delayed;
 
 @TeleOp
+@Disabled
 public class CalibrateBlockDetection extends LinearOpMode {
     SkystoneHardware robot;
     FtcDashboard dashboard;
