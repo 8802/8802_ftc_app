@@ -27,9 +27,6 @@ public abstract class PurePursuitAutoRed extends SimulatableMecanumOpMode {
     SkystoneHardware robot;
     PurePursuitPath followPath;
 
-    ImprovedSkystoneDetector detector;
-    OpenCvCamera webcam;
-
     // Robot state
     public static SkystoneState SKYSTONE = SkystoneState.UPPER;
     public static Alliance ALLIANCE = Alliance.RED;

@@ -20,6 +20,8 @@ public class DoubleMotorLift {
     public static int MAX_POS = 58000;
     public static double SLOW_MAX_SPEED = 0.3;
 
+    public static double MAX_ADJUST_DOWN_POW = -0.2;
+
     public DcMotor left;
     public DcMotor right;
     ElapsedTime timer;
@@ -86,6 +88,10 @@ public class DoubleMotorLift {
 
         if (target == 0 && Math.abs(error) < BOTTOM_DISABLE_THRESHOLD) {
             output = 0;
+        }
+
+        if (target != 0) {
+            output = Math.max(MAX_ADJUST_DOWN_POW, output);
         }
 
         left.setPower(output);

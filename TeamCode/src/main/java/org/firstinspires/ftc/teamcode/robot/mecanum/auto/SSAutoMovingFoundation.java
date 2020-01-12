@@ -131,11 +131,11 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
 
         /* Now we just do all that again, but with the fangs down */
         scoreSkystones.addAll(Waypoint.collate(
-                new HeadingControlledWaypoint(16, 39, 6, Math.PI, new OptionalSkipFourthBlock(this, 8)),
+                new HeadingControlledWaypoint(16, 39, 6, Math.PI),
                 new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_DOWN),
-                new HeadingControlledWaypoint(startSwoop, 39, 8, Math.toRadians(225), Subroutines.ENABLE_INTAKE),
-                new HeadingControlledWaypoint(startSwoop - 19, 20, 8, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
-                new HeadingControlledWaypoint(-53, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
+                new HeadingControlledWaypoint(startSwoop, 39, 8, Math.toRadians(205), Subroutines.ENABLE_INTAKE),
+                new HeadingControlledWaypoint(startSwoop - 19, 20, 8, Math.toRadians(205), Subroutines.CHECK_BLOCK_GRAB),
+                new HeadingControlledWaypoint(-57, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
 
                 new Waypoint(-28, 39, 8),
                 new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_INTAKED_BLOCK_AND_LIFT)),
@@ -146,7 +146,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
 
         scoreSkystones.addAll(Waypoint.collate(
                 new HeadingControlledWaypoint(44, 39, 6, Math.PI),
-                new StopWaypoint(0, 39, 6, Math.PI, 3)
+                new StopWaypoint(2, 39, 8, Math.PI, 0.01)
         ));
 
         return scoreSkystones;

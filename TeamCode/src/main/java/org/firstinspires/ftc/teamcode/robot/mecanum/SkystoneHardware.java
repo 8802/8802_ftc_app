@@ -133,10 +133,10 @@ public class SkystoneHardware {
     public static double BLOCK_GRABBER_OPEN = 0.6;
     public static double BLOCK_GRABBER_CAPSTONE = 0.16;
 
-    public static double FOUNDATION_LATCH_OPEN = 1;
-    public static double FOUNDATION_LATCH_CLOSED = 0;
-    public static double FOUNDATION_LATCH_OUT = 0.25;
-    public static double FOUNDATION_LATCH_LR_OFFSET = 0.0;
+    public static double FOUNDATION_LATCH_OPEN = 0.1;
+    public static double FOUNDATION_LATCH_CLOSED = 0.74;
+    public static double FOUNDATION_LATCH_OUT = 0.55;
+    public static double FOUNDATION_LATCH_LR_OFFSET = -0.02;
 
     public static double FANGS_RAISED = 0.55;
     public static double FANGS_CLOSED = 0.2;
