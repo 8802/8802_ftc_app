@@ -98,8 +98,8 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
             scoreSkystones.addAll(Waypoint.collate(
                     new HeadingControlledWaypoint(16, 43, 6, Math.PI),
                     new HeadingControlledWaypoint(0, 43, 8, Math.PI, Subroutines.SET_FANGS_DOWN),
-                    new HeadingControlledWaypoint(-6, 43, 8, Math.toRadians(225), Subroutines.ENABLE_INTAKE),
-                    new HeadingControlledWaypoint(-25, 22, 8, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
+                    new HeadingControlledWaypoint(-26, 43, 8, Math.toRadians(225), Subroutines.ENABLE_INTAKE),
+                    new HeadingControlledWaypoint(-45, 22, 8, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
                     new HeadingControlledWaypoint(-53, 22, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
 
                     new Waypoint(-28, 43, 8),
