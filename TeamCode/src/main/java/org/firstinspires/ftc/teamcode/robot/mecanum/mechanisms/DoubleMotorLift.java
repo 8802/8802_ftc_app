@@ -64,8 +64,8 @@ public class DoubleMotorLift {
     }
 
     public void setPower(double power) {
-        left.setPower(/*power*/0);
-        right.setPower(/*power*/0);
+        left.setPower(power);
+        right.setPower(power);
         this.pid = false;
     }
 
@@ -86,7 +86,6 @@ public class DoubleMotorLift {
         prev_error = error;
 
         double output = K_P * error + K_I * integral + K_D * derivative + G_STATIC;
-        output = Math.max(-maxPower, Math.min(maxPower, output));
 
         /* If we're in the bottom or top of lift, cut power to prevent destroying the thing */
         if (output > 0 && position > FULL_THROTTLE_CEIL) {
@@ -101,6 +100,7 @@ public class DoubleMotorLift {
 
         if (target != 0) {
             output = Math.max(MAX_ADJUST_DOWN_POW, output);
+            output = Math.max(-maxPower, Math.min(maxPower, output));
         }
 
         if (pid) {

@@ -23,16 +23,16 @@ public class DepositUntilSuccessful implements Subroutines.RepeatedSubroutine {
     public boolean runLoop(SkystoneHardware robot) {
         if (timer == null) {
             timer = new ElapsedTime();
-            robot.blockFlipper.normExtend();
-            robot.actionCache.add(new DelayedSubroutine(500, Subroutines.OPEN_CLAW));
-            robot.actionCache.add(new DelayedSubroutine(600, (r) -> r.pidLift.lift.setPower(1)));
-            robot.actionCache.add(new DelayedSubroutine(1200, Subroutines.LOWER_LIFT_TO_GRABBING));
-            robot.actionCache.add(new DelayedSubroutine(1200, Subroutines.SET_FLIPPER_INTAKING));
+            robot.actionCache.add(new DelayedSubroutine(150, Subroutines.SET_FLIPPER_NORM_EXTEND));
+            robot.actionCache.add(new DelayedSubroutine(400, (r) -> {r.pidLift.lift.setPower(0.8);}));
+            robot.actionCache.add(new DelayedSubroutine(700, Subroutines.OPEN_CLAW));
+            robot.actionCache.add(new DelayedSubroutine(950, Subroutines.SET_FLIPPER_INTAKING));
+            robot.actionCache.add(new DelayedSubroutine(950, Subroutines.LOWER_LIFT_TO_GRABBING));
             attempt = 1;
         }
 
         if (attempt == 1) {
-            if (timer.milliseconds() > 1750 && !robot.hasBlockInTray()) {
+            if (timer.milliseconds() > 1200 && !robot.hasBlockInTray()) {
                 return true;
             }
         } else {
