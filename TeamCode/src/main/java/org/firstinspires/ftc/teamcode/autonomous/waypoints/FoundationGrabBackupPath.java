@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 
 @Config
 public class FoundationGrabBackupPath implements Subroutines.ArrivalInterruptSubroutine {
-    public static double BACKUP_MS = 200;
+    public static double BACKUP_MS = 400;
     public static double WAIT_MS = 300;
 
     ElapsedTime startTime;

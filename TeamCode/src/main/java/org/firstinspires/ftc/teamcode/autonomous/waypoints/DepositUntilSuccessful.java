@@ -9,45 +9,30 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
 import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 
 @Config
-public class DepositUntilSuccessful implements Subroutines.ArrivalInterruptSubroutine {
+public class DepositUntilSuccessful implements Subroutines.RepeatedSubroutine {
 
     ElapsedTime timer;
     int attempt;
-    MecanumPowers driveDir;
-    boolean overshoot;
 
-    public DepositUntilSuccessful(MecanumPowers driveDir) {
-        this(driveDir, false);
-    }
-
-    public DepositUntilSuccessful(MecanumPowers driveDir, boolean overshoot) {
+    public DepositUntilSuccessful() {
         this.timer = null;
         this.attempt = 0;
-        this.driveDir = driveDir;
-        this.overshoot = overshoot;
     }
 
     @Override
-    public boolean runCycle(SkystoneHardware robot) {
+    public boolean runLoop(SkystoneHardware robot) {
         if (timer == null) {
-            robot.setPowers(driveDir);
             timer = new ElapsedTime();
             robot.blockFlipper.normExtend();
             robot.actionCache.add(new DelayedSubroutine(500, Subroutines.OPEN_CLAW));
-            robot.actionCache.add(new DelayedSubroutine(1250, Subroutines.SET_FLIPPER_INTAKING));
-            if (overshoot) {
-                robot.actionCache.add(new DelayedSubroutine(750, Subroutines.LIFT_A_FAIR_BIT));
-                robot.actionCache.add(new DelayedSubroutine(1600, Subroutines.LOWER_LIFT_TO_GRABBING));
-            } else {
-                robot.actionCache.add(new DelayedSubroutine(750, Subroutines.LIFT_A_LITTLE));
-                robot.actionCache.add(new DelayedSubroutine(1250, Subroutines.LOWER_LIFT_TO_GRABBING));
-            }
+            robot.actionCache.add(new DelayedSubroutine(600, (r) -> r.pidLift.lift.setPower(1)));
+            robot.actionCache.add(new DelayedSubroutine(1200, Subroutines.LOWER_LIFT_TO_GRABBING));
+            robot.actionCache.add(new DelayedSubroutine(1200, Subroutines.SET_FLIPPER_INTAKING));
             attempt = 1;
         }
 
-        // TODO wait longer if this is our second time
         if (attempt == 1) {
-            if (timer.milliseconds() > 2000 && !robot.hasBlockInTray()) {
+            if (timer.milliseconds() > 1750 && !robot.hasBlockInTray()) {
                 return true;
             }
         } else {

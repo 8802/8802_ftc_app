@@ -87,7 +87,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                 new HeadingControlledWaypoint(-4, 43, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_INTAKED_BLOCK_AND_LIFT)),
                 new HeadingControlledWaypoint(0, 43, 12, Math.PI),
                 new StopWaypoint(16, 41, 8,
-                        Math.PI, 8, new DepositUntilSuccessful(MecanumUtil.STOP))
+                        Math.PI, -1, new DepositUntilSuccessful())
         );
 
         /* What we do now depends on what blocks we grabbed first, since if we grabbed
@@ -121,7 +121,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
 
         scoreSkystones.addAll(Waypoint.collate(
                 new StopWaypoint(16, 43, 8,
-                        Math.PI, 8, new DepositUntilSuccessful(MecanumUtil.STOP))
+                        Math.PI, -1, new DepositUntilSuccessful())
         ));
 
         double startSwoop = -6;
@@ -141,12 +141,12 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                 new HeadingControlledWaypoint(-12, 43, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_INTAKED_BLOCK_AND_LIFT)),
                 new HeadingControlledWaypoint(0, 43, 8, Math.PI, Subroutines.SET_FANGS_UP),
                 new StopWaypoint(36, 43, 8,
-                        Math.PI, 8, new DepositUntilSuccessful(new MecanumPowers(-0.3, 0, 0), true))
+                        Math.PI, -1, new DepositUntilSuccessful())
         ));
 
         scoreSkystones.addAll(Waypoint.collate(
                 new HeadingControlledWaypoint(44, 43, 6, Math.PI),
-                new StopWaypoint(5, 43, 8, Math.PI, 0.01)
+                new StopWaypoint(5, 43, 8, Math.PI, 3)
         ));
 
         return scoreSkystones;

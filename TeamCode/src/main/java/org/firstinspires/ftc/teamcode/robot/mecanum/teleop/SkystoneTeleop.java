@@ -194,8 +194,8 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
                     // If we've already grabbed the block, just flip out
                     robot.blockFlipper.readyBlockGrab();
                     robot.blockGrabber.extend(); // Grab the block
-                    robot.actionCache.add(new DelayedSubroutine(600, Subroutines.CAPSTONE_CLAW));
-                    robot.actionCache.add(new DelayedSubroutine(2000, Subroutines.OPEN_CLAW));
+                    robot.actionCache.add(new DelayedSubroutine(500, Subroutines.CAPSTONE_CLAW));
+                    robot.actionCache.add(new DelayedSubroutine(1200, Subroutines.OPEN_CLAW));
                 } else {
                     // If we're already there, let go
                     if (robot.blockGrabber.servo.getPosition() == robot.BLOCK_GRABBER_CAPSTONE) {

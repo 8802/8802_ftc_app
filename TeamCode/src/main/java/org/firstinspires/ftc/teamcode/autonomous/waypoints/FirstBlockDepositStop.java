@@ -34,8 +34,6 @@ public class FirstBlockDepositStop implements Subroutines.ArrivalInterruptSubrou
         }
         // If we don't have a deposit end action, we're done!
         if (!robot.hasAction("SKYSTONE1DEPOSITEND")) {
-            robot.leftFoundationLatch.retract();
-            robot.rightFoundationLatch.retract();
             return true;
         } else {
             // Might as well be finishing adjusting our heading while we're here

@@ -32,6 +32,7 @@ public class DoubleMotorLift {
     public double derivative;
     public int prev_error;
     public double dt;
+    private boolean pid;
 
     public DoubleMotorLift(DcMotor left, DcMotor right) {
         this.left = left;
@@ -49,6 +50,7 @@ public class DoubleMotorLift {
         prev_error = 0;
         dt = 0;
         maxPower = 1;
+        pid = true;
     }
 
     public void setTarget(int target) {
@@ -58,6 +60,13 @@ public class DoubleMotorLift {
             target = MAX_POS;
         }
         this.target = target;
+        this.pid = true;
+    }
+
+    public void setPower(double power) {
+        left.setPower(/*power*/0);
+        right.setPower(/*power*/0);
+        this.pid = false;
     }
 
     public void setMaxPower(double power) {
@@ -94,8 +103,10 @@ public class DoubleMotorLift {
             output = Math.max(MAX_ADJUST_DOWN_POW, output);
         }
 
-        left.setPower(output);
-        right.setPower(output);
+        if (pid) {
+            left.setPower(output);
+            right.setPower(output);
+        }
         return output;
     }
 }
