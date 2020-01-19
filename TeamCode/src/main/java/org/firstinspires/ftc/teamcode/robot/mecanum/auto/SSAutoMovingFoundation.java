@@ -170,7 +170,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                 new StopWaypoint(12, 36, 8, Math.PI, -1, new DepositUntilSuccessful())
         ));
 
-        startSwoop -= 12;
+        startSwoop = -6;
 
         /* Now we just do all that again, but with the fangs down */
         scoreSkystones.addAll(Waypoint.collate(
