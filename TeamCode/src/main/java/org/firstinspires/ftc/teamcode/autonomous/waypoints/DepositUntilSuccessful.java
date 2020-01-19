@@ -33,15 +33,15 @@ public class DepositUntilSuccessful implements Subroutines.RepeatedSubroutine {
     public boolean runLoop(SkystoneHardware robot) {
         if (timer == null) {
             timer = new ElapsedTime();
-            robot.actionCache.add(new DelayedSubroutine(150, Subroutines.SET_FLIPPER_MAX_EXTEND));
+            robot.actionCache.add(new DelayedSubroutine(150 + 100, Subroutines.SET_FLIPPER_MAX_EXTEND));
             if (height == DepositHeight.HIGH) {
-                robot.actionCache.add(new DelayedSubroutine(325, (r) -> {r.pidLift.lift.setPower(0.8);}));
+                robot.actionCache.add(new DelayedSubroutine(325 + 150, (r) -> {r.pidLift.lift.setPower(0.8);}));
             } else {
-                robot.actionCache.add(new DelayedSubroutine(450, (r) -> {r.pidLift.lift.setPower(0.8);}));
+                robot.actionCache.add(new DelayedSubroutine(450 + 150, (r) -> {r.pidLift.lift.setPower(0.8);}));
             }
-            robot.actionCache.add(new DelayedSubroutine(600, Subroutines.OPEN_CLAW));
-            robot.actionCache.add(new DelayedSubroutine(950, Subroutines.SET_FLIPPER_INTAKING));
-            robot.actionCache.add(new DelayedSubroutine(950, Subroutines.LOWER_LIFT_TO_GRABBING));
+            robot.actionCache.add(new DelayedSubroutine(600 + 150, Subroutines.OPEN_CLAW));
+            robot.actionCache.add(new DelayedSubroutine(950 + 150, Subroutines.SET_FLIPPER_INTAKING));
+            robot.actionCache.add(new DelayedSubroutine(950 + 150, Subroutines.LOWER_LIFT_TO_GRABBING));
             attempt = 1;
         }
 

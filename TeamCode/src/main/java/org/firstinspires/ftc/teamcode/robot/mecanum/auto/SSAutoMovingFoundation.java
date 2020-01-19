@@ -121,26 +121,27 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                             3, new JoltsUntilBlockGrab(MecanumUtil.FORWARD)),
                     new HeadingControlledWaypoint(-46, 36, 12, Math.PI),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                    new StopWaypoint(12, 36, 8,
+                    new StopWaypoint(12, 34.5, 8,
                             Math.PI, -1, new DepositUntilSuccessful()),
 
                     /* Fourth block goes for 1st lowest */
-                    new HeadingControlledWaypoint(-32, 36, 12, Math.PI, Subroutines.ENABLE_INTAKE),
-                    new StopWaypoint(-56, 25, 6, Math.toRadians(205),
-                            3, new JoltsUntilBlockGrab(MecanumUtil.FORWARD)),
+                    new HeadingControlledWaypoint(-32, 36, 8, Math.PI, Subroutines.ENABLE_INTAKE),
+                    new HeadingControlledWaypoint(-48, 30, 8, Math.toRadians(205)),
+                    new StopWaypoint(-55, 25, 6, Math.toRadians(205),
+                            4.5, new JoltsUntilBlockGrab(MecanumUtil.FORWARD)),
                     new HeadingControlledWaypoint(-54, 36, 12, Math.PI),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                    new StopWaypoint(12, 36, 8, Math.PI, -1, new DepositUntilSuccessful()),
+                    new StopWaypoint(12, 40, 8, Math.PI, -1, new DepositUntilSuccessful()),
 
                     /* Fifth block is a swooping pattern */
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_DOWN),
                     new HeadingControlledWaypoint(-6, 39, 8, Math.toRadians(205), Subroutines.ENABLE_INTAKE),
                     new HeadingControlledWaypoint(-25, 20, 8, Math.toRadians(205), Subroutines.CHECK_BLOCK_GRAB),
                     new HeadingControlledWaypoint(-57, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
-                    new Waypoint(-28, 39, 8),
+                    new HeadingControlledWaypoint(-28, 36, 8, Math.toRadians(205)),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_UP),
-                    new StopWaypoint(36, 36, 8,
+                    new StopWaypoint(36, 40, 8,
                             Math.PI, -1, new DepositUntilSuccessful(DepositUntilSuccessful.DepositHeight.HIGH)),
 
                     /* After pushing the foundation, drive back */
@@ -155,6 +156,42 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                             3, new JoltsUntilBlockGrab(MecanumUtil.FORWARD)),
                     new HeadingControlledWaypoint(-54, 36, 12, Math.PI),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new StopWaypoint(12, 36, 8, Math.PI, -1, new DepositUntilSuccessful()),
+
+                    /* Fourth block is a high swoop */
+                    new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_DOWN),
+                    new HeadingControlledWaypoint(-6, 39, 8, Math.toRadians(205), Subroutines.ENABLE_INTAKE),
+                    new HeadingControlledWaypoint(-25, 20, 8, Math.toRadians(205), Subroutines.CHECK_BLOCK_GRAB),
+                    new HeadingControlledWaypoint(-57, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
+                    new Waypoint(-28, 39, 8),
+                    new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_UP),
+                    new StopWaypoint(12, 36, 8, Math.PI, -1, new DepositUntilSuccessful()),
+
+                    /* Fifth block is the same high swoop */
+                    new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_DOWN),
+                    new HeadingControlledWaypoint(-6, 39, 8, Math.toRadians(205), Subroutines.ENABLE_INTAKE),
+                    new HeadingControlledWaypoint(-25, 20, 8, Math.toRadians(205), Subroutines.CHECK_BLOCK_GRAB),
+                    new HeadingControlledWaypoint(-57, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
+                    new Waypoint(-28, 39, 8),
+                    new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_UP),
+                    new StopWaypoint(40, 36, 8,
+                            Math.PI, -1, new DepositUntilSuccessful(DepositUntilSuccessful.DepositHeight.HIGH)),
+
+                    /* After pushing the foundation, drive back */
+                    new HeadingControlledWaypoint(44, 39, 6, Math.PI),
+                    new StopWaypoint(2, 39, 8, Math.PI, -1)
+            ));
+        } else {
+            scoreSkystones.addAll(Waypoint.collate(
+                    new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_DOWN),
+                    new HeadingControlledWaypoint(-6, 39, 8, Math.toRadians(205), Subroutines.ENABLE_INTAKE),
+                    new HeadingControlledWaypoint(-14, 20, 8, Math.toRadians(205), Subroutines.CHECK_BLOCK_GRAB),
+                    new HeadingControlledWaypoint(-57, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
+                    new Waypoint(-28, 39, 8),
+                    new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_UP),
                     new StopWaypoint(12, 36, 8, Math.PI, -1, new DepositUntilSuccessful()),
 
                     /* Fourth block is a high swoop */
