@@ -113,83 +113,88 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
         /* What we do now depends on what blocks we grabbed first, since if we grabbed
         SkystoneState.UPPER the two skystones closest to the field wall haven't been touched.
          */
-
-        if (SKYSTONE == SkystoneState.LOWER || SKYSTONE == SkystoneState.MIDDLE) {
+        if (SKYSTONE == SkystoneState.UPPER) {
             scoreSkystones.addAll(Waypoint.collate(
-                    new HeadingControlledWaypoint(16, 39, 8, Math.PI),
-                    new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_DOWN),
-                    new HeadingControlledWaypoint(-6, 39, 8, Math.toRadians(225), Subroutines.ENABLE_INTAKE),
-                    new HeadingControlledWaypoint(-25, 20, 8, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
-                    new HeadingControlledWaypoint(-53, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
-
-                    new Waypoint(-28, 39, 8),
-                    new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                    new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_UP)
-            ));
-        } else if (SKYSTONE == SkystoneState.UPPER) {
-            scoreSkystones.addAll(Waypoint.collate(
+                    /* Third block goes for 2cd lowest block */
                     new HeadingControlledWaypoint(-24, 36, 12, Math.PI, Subroutines.ENABLE_INTAKE),
                     new StopWaypoint(-48, 25, 6, Math.toRadians(205),
                             3, new JoltsUntilBlockGrab(MecanumUtil.FORWARD)),
                     new HeadingControlledWaypoint(-46, 36, 12, Math.PI),
-                    new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND))
+                    new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new StopWaypoint(12, 36, 8,
+                            Math.PI, -1, new DepositUntilSuccessful()),
+
+                    /* Fourth block goes for 1st lowest */
+                    new HeadingControlledWaypoint(-32, 36, 12, Math.PI, Subroutines.ENABLE_INTAKE),
+                    new StopWaypoint(-56, 25, 6, Math.toRadians(205),
+                            3, new JoltsUntilBlockGrab(MecanumUtil.FORWARD)),
+                    new HeadingControlledWaypoint(-54, 36, 12, Math.PI),
+                    new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new StopWaypoint(12, 36, 8, Math.PI, -1, new DepositUntilSuccessful()),
+
+                    /* Fifth block is a swooping pattern */
+                    new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_DOWN),
+                    new HeadingControlledWaypoint(-6, 39, 8, Math.toRadians(205), Subroutines.ENABLE_INTAKE),
+                    new HeadingControlledWaypoint(-25, 20, 8, Math.toRadians(205), Subroutines.CHECK_BLOCK_GRAB),
+                    new HeadingControlledWaypoint(-57, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
+                    new Waypoint(-28, 39, 8),
+                    new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_UP),
+                    new StopWaypoint(36, 36, 8,
+                            Math.PI, -1, new DepositUntilSuccessful(DepositUntilSuccessful.DepositHeight.HIGH)),
+
+                    /* After pushing the foundation, drive back */
+                    new HeadingControlledWaypoint(44, 39, 6, Math.PI),
+                    new StopWaypoint(2, 39, 8, Math.PI, -1)
+            ));
+        } else if (SKYSTONE == SkystoneState.MIDDLE) {
+            scoreSkystones.addAll(Waypoint.collate(
+                    /* Third block goes for lowest block */
+                    new HeadingControlledWaypoint(-32, 36, 12, Math.PI, Subroutines.ENABLE_INTAKE),
+                    new StopWaypoint(-56, 25, 6, Math.toRadians(205),
+                            3, new JoltsUntilBlockGrab(MecanumUtil.FORWARD)),
+                    new HeadingControlledWaypoint(-54, 36, 12, Math.PI),
+                    new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new StopWaypoint(12, 36, 8, Math.PI, -1, new DepositUntilSuccessful()),
+
+                    /* Fourth block is a high swoop */
+                    new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_DOWN),
+                    new HeadingControlledWaypoint(-6, 39, 8, Math.toRadians(205), Subroutines.ENABLE_INTAKE),
+                    new HeadingControlledWaypoint(-25, 20, 8, Math.toRadians(205), Subroutines.CHECK_BLOCK_GRAB),
+                    new HeadingControlledWaypoint(-57, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
+                    new Waypoint(-28, 39, 8),
+                    new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_UP),
+                    new StopWaypoint(12, 36, 8, Math.PI, -1, new DepositUntilSuccessful()),
+
+                    /* Fifth block is the same high swoop */
+                    new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_DOWN),
+                    new HeadingControlledWaypoint(-6, 39, 8, Math.toRadians(205), Subroutines.ENABLE_INTAKE),
+                    new HeadingControlledWaypoint(-25, 20, 8, Math.toRadians(205), Subroutines.CHECK_BLOCK_GRAB),
+                    new HeadingControlledWaypoint(-57, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
+                    new Waypoint(-28, 39, 8),
+                    new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_UP),
+                    new StopWaypoint(40, 36, 8,
+                            Math.PI, -1, new DepositUntilSuccessful(DepositUntilSuccessful.DepositHeight.HIGH)),
+
+                    /* After pushing the foundation, drive back */
+                    new HeadingControlledWaypoint(44, 39, 6, Math.PI),
+                    new StopWaypoint(2, 39, 8, Math.PI, -1)
             ));
         }
 
-        scoreSkystones.addAll(Waypoint.collate(
-                new StopWaypoint(12, 36, 8,
-                        Math.PI, -1, new DepositUntilSuccessful())
-        ));
-
-        double startSwoop = -6;
-        if (SKYSTONE == SkystoneState.LOWER) { // If we already did a swoop, shift it down
-            startSwoop = -18;
-        }
-
-        /* Now we just do all that again, but with the fangs down */
         /*scoreSkystones.addAll(Waypoint.collate(
                 new HeadingControlledWaypoint(16, 39, 8, Math.PI),
                 new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_DOWN),
-                new HeadingControlledWaypoint(startSwoop, 39, 8, Math.toRadians(205), Subroutines.ENABLE_INTAKE),
-                new HeadingControlledWaypoint(startSwoop - 19, 20, 8, Math.toRadians(205), Subroutines.CHECK_BLOCK_GRAB),
-                new HeadingControlledWaypoint(-57, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
+                new HeadingControlledWaypoint(-6, 39, 8, Math.toRadians(225), Subroutines.ENABLE_INTAKE),
+                new HeadingControlledWaypoint(-25, 20, 8, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
+                new HeadingControlledWaypoint(-53, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
 
                 new Waypoint(-28, 39, 8),
                 new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_UP),
-                new StopWaypoint(12, 36, 10,
-                        Math.PI, -1, new DepositUntilSuccessful(DepositUntilSuccessful.DepositHeight.HIGH))
+                new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_UP)
         ));*/
-
-        scoreSkystones.addAll(Waypoint.collate(
-                new HeadingControlledWaypoint(-32, 36, 12, Math.PI, Subroutines.ENABLE_INTAKE),
-                new StopWaypoint(-56, 25, 6, Math.toRadians(205),
-                        3, new JoltsUntilBlockGrab(MecanumUtil.FORWARD)),
-                new HeadingControlledWaypoint(-54, 36, 12, Math.PI),
-                new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                new StopWaypoint(12, 36, 8, Math.PI, -1, new DepositUntilSuccessful())
-        ));
-
-        startSwoop = -6;
-
-        /* Now we just do all that again, but with the fangs down */
-        scoreSkystones.addAll(Waypoint.collate(
-                new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_DOWN),
-                new HeadingControlledWaypoint(startSwoop, 39, 8, Math.toRadians(205), Subroutines.ENABLE_INTAKE),
-                new HeadingControlledWaypoint(startSwoop - 19, 20, 8, Math.toRadians(205), Subroutines.CHECK_BLOCK_GRAB),
-                new HeadingControlledWaypoint(-57, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
-
-                new Waypoint(-28, 39, 8),
-                new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.SET_FANGS_UP),
-                new StopWaypoint(36, 36, 8,
-                        Math.PI, -1, new DepositUntilSuccessful(DepositUntilSuccessful.DepositHeight.HIGH))
-        ));
-
-        scoreSkystones.addAll(Waypoint.collate(
-                new HeadingControlledWaypoint(44, 39, 6, Math.PI),
-                new StopWaypoint(2, 39, 8, Math.PI, 0.01)
-        ));
 
         return scoreSkystones;
     }
