@@ -11,12 +11,22 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 @Config
 public class DepositUntilSuccessful implements Subroutines.RepeatedSubroutine {
 
+    public enum DepositHeight {
+        LOW, HIGH
+    }
+
     ElapsedTime timer;
     int attempt;
+    DepositHeight height;
 
     public DepositUntilSuccessful() {
+        this(DepositHeight.LOW);
+    }
+
+    public DepositUntilSuccessful(DepositHeight height) {
         this.timer = null;
         this.attempt = 0;
+        this.height = height;
     }
 
     @Override
@@ -24,7 +34,11 @@ public class DepositUntilSuccessful implements Subroutines.RepeatedSubroutine {
         if (timer == null) {
             timer = new ElapsedTime();
             robot.actionCache.add(new DelayedSubroutine(150, Subroutines.SET_FLIPPER_NORM_EXTEND));
-            robot.actionCache.add(new DelayedSubroutine(400, (r) -> {r.pidLift.lift.setPower(0.8);}));
+            if (height == DepositHeight.HIGH) {
+                robot.actionCache.add(new DelayedSubroutine(325, (r) -> {r.pidLift.lift.setPower(0.8);}));
+            } else {
+                robot.actionCache.add(new DelayedSubroutine(450, (r) -> {r.pidLift.lift.setPower(0.8);}));
+            }
             robot.actionCache.add(new DelayedSubroutine(700, Subroutines.OPEN_CLAW));
             robot.actionCache.add(new DelayedSubroutine(950, Subroutines.SET_FLIPPER_INTAKING));
             robot.actionCache.add(new DelayedSubroutine(950, Subroutines.LOWER_LIFT_TO_GRABBING));

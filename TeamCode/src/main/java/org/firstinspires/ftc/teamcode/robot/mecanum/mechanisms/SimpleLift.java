@@ -14,7 +14,7 @@ public class SimpleLift {
     public static int LAYER_0 = 4500;
     public static int DROP_LAYER_0 = 0;
     public static int GRABBING = 0;
-    public static int LAYER_SHIFT = 7000;
+    public static int LAYER_SHIFT = 6900;
     public static int UPPER_LAYERS_SHIFT = 0;
     public static int UPPER_LAYERS_START = 5;
 
@@ -65,5 +65,9 @@ public class SimpleLift {
 
     public void cacheToGrabbing() {
         lift.setTarget(GRABBING);
+    }
+
+    public boolean up() {
+        return lift.getTarget() > GRABBING;
     }
 }

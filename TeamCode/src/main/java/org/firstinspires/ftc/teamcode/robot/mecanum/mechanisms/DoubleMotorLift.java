@@ -20,6 +20,10 @@ public class DoubleMotorLift {
     public static int MAX_POS = 58000;
     public static double SLOW_MAX_SPEED = 0.3;
 
+    public static double NEAR_TARGET_MAX_UP = 0.6;
+    public static double NEAR_TARGET_MAX_DOWN = -0.4;
+    public static double NEAR_TARGET_THRESHOLD = 4000;
+
     public static double MAX_ADJUST_DOWN_POW = -0.2;
 
     public DcMotor left;
@@ -63,6 +67,10 @@ public class DoubleMotorLift {
         this.pid = true;
     }
 
+    public double getTarget() {
+        return target;
+    }
+
     public void setPower(double power) {
         left.setPower(power);
         right.setPower(power);
@@ -101,6 +109,10 @@ public class DoubleMotorLift {
         if (target != 0) {
             output = Math.max(MAX_ADJUST_DOWN_POW, output);
             output = Math.max(-maxPower, Math.min(maxPower, output));
+        }
+
+        if (Math.abs(error) < NEAR_TARGET_THRESHOLD) {
+            output = Math.max(NEAR_TARGET_MAX_DOWN, Math.min(NEAR_TARGET_MAX_UP, output));
         }
 
         if (pid) {
