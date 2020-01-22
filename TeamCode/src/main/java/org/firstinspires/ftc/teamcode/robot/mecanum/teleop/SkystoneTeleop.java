@@ -57,6 +57,7 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
     @Override
     public void start() {
         robot.initBulkReadTelemetry();
+        robot.lateralEncoderWheelLifter.extend(); // Lift lateral encoder wheel
 
         leftStickButtonPrev = gamepad1.left_stick_button;
         rightStickButtonPrev = gamepad1.right_stick_button;

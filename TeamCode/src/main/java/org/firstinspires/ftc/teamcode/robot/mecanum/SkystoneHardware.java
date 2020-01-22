@@ -103,6 +103,7 @@ public class SkystoneHardware {
 
     public ServoToggle blockGrabber;
     public DepositFlipper blockFlipper;
+    public ServoToggle lateralEncoderWheelLifter;
 
     public ServoToggle leftFoundationLatch;
     public ServoToggle rightFoundationLatch;
@@ -141,6 +142,9 @@ public class SkystoneHardware {
     public static double FANGS_RAISED = 0.55;
     public static double FANGS_CLOSED = 0.2;
     public static double FANGS_LR_OFFSET = -0.13;
+
+    public static double WHEEL_LIFTER_DOWN = 0.25;
+    public static double WHEEL_LIFTER_UP = 0.6;
 
     /**
      * Instantiates a <b>real</b> SkystoneHardware object that will try to communicate with the REV
@@ -187,6 +191,9 @@ public class SkystoneHardware {
         blockFlipper = new DepositFlipper(
                 hardwareMap.get(Servo.class, "leftBlockFlipper"),
                 hardwareMap.get(Servo.class, "rightBlockFlipper"));
+        lateralEncoderWheelLifter = new ServoToggle(
+                hardwareMap.get(Servo.class, "lateralEncoderWheelLifter"),
+                WHEEL_LIFTER_DOWN, WHEEL_LIFTER_UP);
 
         /* Latches */
         leftFoundationLatch = new ServoToggle(
@@ -420,6 +427,8 @@ public class SkystoneHardware {
         /* Update any FtcDashboard parameters */
         blockGrabber.retractPosition = BLOCK_GRABBER_OPEN;
         blockGrabber.extendPosition = BLOCK_GRABBER_CLOSED;
+        lateralEncoderWheelLifter.retractPosition = WHEEL_LIFTER_DOWN;
+        lateralEncoderWheelLifter.extendPosition = WHEEL_LIFTER_UP;
         leftFoundationLatch.retractPosition = FOUNDATION_LATCH_OPEN + FOUNDATION_LATCH_LR_OFFSET;
         leftFoundationLatch.extendPosition = FOUNDATION_LATCH_CLOSED + FOUNDATION_LATCH_LR_OFFSET;
         rightFoundationLatch.retractPosition = FOUNDATION_LATCH_OPEN - FOUNDATION_LATCH_LR_OFFSET;
