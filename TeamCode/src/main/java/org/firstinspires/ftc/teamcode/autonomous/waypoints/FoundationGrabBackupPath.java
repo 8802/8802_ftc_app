@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 
 @Config
 public class FoundationGrabBackupPath implements Subroutines.ArrivalInterruptSubroutine {
-    public static double BACKUP_MS = 400;
-    public static double WAIT_MS = 300;
+    public static double BACKUP_MS = 600;
+    public static double WAIT_MS = 600;
 
     ElapsedTime startTime;
     boolean loweredLatches;
@@ -38,8 +38,9 @@ public class FoundationGrabBackupPath implements Subroutines.ArrivalInterruptSub
             robot.actionCache.add(new DelayedSubroutine(1250, Subroutines.SET_FLIPPER_INTAKING, "SKYSTONE1DEPOSIT"));
             robot.actionCache.add(new DelayedSubroutine(1250, Subroutines.LOWER_LIFT_TO_GRABBING, "SKYSTONE1DEPOSITEND"));
             loweredLatches = true;
+            startTime.reset();
 
-        } else if (startTime.milliseconds() > BACKUP_MS + WAIT_MS) {
+        } else if (loweredLatches && startTime.milliseconds() > WAIT_MS) {
             return true;
         }
         return false;

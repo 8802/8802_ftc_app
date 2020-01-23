@@ -128,6 +128,8 @@ public class SkystoneHardware {
     public static double HAS_BLOCK_TRAY_THRESHOLD = 150;
     public static int CLAWS_DETECTOR_PORT = 1;
     public static double HAS_BLOCK_CLAWS_THRESHOLD = 150;
+    public static int LEFT_LIMIT_SWITCH_PORT = 0;
+    public static int RIGHT_LIMIT_SWITCH_PORT = 2;
 
     /* Servo positions */
     public static double BLOCK_GRABBER_CLOSED = 0;
@@ -313,10 +315,6 @@ public class SkystoneHardware {
         pidLift.lift.right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void initCamera(HardwareMap hardwareMap) {
-        camera = hardwareMap.get(WebcamName.class, "webcam");
-    }
-
     public void initBulkReadTelemetry() {
         Telemetry.Line odometryLine = telemetry.addLine();
         telOdometry = new Telemetry.Item[3];
@@ -456,6 +454,14 @@ public class SkystoneHardware {
 
     public boolean hasBlockInClaws() {
         return lastChassisRead.getAnalogInputValue(CLAWS_DETECTOR_PORT) < HAS_BLOCK_CLAWS_THRESHOLD;
+    }
+
+    public boolean leftLimitSwitchPressed() {
+        return lastChassisRead.getDigitalInputState(LEFT_LIMIT_SWITCH_PORT);
+    }
+
+    public boolean rightLimitSwitchPressed() {
+        return lastChassisRead.getDigitalInputState(RIGHT_LIMIT_SWITCH_PORT);
     }
 
     public boolean hasAction(String tag) {
