@@ -22,7 +22,7 @@ public class FirstBlockDepositStop implements Subroutines.ArrivalInterruptSubrou
             robot.actionCache.clear(); // Remove everything from action cache
 
             // Grab the block
-            robot.pidLift.setLayer(0);
+            robot.pidLift.cacheToGrabbing();
             robot.blockGrabber.retract(); // Open claw
             robot.blockFlipper.readyBlockGrab(); // Move flipper
             robot.actionCache.add(new DelayedSubroutine(500, Subroutines.CLOSE_CLAW, "SKYSTONE1DEPOSITNOCHECK"));

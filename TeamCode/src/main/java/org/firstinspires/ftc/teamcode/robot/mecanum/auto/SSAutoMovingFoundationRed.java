@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.autonomous.waypoints.FoundationGrabBackupP
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.GrabBlockOptionallyRejectDouble;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.JoltsUntilBlockGrab;
-import org.firstinspires.ftc.teamcode.autonomous.waypoints.OptionalSkipFourthBlock;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;

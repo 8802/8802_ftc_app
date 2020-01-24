@@ -22,7 +22,7 @@ public class Subroutines {
     }
 
     public interface RepeatedSubroutine extends Subroutine {
-        boolean runLoop(SkystoneHardware robot); // Returns whether we should advance
+        boolean runLoop(SkystoneHardware robot, PurePursuitPath path); // Returns whether we should advance
     }
 
     // Once a position is reached, if that position has an ArrivalInterruptSubroutine, we advance to
@@ -120,18 +120,14 @@ public class Subroutines {
         robot.blockFlipper.setPosition(0.2, 0.18);
     };
 
-    public static final RepeatedSubroutine CHECK_BLOCK_GRAB = (robot) -> robot.hasBlockInClaws();
+    public static final RepeatedSubroutine CHECK_BLOCK_GRAB = (robot, path) -> robot.hasBlockInClaws();
 
-    public static final RepeatedSubroutine CHECK_BLOCK_GRAB_OR_TRAY = (robot) -> {
-        boolean result = robot.hasBlockInClaws() || robot.hasBlockInTray();
-        System.out.println(System.currentTimeMillis());
-        if (result) {
-            System.out.println("Ran CHECK_BLOCK_GRAB_WITH_TRAY and got result 'true'");
-        } else {
-            System.out.println("Ran CHECK_BLOCK_GRAB_WITH_TRAY and got result 'false'");
-        }
-        return result;
+    public static final RepeatedSubroutine LIFT_FANGS_CHECK_BLOCK_GRAB = (robot, path) -> {
+        robot.leftFang.retract();
+        robot.rightFang.retract();
+        return robot.hasBlockInClaws();
     };
+
 
     public static final OnceOffSubroutine STOP_OP_MODE_IF_DOUBLED_BLOCK = (robot) -> {
         if (robot.hasBlockInClaws()) {
