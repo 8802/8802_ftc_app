@@ -42,12 +42,12 @@ public class DepositUntilSuccessful implements Subroutines.RepeatedSubroutine {
             } else if (height == DepositHeight.LOW) {
                 robot.actionCache.add(new DelayedSubroutine(400, (r) -> {r.pidLift.setLayer(1);}));
             } else {
-                robot.actionCache.add(new DelayedSubroutine(400, (r) -> {r.pidLift.setLayer(1);}));
+                robot.actionCache.add(new DelayedSubroutine(400, (r) -> {r.pidLift.setLayer(2);}));
             }
-            robot.actionCache.add(new DelayedSubroutine(850, Subroutines.OPEN_CLAW));
-            robot.actionCache.add(new DelayedSubroutine(850, (r) -> r.pidLift.lift.setPower(1)));
-            robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.SET_FLIPPER_INTAKING));
-            robot.actionCache.add(new DelayedSubroutine(1450, Subroutines.LOWER_LIFT_TO_GRABBING));
+            robot.actionCache.add(new DelayedSubroutine(1050, Subroutines.OPEN_CLAW));
+            robot.actionCache.add(new DelayedSubroutine(1050, (r) -> r.pidLift.lift.setPower(1)));
+            robot.actionCache.add(new DelayedSubroutine(1200, Subroutines.SET_FLIPPER_INTAKING));
+            robot.actionCache.add(new DelayedSubroutine(1650, Subroutines.LOWER_LIFT_TO_GRABBING));
             attempt = 1;
         }
 
