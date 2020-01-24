@@ -120,6 +120,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                             3, new JoltsUntilBlockGrab(MecanumUtil.FORWARD)),
                     new HeadingControlledWaypoint(-46, 36, 12, Math.PI),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new HeadingControlledWaypoint(0, 39, 12, Math.PI),
                     new StopWaypoint(44, 41, 8,
                             Math.PI, -1, new DepositUntilSuccessful(DepositUntilSuccessful.DepositHeight.LOW)),
 
@@ -130,6 +131,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                             4.5, new JoltsUntilBlockGrab(MecanumUtil.FORWARD)),
                     new HeadingControlledWaypoint(-54, 36, 12, Math.PI),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new HeadingControlledWaypoint(0, 39, 12, Math.PI),
                     new StopWaypoint(44, 41, 8, Math.PI, -1, new DepositUntilSuccessful(DepositUntilSuccessful.DepositHeight.LOW)),
 
                     /* Fifth block is a swooping pattern */
@@ -140,6 +142,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                     new HeadingControlledWaypoint(-57, 20, 8, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
                     new HeadingControlledWaypoint(-28, 36, 8, Math.toRadians(205), Subroutines.SET_FANGS_UP),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new HeadingControlledWaypoint(0, 39, 12, Math.PI),
                     new StopWaypoint(44, 41, 8,
                             Math.PI, -1, new DepositUntilSuccessful(DepositUntilSuccessful.DepositHeight.LOW))
             ));
@@ -152,6 +155,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                             4.5, new JoltsUntilBlockGrab(MecanumUtil.FORWARD)),
                     new HeadingControlledWaypoint(-54, 36, 8, Math.PI),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new HeadingControlledWaypoint(0, 39, 12, Math.PI),
                     new StopWaypoint(44, 41, 8, Math.PI, -1, new DepositUntilSuccessful()),
 
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.FANGS_DOWN_AND_INTAKE),
@@ -160,6 +164,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                             4, Subroutines.CHECK_BLOCK_GRAB),
                     new HeadingControlledWaypoint(-30, 33, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.PI),
+                    new HeadingControlledWaypoint(0, 39, 12, Math.PI),
                     new StopWaypoint(44, 41, 8, Math.PI, -1, new DepositUntilSuccessful()),
 
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.FANGS_DOWN_AND_INTAKE),
@@ -169,6 +174,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
 
                     new HeadingControlledWaypoint(-24, 33, 8, -0.85 * Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.PI),
+                    new HeadingControlledWaypoint(0, 39, 12, Math.PI),
                     new StopWaypoint(44, 41, 8,
                             Math.PI, -1, new DepositUntilSuccessful())
             ));
@@ -189,7 +195,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                     new HeadingControlledWaypoint(-36, 12, 6, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
                     new HeadingControlledWaypoint(-16, 36, 12, Math.toRadians(225)),
                     new HeadingControlledWaypoint(-4, 36, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                    new HeadingControlledWaypoint(0, 36, 12, Math.PI),
+                    new HeadingControlledWaypoint(0, 39, 12, Math.PI),
                     new StopWaypoint(44, 41, 8,
                             Math.PI, -1, new DepositUntilSuccessful()),
 
@@ -201,6 +207,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
 
                     new HeadingControlledWaypoint(-24, 33, 8, -0.85 * Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.PI),
+                    new HeadingControlledWaypoint(0, 39, 12, Math.PI),
                     new StopWaypoint(44, 41, 8,
                             Math.PI, -1, new DepositUntilSuccessful())
             ));
