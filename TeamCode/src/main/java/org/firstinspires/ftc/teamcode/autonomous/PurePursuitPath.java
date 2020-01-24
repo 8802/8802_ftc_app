@@ -116,7 +116,7 @@ public class PurePursuitPath {
             // Run repeated subroutines, and see if they return true
             Subroutines.Subroutine action = waypoints.get(currPoint + 1).action;
             if (action instanceof Subroutines.RepeatedSubroutine) {
-                if (((Subroutines.RepeatedSubroutine) action).runLoop(robot)) {
+                if (((Subroutines.RepeatedSubroutine) action).runLoop(robot, this)) {
                     jumpToNextSegment = true;
                 }
             }
