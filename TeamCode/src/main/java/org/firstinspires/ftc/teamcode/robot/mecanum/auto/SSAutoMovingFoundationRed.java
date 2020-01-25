@@ -26,7 +26,7 @@ import static org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware.FIEL
 // Import constants
 
 @Config
-public class SSAutoMovingFoundationRed extends PurePursuitAuto {
+public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
 
     Waypoint GRAB_FOUNDATION_LOCATION = new StopWaypoint(FIELD_RADIUS - 5 - (34.5/2), 34,
             6, Math.PI * 0.5, 4, new FoundationGrabBackupPath());
@@ -79,8 +79,8 @@ public class SSAutoMovingFoundationRed extends PurePursuitAuto {
             scoreSkystones.addAll(Waypoint.collate(
                     new HeadingControlledWaypoint(DEFAULT_START_POSITION.x, 45, 10, -Math.PI/2),
                     new HeadingControlledWaypoint(DEFAULT_START_POSITION.x, 34, 6, -0.75 * Math.PI),
-                    new StopWaypoint(-FIELD_RADIUS + 30.5, 25, 6, -0.75 * Math.PI,
-                            3, new JoltsUntilBlockGrab(joltDirection)),
+                    new StopWaypoint(-38, 25, 6, -0.75 * Math.PI,
+                            4, new JoltsUntilBlockGrab(joltDirection)),
                     new HeadingControlledWaypoint(-FIELD_RADIUS + 29, 35, 6, -0.75 * Math.PI),
                     new HeadingControlledWaypoint(-FIELD_RADIUS + 37, 36, 10, -0.75 * Math.PI)
             ));
@@ -145,7 +145,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAuto {
         } else if (SKYSTONE == SkystoneState.MIDDLE) {
             scoreSkystones.addAll(Waypoint.collate(
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.ENABLE_INTAKE),
-                    new HeadingControlledWaypoint(-12, 39, 8, Math.toRadians(240), Subroutines.SET_LEFT_FANG_DOWN),
+                    new HeadingControlledWaypoint(-12, 39, 8, Math.toRadians(240), Subroutines.SET_RIGHT_FANG_DOWN),
                     new HeadingControlledWaypoint(-30, 12, 4.5, Math.toRadians(240), Subroutines.CHECK_BLOCK_GRAB),
                     new HeadingControlledWaypoint(-16, 36, 12, Math.toRadians(240)),
                     new HeadingControlledWaypoint(-4, 41, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
@@ -153,7 +153,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAuto {
                             Math.PI, -1, new CloseDepositUntilSuccessful()),
 
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.ENABLE_INTAKE),
-                    new HeadingControlledWaypoint(-25, 39, 8, Math.toRadians(225), Subroutines.SET_LEFT_FANG_DOWN),
+                    new HeadingControlledWaypoint(-25, 39, 8, Math.toRadians(225), Subroutines.SET_RIGHT_FANG_DOWN),
                     new HeadingControlledWaypoint(-49, 12, 4.5, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
                     new HeadingControlledWaypoint(-25, 36, 12, Math.toRadians(225)),
                     new HeadingControlledWaypoint(-4, 41, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
