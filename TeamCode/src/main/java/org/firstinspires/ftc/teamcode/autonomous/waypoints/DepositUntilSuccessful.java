@@ -36,13 +36,13 @@ public class DepositUntilSuccessful implements Subroutines.RepeatedSubroutine {
     public boolean runLoop(SkystoneHardware robot, PurePursuitPath path) {
         if (attemptTime == null) {
             attemptTime = new ElapsedTime();
-            robot.actionCache.add(new DelayedSubroutine(250, Subroutines.SET_FLIPPER_NORM_EXTEND));
+            robot.actionCache.add(new DelayedSubroutine(250, Subroutines.SET_FLIPPER_MAX_EXTEND));
             if (height == DepositHeight.HIGH) {
                 robot.actionCache.add(new DelayedSubroutine(400, (r) -> {r.pidLift.setLayer(3);}));
             } else if (height == DepositHeight.LOW) {
                 robot.actionCache.add(new DelayedSubroutine(400, (r) -> {r.pidLift.setLayer(1);}));
             } else {
-                robot.actionCache.add(new DelayedSubroutine(400, (r) -> {r.pidLift.setLayer(2);}));
+                robot.actionCache.add(new DelayedSubroutine(450, (r) -> {r.pidLift.setLayer(1);}));
             }
             robot.actionCache.add(new DelayedSubroutine(1050, Subroutines.OPEN_CLAW));
             robot.actionCache.add(new DelayedSubroutine(1050, (r) -> r.pidLift.lift.setPower(1)));
@@ -51,7 +51,7 @@ public class DepositUntilSuccessful implements Subroutines.RepeatedSubroutine {
             attempt = 1;
         }
 
-        int msToDriveAway = (attempt == 1) ? 1200 : 3000;
+        int msToDriveAway = (attempt == 1) ? 1400 : 3000;
         if (attemptTime.milliseconds() > msToDriveAway && !robot.hasBlockInTray()) {
             boolean skipped = optionallySkip(robot, path);
             // If we're not skipping the remaining paths, return true

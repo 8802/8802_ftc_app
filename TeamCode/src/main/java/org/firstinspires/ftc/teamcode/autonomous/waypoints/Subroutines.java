@@ -78,6 +78,14 @@ public class Subroutines {
         robot.rightFang.retract();
     };
 
+    public static final OnceOffSubroutine SET_LEFT_FANG_DOWN = (robot) -> {
+        robot.leftFang.extend();
+    };
+
+    public static final OnceOffSubroutine SET_RIGHT_FANG_DOWN = (robot) -> {
+        robot.rightFang.extend();
+    };
+
     public static final OnceOffSubroutine FANGS_DOWN_AND_INTAKE = (robot) -> {
         robot.setIntakePower(INTAKE_SPEED);
         robot.leftFang.extend();
