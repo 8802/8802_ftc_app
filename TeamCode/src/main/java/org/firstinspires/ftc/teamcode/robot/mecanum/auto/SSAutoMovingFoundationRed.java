@@ -79,7 +79,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
             scoreSkystones.addAll(Waypoint.collate(
                     new HeadingControlledWaypoint(DEFAULT_START_POSITION.x, 45, 10, -Math.PI/2),
                     new HeadingControlledWaypoint(DEFAULT_START_POSITION.x, 34, 6, -0.75 * Math.PI),
-                    new StopWaypoint(-38, 25, 6, -0.75 * Math.PI,
+                    new StopWaypoint(-39, 25, 5, -0.75 * Math.PI,
                             4, new JoltsUntilBlockGrab(joltDirection)),
                     new HeadingControlledWaypoint(-FIELD_RADIUS + 29, 35, 6, -0.75 * Math.PI),
                     new HeadingControlledWaypoint(-FIELD_RADIUS + 37, 36, 10, -0.75 * Math.PI)
@@ -130,12 +130,12 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                     new HeadingControlledWaypoint(-54, 36, 12, Math.PI),
                     new HeadingControlledWaypoint(-12, 41, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(0, 41, 12, Math.PI),
-                    new StopWaypoint(50, 41, 8, Math.PI, -1, new CloseDepositUntilSuccessful()),
+                    new StopWaypoint(50, 43, 8, Math.PI, -1, new CloseDepositUntilSuccessful()),
 
                     /* Fifth block is a swooping pattern */
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.ENABLE_INTAKE),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.toRadians(225), Subroutines.SET_FANGS_DOWN),
-                    new HeadingControlledWaypoint(-36, 12, 6, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
+                    new HeadingControlledWaypoint(-36, 12, 5, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
                     new HeadingControlledWaypoint(-16, 39, 12, Math.toRadians(225)),
                     new HeadingControlledWaypoint(-4, 39, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(0, 41, 12, Math.PI),
