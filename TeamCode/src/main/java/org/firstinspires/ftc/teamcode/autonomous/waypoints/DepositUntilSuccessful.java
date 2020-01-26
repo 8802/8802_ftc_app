@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 @Config
 public class DepositUntilSuccessful implements Subroutines.RepeatedSubroutine {
 
-    public static double NO_NEW_CYCLES_DEADLINE = 24; // Seconds
+    public static double NO_NEW_CYCLES_DEADLINE = 23; // Seconds
 
     static ElapsedTime timeSinceStart = new ElapsedTime();
     ElapsedTime attemptTime;

@@ -303,9 +303,6 @@ public class SkystoneHardware {
     }
 
     private void initBNO055IMU(HardwareMap hardwareMap) {
-        // During this we're also going to init our lift again
-        pidLift.lift.left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        pidLift.lift.right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         imu = hardwareMap.get(BNO055IMUImpl.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
