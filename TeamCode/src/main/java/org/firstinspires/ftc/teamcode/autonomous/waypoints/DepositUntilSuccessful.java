@@ -26,7 +26,7 @@ public class DepositUntilSuccessful implements Subroutines.RepeatedSubroutine {
     public boolean runLoop(SkystoneHardware robot, PurePursuitPath path) {
         if (attemptTime == null) {
             attemptTime = new ElapsedTime();
-            robot.actionCache.add(new DelayedSubroutine(425, Subroutines.SET_FLIPPER_MAX_EXTEND));
+            robot.actionCache.add(new DelayedSubroutine(425, Subroutines.SET_FLIPPER_NORM_EXTEND));
             robot.actionCache.add(new DelayedSubroutine(300, (r) -> {r.pidLift.setLayer(2);}));
             robot.actionCache.add(new DelayedSubroutine(1050, Subroutines.OPEN_CLAW));
             robot.actionCache.add(new DelayedSubroutine(1050, (r) -> r.pidLift.lift.setPower(1)));

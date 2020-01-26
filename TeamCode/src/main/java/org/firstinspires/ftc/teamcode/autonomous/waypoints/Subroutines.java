@@ -108,14 +108,6 @@ public class Subroutines {
         robot.pidLift.changePosition(HIGH_LIFT_RAISE_AMOUNT);
     };
 
-    public static final OnceOffSubroutine LOWER_A_LITTLE = (robot) -> {
-        robot.pidLift.changePosition(-LIFT_RAISE_AMOUNT);
-    };
-
-    public static final OnceOffSubroutine LOWER_A_FAIR_BIT = (robot) -> {
-        robot.pidLift.changePosition(-HIGH_LIFT_RAISE_AMOUNT);
-    };
-
     public static final OnceOffSubroutine LOWER_LIFT_TO_GRABBING = (robot) -> {
         robot.pidLift.cacheToGrabbing();
     };

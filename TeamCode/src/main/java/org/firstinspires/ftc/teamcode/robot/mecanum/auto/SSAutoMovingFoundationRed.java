@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.autonomous.waypoints.FoundationGrabBackupP
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.GrabBlockOptionallyRejectDouble;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.JoltsUntilBlockGrab;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.SkipFifthBlockPlacement;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.WaitSubroutine;
@@ -89,12 +90,12 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
 
         scoreSkystones.addAll(Waypoint.collate(
                         // Now make our move to deposit
-                new HeadingControlledWaypoint(-20, 41, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                new HeadingControlledWaypoint(18, 41, 12, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_OUT),
+                new HeadingControlledWaypoint(-20, 38, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                new HeadingControlledWaypoint(18, 38, 12, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_OUT),
                 new HeadingControlledWaypoint(GRAB_FOUNDATION_LOCATION.x, 38, 8, Math.PI * 0.5),
                 GRAB_FOUNDATION_LOCATION,
                 new HeadingControlledWaypoint(20, 41, 8, Math.PI, new FirstBlockDepositStop()),
-                new HeadingControlledWaypoint(8, 41, 10, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_UP),
+                new HeadingControlledWaypoint(11, 41, 10, Math.PI, Subroutines.SET_FOUNDATION_LATCHES_UP),
                 new HeadingControlledWaypoint(frontPlungeTarget + 16, 36, 6, Math.PI, Subroutines.ENABLE_INTAKE),
 
                 new HeadingControlledWaypoint(frontPlungeTarget + 8, 36, 6, Math.toRadians(225)),
@@ -103,8 +104,8 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                 new HeadingControlledWaypoint(frontPlungeTarget + 4, 41, 12, Math.PI),
                 // Now make our move to deposit
                 new HeadingControlledWaypoint(-4, 43, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                new HeadingControlledWaypoint(0, 43, 12, Math.PI),
-                new StopWaypoint(12, 41, 8,
+                new HeadingControlledWaypoint(0, 44, 12, Math.PI),
+                new StopWaypoint(12, 46, 8,
                         Math.PI, -1, new CloseDepositUntilSuccessful())
         ));
 
@@ -139,7 +140,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                     new HeadingControlledWaypoint(-36, 12, 5, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
                     new HeadingControlledWaypoint(-16, 39, 12, Math.toRadians(225)),
                     new HeadingControlledWaypoint(-4, 39, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                    new HeadingControlledWaypoint(0, 41, 12, Math.PI),
+                    new HeadingControlledWaypoint(0, 41, 12, Math.PI, new SkipFifthBlockPlacement()),
                     new StopWaypoint(50, 48, 8,
                             Math.PI, -1, new DepositUntilSuccessful())
             ));
@@ -148,9 +149,9 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.ENABLE_INTAKE),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.toRadians(240), Subroutines.SET_RIGHT_FANG_DOWN),
                     new HeadingControlledWaypoint(-30, 12, 4.5, Math.toRadians(240), Subroutines.CHECK_BLOCK_GRAB),
-                    new HeadingControlledWaypoint(-16, 36, 12, Math.toRadians(240)),
-                    new HeadingControlledWaypoint(-4, 41, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                    new StopWaypoint(12, 41, 8, // TOOD verify this 40 actually works better than 35
+                    new HeadingControlledWaypoint(-16, 36, 8, Math.toRadians(240)),
+                    new HeadingControlledWaypoint(-4, 40, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new StopWaypoint(12, 40, 8, // TOOD verify this 40 actually works better than 35
                             Math.PI, -1, new CloseDepositUntilSuccessful()),
 
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.ENABLE_INTAKE),
@@ -169,7 +170,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                             4.5, new JoltsUntilBlockGrab(MecanumUtil.FORWARD)),
                     new HeadingControlledWaypoint(-36, 41, 8, Math.toRadians(205), new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(-12, 41, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                    new HeadingControlledWaypoint(0, 43, 12, Math.PI),
+                    new HeadingControlledWaypoint(0, 43, 12, Math.PI, new SkipFifthBlockPlacement()),
                     new StopWaypoint(50, 43, 8, Math.PI, -1, new DepositUntilSuccessful())
             ));
         } else {
@@ -200,7 +201,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                     new StopWaypoint(-56, 18, 8, Math.PI, 4, new JoltsUntilBlockGrab(MecanumUtil.FORWARD)),
 
                     new HeadingControlledWaypoint(-24, 33, 8, -0.85 * Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                    new HeadingControlledWaypoint(-12, 39, 8, Math.PI),
+                    new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new SkipFifthBlockPlacement()),
                     new HeadingControlledWaypoint(0, 41, 12, Math.PI),
                     new StopWaypoint(50, 41, 8,
                             Math.PI, -1, new DepositUntilSuccessful())

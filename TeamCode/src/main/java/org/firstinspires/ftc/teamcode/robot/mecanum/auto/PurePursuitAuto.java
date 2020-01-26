@@ -95,4 +95,9 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
             stop();
         }
     }
+
+    @Override
+    public void stop() {
+        robot.blockGrabber.retract();
+    }
 }
