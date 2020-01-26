@@ -110,6 +110,8 @@ public class SkystoneHardware {
     public ServoToggle leftFang;
     public ServoToggle rightFang;
 
+    public ServoToggle parkingMarker;
+
     /* Uneditable constants */
     public final static double TRACK_WIDTH = 16.5; // in
     public final static double WHEEL_DIAMETER = 4; // in
@@ -147,6 +149,9 @@ public class SkystoneHardware {
 
     public static double WHEEL_LIFTER_DOWN = 0.25;
     public static double WHEEL_LIFTER_UP = 0.6;
+
+    public static double PARKING_MARKER_IN = 1;
+    public static double PARKING_MARKER_OUT = 0.7;
 
     /**
      * Instantiates a <b>real</b> SkystoneHardware object that will try to communicate with the REV
@@ -218,6 +223,12 @@ public class SkystoneHardware {
                 hardwareMap.get(Servo.class, "rightFang"),
                 FANGS_RAISED - FANGS_LR_OFFSET,
                 FANGS_CLOSED - FANGS_LR_OFFSET);
+
+        parkingMarker = new ServoToggle(
+                hardwareMap.get(Servo.class, "parkingMarker"),
+                PARKING_MARKER_IN,
+                PARKING_MARKER_OUT
+        );
 
         allServos = Arrays.asList(blockFlipper.leftFlipper, blockFlipper.rightFlipper,
                 leftFoundationLatch.servo, rightFoundationLatch.servo, blockGrabber.servo, leftFang.servo, rightFang.servo);
@@ -432,6 +443,8 @@ public class SkystoneHardware {
         leftFang.extendPosition = FANGS_CLOSED + FANGS_LR_OFFSET;
         rightFang.retractPosition = FANGS_RAISED - FANGS_LR_OFFSET;
         rightFang.extendPosition = FANGS_CLOSED - FANGS_LR_OFFSET;
+        parkingMarker.retractPosition = PARKING_MARKER_IN;
+        parkingMarker.extendPosition = PARKING_MARKER_OUT;
 
         lastTelemetryUpdate = System.nanoTime();
         return lastChassisRead;

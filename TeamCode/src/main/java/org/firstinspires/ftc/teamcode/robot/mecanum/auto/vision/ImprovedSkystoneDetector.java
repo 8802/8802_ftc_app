@@ -35,10 +35,13 @@ public class ImprovedSkystoneDetector extends DogeCVDetector {
     public static double RED_LOWER_MIDDLE_CUTOFF = 40;
     public static double RED_MIDDLE_UPPER_CUTOFF = 105;
 
+    public static int GRAYSCALE_FILTER_LOWER = 0;
+    public static int GRAYSCALE_FILTER_UPPER = 25;
+
     public DogeCV.AreaScoringMethod areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Setting to decide to use MaxAreaScorer or PerfectAreaScorer
 
     //Create the default filters and scorers
-    public DogeCVColorFilter blackFilter = new GrayscaleFilter(0, 25);
+    public DogeCVColorFilter blackFilter = new GrayscaleFilter(GRAYSCALE_FILTER_LOWER, GRAYSCALE_FILTER_UPPER);
     public DogeCVColorFilter yellowFilter = new LeviColorFilter(LeviColorFilter.ColorPreset.YELLOW, 70); //Default Yellow blackFilter
 
     public RatioScorer ratioScorer = new RatioScorer(1.25, 3); // Used to find the short face of the stone
