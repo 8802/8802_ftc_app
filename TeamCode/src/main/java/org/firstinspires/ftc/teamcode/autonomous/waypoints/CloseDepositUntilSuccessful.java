@@ -11,22 +11,12 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
 
 public class CloseDepositUntilSuccessful implements Subroutines.RepeatedSubroutine {
 
-    public enum DepositHeight {
-        LOW, HIGH
-    }
-
     ElapsedTime timer;
     int attempt;
-    DepositHeight height;
 
     public CloseDepositUntilSuccessful() {
-        this(DepositHeight.LOW);
-    }
-
-    public CloseDepositUntilSuccessful(DepositHeight height) {
         this.timer = null;
         this.attempt = 0;
-        this.height = height;
     }
 
     @Override
@@ -34,11 +24,7 @@ public class CloseDepositUntilSuccessful implements Subroutines.RepeatedSubrouti
         if (timer == null) {
             timer = new ElapsedTime();
             robot.actionCache.add(new DelayedSubroutine(150 + 100, Subroutines.SET_FLIPPER_MAX_EXTEND));
-            if (height == DepositHeight.HIGH) {
-                robot.actionCache.add(new DelayedSubroutine(325 + 150, (r) -> {r.pidLift.lift.setPower(0.8);}));
-            } else {
-                robot.actionCache.add(new DelayedSubroutine(450 + 150, (r) -> {r.pidLift.lift.setPower(0.8);}));
-            }
+            robot.actionCache.add(new DelayedSubroutine(425 + 150, (r) -> {r.pidLift.lift.setPower(0.8);}));
             robot.actionCache.add(new DelayedSubroutine(600 + 150, Subroutines.OPEN_CLAW));
             robot.actionCache.add(new DelayedSubroutine(950 + 150, Subroutines.SET_FLIPPER_INTAKING));
             robot.actionCache.add(new DelayedSubroutine(950 + 150, Subroutines.LOWER_LIFT_TO_GRABBING));
@@ -50,7 +36,8 @@ public class CloseDepositUntilSuccessful implements Subroutines.RepeatedSubrouti
                 return true;
             }
         } else {
-            if (timer.milliseconds() > 3000 && !robot.hasBlockInTray()) {
+            if (timer.milliseconds() > 4000
+                    && !robot.hasBlockInTray()) {
                 return true;
             }
         }

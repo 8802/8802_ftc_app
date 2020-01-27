@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robot.mecanum.auto;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -53,8 +54,13 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
             start.heading *= -start.heading;
         }
         this.robot = this.getRobot(start);
+        // During this we're also going to init our lift again
+        robot.pidLift.lift.left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.pidLift.lift.right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         startPhoneCamDetector(ALLIANCE);
         telemetry.clearAll();
+        robot.pidLift.lift.left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.pidLift.lift.right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override
@@ -88,5 +94,10 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
             robot.setPowers(MecanumUtil.STOP);
             stop();
         }
+    }
+
+    @Override
+    public void stop() {
+        robot.blockGrabber.retract();
     }
 }

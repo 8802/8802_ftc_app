@@ -25,7 +25,7 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
 
     SkystoneHardware robot;
 
-    boolean leftStickButtonPrev, rightStickButtonPrev, rightTriggerPrev, leftBumperPrev, rightBumperPrev, yPrev, xPrev, bPrev, upPrev, downPrev;
+    boolean leftStickButtonPrev, rightStickButtonPrev, rightTriggerPrev, leftBumperPrev, rightBumperPrev, yPrev, xPrev, bPrev, upPrev, downPrev, leftPrev;
 
     enum RightTriggerActions {
         GRAB, VERIFY, DROP;
@@ -68,6 +68,7 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
         bPrev = gamepad1.b;
         upPrev = gamepad1.dpad_up;
         downPrev = gamepad1.dpad_down;
+        leftPrev = gamepad1.dpad_left;
 
         intakeOn = false;
         nextRightTriggerAction = RightTriggerActions.GRAB;
@@ -237,6 +238,13 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
             nextRightTriggerAction = RightTriggerActions.GRAB;
         } else if (!gamepad1.x) {
             xPrev = false;
+        }
+
+        if (gamepad1.dpad_left && !leftPrev && gamepad1.a) {
+            robot.parkingMarker.toggle();
+            leftPrev = true;
+        } else if (!gamepad1.dpad_left) {
+            leftPrev = false;
         }
     }
 }
