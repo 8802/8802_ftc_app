@@ -147,11 +147,12 @@ public class SkystoneHardware {
     public static double FANGS_CLOSED = 0.2;
     public static double FANGS_LR_OFFSET = -0.13;
 
+
     public static double WHEEL_LIFTER_DOWN = 0.25;
     public static double WHEEL_LIFTER_UP = 0.6;
 
-    public static double PARKING_MARKER_IN = 1;
-    public static double PARKING_MARKER_OUT = 0.7;
+    public static double PARKING_MARKER_IN = 0.8;
+    public static double PARKING_MARKER_OUT = 0.4;
 
     /**
      * Instantiates a <b>real</b> SkystoneHardware object that will try to communicate with the REV

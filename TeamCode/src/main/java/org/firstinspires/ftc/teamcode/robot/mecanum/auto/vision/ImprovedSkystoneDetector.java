@@ -36,7 +36,7 @@ public class ImprovedSkystoneDetector extends DogeCVDetector {
     public static double RED_MIDDLE_UPPER_CUTOFF = 105;
 
     public static int GRAYSCALE_FILTER_LOWER = 0;
-    public static int GRAYSCALE_FILTER_UPPER = 25;
+    public static int GRAYSCALE_FILTER_UPPER = 40;
 
     public DogeCV.AreaScoringMethod areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Setting to decide to use MaxAreaScorer or PerfectAreaScorer
 

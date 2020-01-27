@@ -150,7 +150,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                     new HeadingControlledWaypoint(-30, 12, 4.5, Math.toRadians(240), Subroutines.CHECK_BLOCK_GRAB),
                     new HeadingControlledWaypoint(-16, 34, 6, Math.toRadians(240)),
                     new HeadingControlledWaypoint(-4, 36, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                    new StopWaypoint(12, 36, 8, // TOOD verify this 40 actually works better than 35
+                    new StopWaypoint(12, 37, 8, // TOOD verify this 40 actually works better than 35
                             Math.PI, -1, new CloseDepositUntilSuccessful()),
 
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.ENABLE_INTAKE),
@@ -158,7 +158,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                     new HeadingControlledWaypoint(-49, 12, 4.5, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
                     new HeadingControlledWaypoint(-25, 36, 8, Math.toRadians(225)),
                     new HeadingControlledWaypoint(-4, 34, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                    new StopWaypoint(50, 36, 8, // TOOD verify this 40 actually works better than 35
+                    new StopWaypoint(50, 39, 8, // TOOD verify this 40 actually works better than 35
                             Math.PI, -1, new CloseDepositUntilSuccessful()),
 
                     new HeadingControlledWaypoint(-32, 36, 8, Math.PI, Subroutines.FANGS_DOWN_AND_INTAKE),
