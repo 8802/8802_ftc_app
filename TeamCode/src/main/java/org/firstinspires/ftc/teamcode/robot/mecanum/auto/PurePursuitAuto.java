@@ -55,12 +55,12 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
         }
         this.robot = this.getRobot(start);
         // During this we're also going to init our lift again
-        robot.pidLift.lift.left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.pidLift.lift.right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.pidLift.left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.pidLift.right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         startPhoneCamDetector(ALLIANCE);
         telemetry.clearAll();
-        robot.pidLift.lift.left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.pidLift.lift.right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.pidLift.left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.pidLift.right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override

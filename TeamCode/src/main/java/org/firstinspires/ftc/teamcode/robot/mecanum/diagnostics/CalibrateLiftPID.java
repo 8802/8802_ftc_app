@@ -1,49 +1,83 @@
 package org.firstinspires.ftc.teamcode.robot.mecanum.diagnostics;
 
-import android.media.AudioManager;
-import android.media.ToneGenerator;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.teamcode.common.math.Pose;
-import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
-import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.DoubleMotorLift;
-import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrent;
-import org.openftc.revextensions2.ExpansionHubEx;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.ExternalLiftMotor;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.SimpleLift;
 
 @TeleOp
 @Config
-@Disabled
 public class CalibrateLiftPID extends LinearOpMode {
     FtcDashboard dashboard;
-    DoubleMotorLift doublePIDLift;
 
-    public static int target = 0;
+    public static int TARGET = 0;
+
+    public static double V_P = 0.117;
+    public static double V_I = 0.017;
+    public static double V_D = 0;
+    public static double V_F = 1.17;
+    public static double P_P = 5;
 
     @Override
     public void runOpMode() {
         this.dashboard = FtcDashboard.getInstance();
-        this.doublePIDLift = new DoubleMotorLift(
-                hardwareMap.get(DcMotorEx.class, "liftLeft"),
-                hardwareMap.get(DcMotorEx.class, "liftRight"));
+        DcMotorEx left = hardwareMap.get(DcMotorEx.class, "liftLeft");
+        DcMotorEx right = hardwareMap.get(DcMotorEx.class, "liftRight");
+
+        double pV_P = V_P;
+        double pV_I = V_I;
+        double pV_D = V_D;
+        double pV_F = V_F;
+        double pP_P = P_P;
+
+        left.setVelocityPIDFCoefficients(pV_P, pV_I, pV_D, pV_F);
+        right.setVelocityPIDFCoefficients(pV_P, pV_I, pV_D, pV_F);
+        left.setPositionPIDFCoefficients(pP_P);
+        right.setPositionPIDFCoefficients(pP_P);
+
+        left.setTargetPosition(0);
+        right.setTargetPosition(0);
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        left.setPower(1);
+        right.setPower(1);
+
         waitForStart();
 
         while(opModeIsActive()) {
-            TelemetryPacket packet = new TelemetryPacket();
 
-            doublePIDLift.setTarget(target);
-            packet.put("power", doublePIDLift.update());
-            packet.put("error", doublePIDLift.prev_error);
-            packet.put("period", doublePIDLift.dt);
-            packet.put("frequency", 1 / doublePIDLift.dt);
-            packet.put("integral", doublePIDLift.integral);
-            packet.put("derivative", doublePIDLift.derivative);
+            if (V_P != pV_P || V_I != pV_I || V_D != pV_D || V_F != pV_F || P_P != pP_P) {
+                pV_P = V_P;
+                pV_I = V_I;
+                pV_D = V_D;
+                pV_F = V_F;
+                pP_P = P_P;
+                left.setVelocityPIDFCoefficients(pV_P, pV_I, pV_D, pV_F);
+                right.setVelocityPIDFCoefficients(pV_P, pV_I, pV_D, pV_F);
+                left.setPositionPIDFCoefficients(pP_P);
+                right.setPositionPIDFCoefficients(pP_P);
+            }
+
+            left.setTargetPosition(TARGET);
+            right.setTargetPosition(TARGET);
+
+            int leftPos = left.getCurrentPosition();
+            int rightPos = right.getCurrentPosition();
+            int error = TARGET - leftPos;
+
+            TelemetryPacket packet = new TelemetryPacket();
+            packet.put("leftPos", leftPos);
+            packet.put("rightPos", rightPos);
+            packet.put("error", error);
             dashboard.sendTelemetryPacket(packet);
         }
     }

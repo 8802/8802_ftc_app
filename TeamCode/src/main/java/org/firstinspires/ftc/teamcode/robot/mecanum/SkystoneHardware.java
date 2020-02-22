@@ -9,7 +9,6 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.BNO055IMUImpl;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -17,7 +16,6 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -28,7 +26,6 @@ import org.firstinspires.ftc.teamcode.autonomous.waypoints.DelayedSubroutine;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.common.LoadTimer;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.DepositFlipper;
-import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.DoubleMotorLift;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrentQueue;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.common.math.TimePose;
@@ -99,7 +96,6 @@ public class SkystoneHardware {
     public DcMotorEx intakeRight;
     public DcMotorEx liftLeft;
     public DcMotorEx liftRight;
-    public DoubleMotorLift lift;
 
     public ServoToggle blockGrabber;
     public DepositFlipper blockFlipper;
@@ -188,8 +184,7 @@ public class SkystoneHardware {
         intakeCurrentQueue = new IntakeCurrentQueue();
 
         /* Lift and block grabbers */
-        lift = new DoubleMotorLift(liftLeft, liftRight);
-        pidLift = new SimpleLift(lift); // Also initializes lift
+        pidLift = new SimpleLift(liftLeft, liftRight); // Also initializes lift
 
         allMotors = Arrays.asList(frontLeft, backLeft, frontRight, backRight, intakeLeft, intakeRight, liftLeft, liftRight);
 
@@ -320,8 +315,6 @@ public class SkystoneHardware {
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
         headingOffset = imu.getAngularOrientation().firstAngle;
-        pidLift.lift.left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        pidLift.lift.right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void initBulkReadTelemetry() {
@@ -409,9 +402,6 @@ public class SkystoneHardware {
                 iterator.remove();
             }
         }
-
-        // Update our lift
-        lift.update();
 
         // Adjust elapsed time
         double elapsed = ((System.nanoTime() - lastTelemetryUpdate) / 1000000.0);

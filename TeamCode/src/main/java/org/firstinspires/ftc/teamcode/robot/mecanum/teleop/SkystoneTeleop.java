@@ -140,7 +140,7 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
                     break;
 
                 case VERIFY:
-                    robot.pidLift.setLiftPositionWithoutRaise();
+                    robot.pidLift.setDroppedPositionFromLayer();
                     break;
 
                 case DROP:

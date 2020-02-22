@@ -216,7 +216,6 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
     @Override
     public void start() {
         super.start();
-        robot.pidLift.lift.setMaxPower(LIFT_MAX_POWER);
         Subroutines.ENABLE_INTAKE.runOnce(robot);
     }
 }

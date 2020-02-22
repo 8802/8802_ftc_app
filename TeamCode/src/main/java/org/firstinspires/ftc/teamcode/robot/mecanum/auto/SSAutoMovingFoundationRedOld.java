@@ -154,7 +154,6 @@ public class SSAutoMovingFoundationRedOld extends PurePursuitAutoRed {
     @Override
     public void start() {
         super.start();
-        robot.pidLift.lift.setMaxPower(LIFT_MAX_POWER);
         Subroutines.ENABLE_INTAKE.runOnce(robot);
     }
 }
