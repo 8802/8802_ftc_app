@@ -22,7 +22,7 @@ import java.util.List;
 import static org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware.FIELD_RADIUS;
 
 @Autonomous(name="Test Pure Pursuit", group="Testing")
-public abstract class TestPurePursuitAuto extends SimulatableMecanumOpMode {
+public class TestPurePursuitAuto extends SimulatableMecanumOpMode {
     Pose DEFAULT_START_POSITION = new Pose(-FIELD_RADIUS + 22.75 + 9, FIELD_RADIUS - 9, 3 * Math.PI / 2);
 
     SkystoneHardware robot;
@@ -30,7 +30,12 @@ public abstract class TestPurePursuitAuto extends SimulatableMecanumOpMode {
 
     // Robot state
 
-    public abstract List<Waypoint> getPurePursuitWaypoints();
+    public List<Waypoint> getPurePursuitWaypoints() {
+        return  Waypoint.collate(
+                new Waypoint(DEFAULT_START_POSITION, 4),
+                new StopWaypoint(DEFAULT_START_POSITION.x, -38.5, 20, 1.5 * Math.PI, 0)
+        );
+    }
 
     @Override
     public void init() {
@@ -42,12 +47,7 @@ public abstract class TestPurePursuitAuto extends SimulatableMecanumOpMode {
     public void start() {
         telemetry.clearAll();
         robot.initBulkReadTelemetry();
-        LinkedList<Waypoint> waypoints = Waypoint.collate(
-                new Waypoint(DEFAULT_START_POSITION, 4),
-                new StopWaypoint(DEFAULT_START_POSITION.x, -38.5, 12, 1.5 * Math.PI, 0)
-        );
-
-        followPath = new PurePursuitPath(robot, waypoints);
+        followPath = new PurePursuitPath(robot, getPurePursuitWaypoints());
     }
 
     @Override
