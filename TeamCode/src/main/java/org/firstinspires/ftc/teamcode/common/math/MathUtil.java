@@ -32,6 +32,10 @@ public class MathUtil {
     }
 
     public static double powRetainingSign(double d, double power) {
+        // In case d is super small, just make it zero
+        if (Math.abs(d) < 1e-14) {
+            return 0;
+        }
         return Math.copySign(Math.pow(Math.abs(d), power), d);
     }
 

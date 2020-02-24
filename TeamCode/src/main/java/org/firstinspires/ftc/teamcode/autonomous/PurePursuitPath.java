@@ -144,11 +144,11 @@ public class PurePursuitPath {
         // If we're making a stop and in the stop portion of the move
         if (target instanceof StopWaypoint && robotPosition.distance(target) < target.followDistance) {
             robot.setPowers(MecanumPurePursuitController.goToPosition(
-                    robotPosition, robotVelocity, target, TRACK_SPEED, false));
+                    robotPosition, robotVelocity, target, (StopWaypoint) target));
             System.out.println("Locking onto point " + target.toString());
         } else if (target instanceof PointTurnWaypoint) {
             robot.setPowers(MecanumPurePursuitController.goToPosition(
-                    robotPosition, robotVelocity, target, 1.0, true));
+                    robotPosition, robotVelocity, target, null));
         } else {
             trackToLine(
                     robotPosition, robotVelocity,
@@ -180,7 +180,7 @@ public class PurePursuitPath {
         target.x = intersection.x;
         target.y = intersection.y;
         robot.setPowers(MecanumPurePursuitController.goToPosition(robotPosition, robotVelocity,
-                target, TRACK_SPEED, true));
+                target, mid instanceof StopWaypoint ? (StopWaypoint) mid : null));
     }
 
     public Canvas draw(Canvas t) {
