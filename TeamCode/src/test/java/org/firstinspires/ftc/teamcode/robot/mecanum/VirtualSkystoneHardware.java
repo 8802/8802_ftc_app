@@ -129,10 +129,6 @@ public class VirtualSkystoneHardware extends SkystoneHardware implements Virtual
     @Override
     public void sendDashboardTelemetryPacket() {}
 
-    @Override
-    public void initCamera(HardwareMap hardwareMap) {
-        this.camera = Mockito.mock(WebcamName.class);
-    }
     // Some method calls we just throw away
     @Override
     public void setIntakePower(double power) {
