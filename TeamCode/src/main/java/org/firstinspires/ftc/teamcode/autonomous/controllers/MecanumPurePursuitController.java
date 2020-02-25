@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.autonomous.waypoints.HeadingControlledWayp
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
+import org.firstinspires.ftc.teamcode.common.math.Point;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 
@@ -13,14 +14,14 @@ import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 public class MecanumPurePursuitController {
     // How far we slip if we're moving 1 in/sec (or 1 rad/sec) in each of these directions
     public static Pose SLIP_DISTANCES = new Pose(1.5, 0, 0);
-    public static double UNDERSHOOT_DIST = 2; // Aim to stop 2 in away from target, and use small motions to finish it
+    public static double UNDERSHOOT_DIST = 6; // Aim to stop 2 in away from target, and use small motions to finish it
     public static double MIN_SLIP_SPEED = 8;
     public static Pose GUNNING_REDUCTION_DISTANCES = new Pose(12, 12, Math.PI);
     public static Pose ONE_AWAY_POWERS = new Pose(0.08, 0.12, 0.1);
     public static double CLOSE_EXPONENT = 1.0/6.0;
 
 
-    private static Pose relDistanceToTarget(Pose robot, Waypoint target) {
+    private static Pose relDistanceToTarget(Pose robot, Point target) {
         double distance = target.minus(robot).radius();
         double relAngle = robot.minus(target).atan() - robot.heading;
         double relX = distance * Math.cos(relAngle);
@@ -57,9 +58,12 @@ public class MecanumPurePursuitController {
             double angleToTarget = MathUtil.angleWrap(desiredAngle - robotPose.heading);
             translationPowers.heading = angleToTarget / GUNNING_REDUCTION_DISTANCES.heading;
             return new MecanumPowers(translationPowers);
-        } else if (robotVelocity.radius() > MIN_SLIP_SPEED) { // If we're moving more than 8 in/sec and we're close to our target
-            StopWaypoint t = finalTarget.clone();
-            t.y += 6;
+        } else if (robotVelocity.radius() > MIN_SLIP_SPEED && robotPose.distance(finalTarget) > UNDERSHOOT_DIST) { // If we're moving more than 8 in/sec and we're close to our target
+            // We don't want to aim quite for our target - we want to undershoot a fair bit
+            // We won't use this very often - only when we need to line up somewhere exactly. Everywhere else,
+            // we'll just allow a lot of error in our stopwaypoint
+            Point t = MathUtil.lineSegmentCircleIntersection(robotPose, finalTarget, finalTarget, UNDERSHOOT_DIST);
+
             // We're approaching a point, and we need to not overshoot
             Pose relVelocity = new Pose(robotVelocity.rotated(-robotPose.heading), robotVelocity.heading);
             System.out.println(relVelocity);
@@ -68,7 +72,7 @@ public class MecanumPurePursuitController {
             Pose relAbsTarget = relDistanceToTarget(robotPose, t).add(relSlipDistances);
             System.out.println(relAbsTarget);
             // We negate this here so our negation in translationPowers is cancelled out
-            relAbsTarget.heading = -MathUtil.angleWrap(t.targetHeading - robotPose.heading - relSlipDistances.heading);
+            relAbsTarget.heading = -MathUtil.angleWrap(finalTarget.targetHeading - robotPose.heading - relSlipDistances.heading);
 
             Pose translationPowers = relAbsTarget.scale(-1).divideBy(GUNNING_REDUCTION_DISTANCES);
             return new MecanumPowers(translationPowers);
