@@ -417,6 +417,9 @@ public class SkystoneHardware {
         packet.put("h", localizer.h());
         packet.put("leftMAmps", lastIntakeCurrent.leftMAmps);
         packet.put("rightMAmps", lastIntakeCurrent.rightMAmps);
+        packet.put("e0", lastChassisRead.getMotorCurrentPosition(0));
+        packet.put("e1", lastChassisRead.getMotorCurrentPosition(1));
+
         packet.fieldOverlay()
                 .setFill("blue")
                 .fillCircle(localizer.x(), localizer.y(), 3);

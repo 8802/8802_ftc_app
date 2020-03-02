@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 public class MockDcMotorEx implements DcMotorEx {
     private double power;
@@ -67,6 +68,27 @@ public class MockDcMotorEx implements DcMotorEx {
     public void setTargetPositionTolerance(int tolerance) {}
     @Override
     public int getTargetPositionTolerance() { return 0; }
+
+    @Override
+    public double getCurrent(CurrentUnit unit) {
+        return 0;
+    }
+
+    @Override
+    public double getCurrentAlert(CurrentUnit unit) {
+        return 0;
+    }
+
+    @Override
+    public void setCurrentAlert(double current, CurrentUnit unit) {
+
+    }
+
+    @Override
+    public boolean isOverCurrent() {
+        return false;
+    }
+
     @Override
     public MotorConfigurationType getMotorType() { return null; }
     @Override
