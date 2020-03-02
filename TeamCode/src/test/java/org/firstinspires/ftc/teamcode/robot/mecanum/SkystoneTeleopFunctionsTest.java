@@ -57,9 +57,6 @@ class SkystoneTeleopFunctionsTest {
     }
 
     private void testToggleServos(SimulatedOpModeFactory simOpMode, SkystoneHardware robot) {
-        /* Test capstone dropping toggle */
-        // TODO add this
-
         /* Test foundation latch toggle */
         assertEquals(SkystoneHardware.FOUNDATION_LATCH_OPEN, robot.leftFoundationLatch.servo.getPosition());
         assertEquals(SkystoneHardware.FOUNDATION_LATCH_OPEN, robot.rightFoundationLatch.servo.getPosition());
@@ -125,7 +122,7 @@ class SkystoneTeleopFunctionsTest {
         assertEquals(DepositFlipper.LEFT_NORM_EXTEND, robot.blockFlipper.leftFlipper.getPosition());
         assertEquals(DepositFlipper.RIGHT_NORM_EXTEND, robot.blockFlipper.rightFlipper.getPosition());
         assertEquals(SkystoneHardware.BLOCK_GRABBER_CLOSED, robot.blockGrabber.servo.getPosition());
-        assertEquals(0, robot.pidLift.left.getTargetPosition());
+        assertEquals(0, robot.liftLeft.getTargetPosition());
 
         // Move lift up two levels
         /*simOpMode.opMode.gamepad1.dpad_right = true;
@@ -136,7 +133,7 @@ class SkystoneTeleopFunctionsTest {
         simOpMode.cycle();
         simOpMode.opMode.gamepad1.dpad_right = false;
         simOpMode.cycle();
-        assertEquals(SimpleLift. + SimpleLift.LAYER_SHIFT * 2, robot.lift.getTargetPosition());
+        assertEquals(SimpleLift.LAYER_SHIFT * 2, robot.liftLeft.getTargetPosition());
 
         // Place block
         simOpMode.opMode.gamepad1.right_trigger = 1;
@@ -145,14 +142,13 @@ class SkystoneTeleopFunctionsTest {
         simOpMode.cycle();
 
         // Ensure lift is moving up, but we're not retracting the servos yet
-        assertTrue(SimpleLift.LAYER_0 + SimpleLift.LAYER_SHIFT * 2 < robot.lift.getTargetPosition());
+        assertTrue(SimpleLift.LAYER_SHIFT * 2 < robot.liftLeft.getTargetPosition());
         assertEquals(SkystoneHardware.BLOCK_GRABBER_OPEN, robot.blockGrabber.servo.getPosition());
         assertEquals(DepositFlipper.LEFT_NORM_EXTEND, robot.blockFlipper.leftFlipper.getPosition());
         assertEquals(DepositFlipper.RIGHT_NORM_EXTEND, robot.blockFlipper.rightFlipper.getPosition());
 
         // Now once sequence is over, we should be properly reset
         simOpMode.elapseCycles(2, 100);
-        assertEquals(SimpleLift.LAYER_0, robot.lift.getTargetPosition());
         assertEquals(SkystoneHardware.BLOCK_GRABBER_OPEN, robot.blockGrabber.servo.getPosition());
         assertEquals(DepositFlipper.LEFT_INTAKING, robot.blockFlipper.leftFlipper.getPosition());
         assertEquals(DepositFlipper.RIGHT_INTAKING, robot.blockFlipper.rightFlipper.getPosition());

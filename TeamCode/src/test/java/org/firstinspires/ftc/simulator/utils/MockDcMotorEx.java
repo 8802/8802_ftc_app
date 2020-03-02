@@ -68,14 +68,27 @@ public class MockDcMotorEx implements DcMotorEx {
     public void setTargetPositionTolerance(int tolerance) {}
     @Override
     public int getTargetPositionTolerance() { return 0; }
+
     @Override
-    public double getCurrent(CurrentUnit unit) { return 0; }
+    public double getCurrent(CurrentUnit unit) {
+        return 0;
+    }
+
     @Override
-    public double getCurrentAlert(CurrentUnit unit) { return 0; }
+    public double getCurrentAlert(CurrentUnit unit) {
+        return 0;
+    }
+
     @Override
-    public void setCurrentAlert(double current, CurrentUnit unit) {}
+    public void setCurrentAlert(double current, CurrentUnit unit) {
+
+    }
+
     @Override
-    public boolean isOverCurrent() { return false; }
+    public boolean isOverCurrent() {
+        return false;
+    }
+
     @Override
     public MotorConfigurationType getMotorType() { return null; }
     @Override
