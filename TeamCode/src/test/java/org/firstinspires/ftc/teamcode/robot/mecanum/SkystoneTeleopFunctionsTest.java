@@ -21,6 +21,9 @@ class SkystoneTeleopFunctionsTest {
         Mockito.verify(m).setPower(power);
     }
 
+    private static double FL_LEFT = SkystoneHardware.FOUNDATION_LATCH_OPEN + SkystoneHardware.FOUNDATION_LATCH_LR_OFFSET;
+    private static double FL_RIGHT = SkystoneHardware.FOUNDATION_LATCH_OPEN - SkystoneHardware.FOUNDATION_LATCH_LR_OFFSET;
+
     @Test
     void opModeTest() {
         SimulatedOpModeFactory simOpMode = new SimulatedOpModeFactory(SkystoneTeleop.class);
@@ -33,7 +36,7 @@ class SkystoneTeleopFunctionsTest {
 
     private void testStartingPosition(SimulatedOpModeFactory simOpMode, SkystoneHardware robot) {
         // At start, our position should be 0, 0 after waiting a bit
-        simOpMode.elapseCycles(10, 100);
+        simOpMode.elapseCycles(10, 0.1);
         assertEquals(simOpMode.robot.pose(), new Pose(0, 0, 0));
         assertEquals(simOpMode.robot.wheelPowers, new MecanumPowers(0,0, 0, 0));
         assertEquals(simOpMode.robot.wheelPowers, new MecanumPowers(0,0, 0, 0));
@@ -50,29 +53,30 @@ class SkystoneTeleopFunctionsTest {
         assertEquals(DepositFlipper.LEFT_INTAKING, robot.blockFlipper.leftFlipper.getPosition());
         assertEquals(DepositFlipper.RIGHT_INTAKING, robot.blockFlipper.rightFlipper.getPosition());
         assertNotEquals(robot.blockFlipper.leftFlipper.getDirection(), robot.blockFlipper.rightFlipper.getDirection());
-        assertEquals(SkystoneHardware.FOUNDATION_LATCH_OPEN, robot.leftFoundationLatch.servo.getPosition(), 0.1);
-        assertEquals(SkystoneHardware.FOUNDATION_LATCH_OPEN, robot.rightFoundationLatch.servo.getPosition(), 0.1);
+        assertEquals(FL_LEFT, robot.leftFoundationLatch.servo.getPosition());
+        assertEquals(FL_RIGHT, robot.rightFoundationLatch.servo.getPosition());
         assertNotEquals(robot.leftFoundationLatch.servo.getDirection(), robot.rightFoundationLatch.servo.getDirection());
         assertEquals(SkystoneHardware.BLOCK_GRABBER_OPEN, robot.blockGrabber.servo.getPosition());
     }
 
     private void testToggleServos(SimulatedOpModeFactory simOpMode, SkystoneHardware robot) {
         /* Test foundation latch toggle */
-        assertEquals(SkystoneHardware.FOUNDATION_LATCH_OPEN, robot.leftFoundationLatch.servo.getPosition());
-        assertEquals(SkystoneHardware.FOUNDATION_LATCH_OPEN, robot.rightFoundationLatch.servo.getPosition());
+        System.out.println(robot.leftFoundationLatch.servo.getPosition());
+        assertEquals(FL_LEFT, robot.leftFoundationLatch.servo.getPosition());
+        assertEquals(FL_RIGHT, robot.rightFoundationLatch.servo.getPosition());
         simOpMode.cycle();
         simOpMode.opMode.gamepad1.y = true;
         simOpMode.cycle();
         simOpMode.opMode.gamepad1.y = false;
         simOpMode.cycle();
-        assertEquals(SkystoneHardware.FOUNDATION_LATCH_CLOSED, robot.leftFoundationLatch.servo.getPosition());
-        assertEquals(SkystoneHardware.FOUNDATION_LATCH_CLOSED, robot.rightFoundationLatch.servo.getPosition());
+        assertEquals(SkystoneHardware.FOUNDATION_LATCH_CLOSED + SkystoneHardware.FOUNDATION_LATCH_LR_OFFSET, robot.leftFoundationLatch.servo.getPosition());
+        assertEquals(SkystoneHardware.FOUNDATION_LATCH_CLOSED - SkystoneHardware.FOUNDATION_LATCH_LR_OFFSET, robot.rightFoundationLatch.servo.getPosition());
         simOpMode.opMode.gamepad1.y = true;
         simOpMode.cycle();
         simOpMode.opMode.gamepad1.y = false;
         simOpMode.cycle();
-        assertEquals(SkystoneHardware.FOUNDATION_LATCH_OPEN, robot.leftFoundationLatch.servo.getPosition());
-        assertEquals(SkystoneHardware.FOUNDATION_LATCH_OPEN, robot.rightFoundationLatch.servo.getPosition());
+        assertEquals(FL_LEFT, robot.leftFoundationLatch.servo.getPosition());
+        assertEquals(FL_RIGHT, robot.rightFoundationLatch.servo.getPosition());
     }
 
     private void simulateCycle(SimulatedOpModeFactory simOpMode, SkystoneHardware robot) {
