@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.simulator.SimulatedOpModeFactory;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
-import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.DepositFlipper;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.HorizontalSlide;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.SimpleLift;
 import org.firstinspires.ftc.teamcode.robot.mecanum.teleop.SkystoneTeleop;
 import org.junit.jupiter.api.Test;
@@ -50,8 +50,8 @@ class SkystoneTeleopFunctionsTest {
         assertMotorOff(robot.intakeRight);
 
         // Ensure all servos are going to starting place
-        assertEquals(DepositFlipper.LEFT_INTAKING, robot.blockFlipper.leftFlipper.getPosition());
-        assertEquals(DepositFlipper.RIGHT_INTAKING, robot.blockFlipper.rightFlipper.getPosition());
+        assertEquals(HorizontalSlide.LEFT_INTAKING, robot.blockFlipper.leftFlipper.getPosition());
+        assertEquals(HorizontalSlide.RIGHT_INTAKING, robot.blockFlipper.rightFlipper.getPosition());
         assertNotEquals(robot.blockFlipper.leftFlipper.getDirection(), robot.blockFlipper.rightFlipper.getDirection());
         assertEquals(FL_LEFT, robot.leftFoundationLatch.servo.getPosition());
         assertEquals(FL_RIGHT, robot.rightFoundationLatch.servo.getPosition());
@@ -100,8 +100,8 @@ class SkystoneTeleopFunctionsTest {
         // Intake should automatically turn off
         assertMotorOff(robot.intakeLeft);
         assertMotorOff(robot.intakeRight);
-        assertEquals(DepositFlipper.LEFT_INTAKING, robot.blockFlipper.leftFlipper.getPosition());
-        assertEquals(DepositFlipper.RIGHT_INTAKING, robot.blockFlipper.rightFlipper.getPosition());
+        assertEquals(HorizontalSlide.LEFT_INTAKING, robot.blockFlipper.leftFlipper.getPosition());
+        assertEquals(HorizontalSlide.RIGHT_INTAKING, robot.blockFlipper.rightFlipper.getPosition());
 
         // Now we grab the block
         simOpMode.opMode.gamepad1.right_trigger = 1;
@@ -110,12 +110,12 @@ class SkystoneTeleopFunctionsTest {
         simOpMode.cycle();
 
         // We should be trying to grab the block
-        assertEquals(DepositFlipper.LEFT_GRABBING, robot.blockFlipper.leftFlipper.getPosition());
-        assertEquals(DepositFlipper.RIGHT_GRABBING, robot.blockFlipper.rightFlipper.getPosition());
+        assertEquals(HorizontalSlide.LEFT_GRABBING, robot.blockFlipper.leftFlipper.getPosition());
+        assertEquals(HorizontalSlide.RIGHT_GRABBING, robot.blockFlipper.rightFlipper.getPosition());
 
         simOpMode.elapseCycles(2, 100);
-        assertEquals(DepositFlipper.LEFT_DRIVING, robot.blockFlipper.leftFlipper.getPosition());
-        assertEquals(DepositFlipper.RIGHT_DRIVING, robot.blockFlipper.rightFlipper.getPosition());
+        assertEquals(HorizontalSlide.LEFT_DRIVING, robot.blockFlipper.leftFlipper.getPosition());
+        assertEquals(HorizontalSlide.RIGHT_DRIVING, robot.blockFlipper.rightFlipper.getPosition());
         assertEquals(SkystoneHardware.BLOCK_GRABBER_CLOSED, robot.blockGrabber.servo.getPosition());
 
         simOpMode.opMode.gamepad1.right_trigger = 1;
@@ -123,8 +123,8 @@ class SkystoneTeleopFunctionsTest {
         simOpMode.opMode.gamepad1.right_trigger = 0;
         simOpMode.cycle();
 
-        assertEquals(DepositFlipper.LEFT_NORM_EXTEND, robot.blockFlipper.leftFlipper.getPosition());
-        assertEquals(DepositFlipper.RIGHT_NORM_EXTEND, robot.blockFlipper.rightFlipper.getPosition());
+        assertEquals(HorizontalSlide.LEFT_NORM_EXTEND, robot.blockFlipper.leftFlipper.getPosition());
+        assertEquals(HorizontalSlide.RIGHT_NORM_EXTEND, robot.blockFlipper.rightFlipper.getPosition());
         assertEquals(SkystoneHardware.BLOCK_GRABBER_CLOSED, robot.blockGrabber.servo.getPosition());
         assertEquals(0, robot.liftLeft.getTargetPosition());
 
@@ -148,14 +148,14 @@ class SkystoneTeleopFunctionsTest {
         // Ensure lift is moving up, but we're not retracting the servos yet
         assertTrue(SimpleLift.LAYER_SHIFT * 2 < robot.liftLeft.getTargetPosition());
         assertEquals(SkystoneHardware.BLOCK_GRABBER_OPEN, robot.blockGrabber.servo.getPosition());
-        assertEquals(DepositFlipper.LEFT_NORM_EXTEND, robot.blockFlipper.leftFlipper.getPosition());
-        assertEquals(DepositFlipper.RIGHT_NORM_EXTEND, robot.blockFlipper.rightFlipper.getPosition());
+        assertEquals(HorizontalSlide.LEFT_NORM_EXTEND, robot.blockFlipper.leftFlipper.getPosition());
+        assertEquals(HorizontalSlide.RIGHT_NORM_EXTEND, robot.blockFlipper.rightFlipper.getPosition());
 
         // Now once sequence is over, we should be properly reset
         simOpMode.elapseCycles(2, 100);
         assertEquals(SkystoneHardware.BLOCK_GRABBER_OPEN, robot.blockGrabber.servo.getPosition());
-        assertEquals(DepositFlipper.LEFT_INTAKING, robot.blockFlipper.leftFlipper.getPosition());
-        assertEquals(DepositFlipper.RIGHT_INTAKING, robot.blockFlipper.rightFlipper.getPosition());
+        assertEquals(HorizontalSlide.LEFT_INTAKING, robot.blockFlipper.leftFlipper.getPosition());
+        assertEquals(HorizontalSlide.RIGHT_INTAKING, robot.blockFlipper.rightFlipper.getPosition());
         assertEquals(1, robot.intakeLeft.getPower());
         assertEquals(1, robot.intakeRight.getPower());*/
     }

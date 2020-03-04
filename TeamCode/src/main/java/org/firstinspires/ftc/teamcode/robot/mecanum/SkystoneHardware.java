@@ -18,7 +18,6 @@ import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.BuildConfig;
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
@@ -28,7 +27,7 @@ import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.common.AxesSigns;
 import org.firstinspires.ftc.teamcode.common.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.common.LoadTimer;
-import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.DepositFlipper;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.HorizontalSlide;
 import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.IntakeCurrentQueue;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.common.math.TimePose;
@@ -84,7 +83,6 @@ public class SkystoneHardware {
     public ExpansionHubEx chassisHub;
     public ExpansionHubEx mechanicHub;
     public BNO055IMU imu;
-    public WebcamName camera;
 
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
@@ -101,7 +99,7 @@ public class SkystoneHardware {
     public DcMotorEx liftRight;
 
     public ServoToggle blockGrabber;
-    public DepositFlipper blockFlipper;
+    public HorizontalSlide blockFlipper;
     public ServoToggle lateralEncoderWheelLifter;
 
     public ServoToggle leftFoundationLatch;
@@ -194,7 +192,7 @@ public class SkystoneHardware {
         blockGrabber = new ServoToggle(
                 hardwareMap.get(Servo.class, "blockGrabber"),
                 BLOCK_GRABBER_OPEN, BLOCK_GRABBER_CLOSED);
-        blockFlipper = new DepositFlipper(
+        blockFlipper = new HorizontalSlide(
                 hardwareMap.get(Servo.class, "leftBlockFlipper"),
                 hardwareMap.get(Servo.class, "rightBlockFlipper"));
         lateralEncoderWheelLifter = new ServoToggle(
@@ -316,7 +314,6 @@ public class SkystoneHardware {
         imu = hardwareMap.get(BNO055IMUImpl.class, "imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        parameters.mode = BNO055IMU.SensorMode.;
         parameters.loggingEnabled  = false;
         imu.initialize(parameters);
         BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
