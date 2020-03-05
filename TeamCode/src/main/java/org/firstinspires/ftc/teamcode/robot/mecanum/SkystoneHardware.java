@@ -131,11 +131,14 @@ public class SkystoneHardware {
     public static int RIGHT_LIMIT_SWITCH_PORT = 2;
 
     /* Servo positions */
-    public static double BLOCK_GRABBER_CLOSED = 0;
-    public static double BLOCK_GRABBER_OPEN = 0.5;
-    public static double BLOCK_GRABBER_CAPSTONE = 1;
+    public static double BLOCK_GRABBER_CLOSED = 0.46;
+    public static double BLOCK_GRABBER_OPEN = 0;
+    public static double BLOCK_GRABBER_CAPSTONE = 0.5;
 
-    public static double FOUNDATION_LATCH_OPEN = 0.1;
+    public static double CLAW_SPINNER_PARALLEL = 0.5;
+    public static double CLAW_SPINNER_ROTATED = 0.82;
+
+    public static double FOUNDATION_LATCH_OPEN = 0;
     public static double FOUNDATION_LATCH_CLOSED = 0.74;
     public static double FOUNDATION_LATCH_OUT = 0.55;
     public static double FOUNDATION_LATCH_LR_OFFSET = -0.02;

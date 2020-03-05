@@ -116,10 +116,6 @@ public class Subroutines {
         robot.pidLift.setLayer(0);
     };
 
-    public static final OnceOffSubroutine LOWER_FLIPPER_LOW = (robot) -> {
-        robot.blockFlipper.setPosition(0.2, 0.18);
-    };
-
     public static final RepeatedSubroutine CHECK_BLOCK_GRAB = (robot, path) -> robot.hasBlockInClaws();
 
     public static final RepeatedSubroutine LIFT_FANGS_CHECK_BLOCK_GRAB = (robot, path) -> {
