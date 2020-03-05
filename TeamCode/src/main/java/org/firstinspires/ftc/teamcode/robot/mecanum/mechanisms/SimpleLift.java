@@ -10,22 +10,22 @@ public class SimpleLift {
     We tried using PID from the phone to accomplish this, but results were poor. Instead, we split
     our single external encoder cable to go into both motor ports,
      */
-    public static int MAX_LAYER = 9;
+    public static int MAX_LAYER = 13;
 
     // The position we should go to for grabbing blocks
     public static int GRABBING = 0;
 
     // LAYER_SHIFT is the distance in ticks between each two layers
-    public static int LAYER_SHIFT = 6900;
+    public static int LAYER_SHIFT = 100;
 
     // PLACEMENT_LAYER_0 is the position at which we should place blocks on layer 0
     public static int PLACEMENT_LAYER_0 = 0;
 
     // VERIFY_OFFSET is how far upwards we should go for maneuvering blocks
-    public static int VERIFY_OFFSET = 4500;
+    public static int VERIFY_OFFSET = 50;
 
     /* If we're more than PID_RANGE ticks BELOW our target, we'll just set power to 100% */
-    public static int PID_RANGE = 3000;
+    public static int PID_RANGE = 25;
 
     public int layer;
     public int targetPosition;
@@ -108,7 +108,7 @@ public class SimpleLift {
     // on how far away we are from the target.
     public void update() {
         // Don't spend time querying motor position if the lift isn't raised
-        if (targetPosition > 10000) {
+        if (targetPosition > PID_RANGE) {
             if (left.getCurrentPosition() + PID_RANGE < targetPosition) {
                 doPower();
             } else {

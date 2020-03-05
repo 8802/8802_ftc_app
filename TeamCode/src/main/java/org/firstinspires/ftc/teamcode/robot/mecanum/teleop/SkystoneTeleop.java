@@ -18,7 +18,7 @@ import org.openftc.revextensions2.RevBulkData;
 @TeleOp(name="Robot centric teleop")
 public class SkystoneTeleop extends SimulatableMecanumOpMode {
     public static double TRIGGER_THRESHOLD = 0.2;
-    public static double INTAKE_POWER = 0.65;
+    public static double INTAKE_POWER = 0.8;
     public static double LEFT_TRIGGER_X_POW = 2;
     public static double LEFT_TRIGGER_Y_POW = 2;
     public static double LIFT_UP_SLOW_SPEED = 0.6;
@@ -81,7 +81,8 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
         robot.packet.put("targetPosition", robot.pidLift.targetPosition);
         robot.sendDashboardTelemetryPacket();
 
-        double scale = robot.pidLift.up() ? LIFT_UP_SLOW_SPEED : 1;
+        //double scale = robot.pidLift.up() ? LIFT_UP_SLOW_SPEED : 1;
+        double scale = 1;
 
         /* Drive code */
         double leftX = MathUtil.powRetainingSign(MecanumUtil.deadZone(-gamepad1.left_stick_x, 0.05), LEFT_TRIGGER_X_POW) * scale;
@@ -110,10 +111,10 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
             robot.setIntakePower(intakeOn ? INTAKE_POWER : 0);
         } else if (!gamepad1.left_stick_button) {
             leftStickButtonPrev = false;
-            if (robot.hasBlockInTray() && intakeOn) {
+            /*if (robot.hasBlockInTray() && intakeOn) {
                 intakeOn = false;
                 robot.actionCache.add(new DelayedSubroutine(800, Subroutines.STOP_INTAKE));
-            }
+            }*/
         }
 
         /* Intake flipper */
@@ -246,5 +247,7 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
         } else if (!gamepad1.dpad_left) {
             leftPrev = false;
         }
+
+        robot.pidLift.update();
     }
 }

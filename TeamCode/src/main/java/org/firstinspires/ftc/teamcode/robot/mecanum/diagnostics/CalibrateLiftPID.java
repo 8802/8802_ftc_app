@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robot.mecanum.diagnostics;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.hardware.motors.GoBILDA5202Series;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -20,6 +21,7 @@ public class CalibrateLiftPID extends LinearOpMode {
     FtcDashboard dashboard;
 
     public static int TARGET = 0;
+    public static int LAYER = 0;
 
     public static double V_P = 0.117;
     public static double V_I = 0.017;
@@ -32,6 +34,7 @@ public class CalibrateLiftPID extends LinearOpMode {
         this.dashboard = FtcDashboard.getInstance();
         DcMotorEx left = hardwareMap.get(DcMotorEx.class, "liftLeft");
         DcMotorEx right = hardwareMap.get(DcMotorEx.class, "liftRight");
+        SimpleLift pidLift = new SimpleLift(left, right); // Also initializes lift
 
         double pV_P = V_P;
         double pV_I = V_I;
@@ -39,17 +42,10 @@ public class CalibrateLiftPID extends LinearOpMode {
         double pV_F = V_F;
         double pP_P = P_P;
 
-        left.setVelocityPIDFCoefficients(pV_P, pV_I, pV_D, pV_F);
+        /*left.setVelocityPIDFCoefficients(pV_P, pV_I, pV_D, pV_F);
         right.setVelocityPIDFCoefficients(pV_P, pV_I, pV_D, pV_F);
         left.setPositionPIDFCoefficients(pP_P);
-        right.setPositionPIDFCoefficients(pP_P);
-
-        left.setTargetPosition(0);
-        right.setTargetPosition(0);
-        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left.setPower(1);
-        right.setPower(1);
+        right.setPositionPIDFCoefficients(pP_P);*/
 
         waitForStart();
 
@@ -61,14 +57,18 @@ public class CalibrateLiftPID extends LinearOpMode {
                 pV_D = V_D;
                 pV_F = V_F;
                 pP_P = P_P;
-                left.setVelocityPIDFCoefficients(pV_P, pV_I, pV_D, pV_F);
+                /*left.setVelocityPIDFCoefficients(pV_P, pV_I, pV_D, pV_F);
                 right.setVelocityPIDFCoefficients(pV_P, pV_I, pV_D, pV_F);
                 left.setPositionPIDFCoefficients(pP_P);
-                right.setPositionPIDFCoefficients(pP_P);
+                right.setPositionPIDFCoefficients(pP_P);*/
             }
 
-            left.setTargetPosition(TARGET);
-            right.setTargetPosition(TARGET);
+            //left.setTargetPosition(TARGET);
+            //right.setTargetPosition(TARGET);
+            if (LAYER != pidLift.layer) {
+                pidLift.setLayer(LAYER);
+            }
+            pidLift.update();
 
             int leftPos = left.getCurrentPosition();
             int rightPos = right.getCurrentPosition();
@@ -79,6 +79,7 @@ public class CalibrateLiftPID extends LinearOpMode {
             packet.put("rightPos", rightPos);
             packet.put("error", error);
             dashboard.sendTelemetryPacket(packet);
+
         }
     }
 }

@@ -15,17 +15,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.Rotation;
  * NeveRest 3.7-geared gearmotor.
  */
 
-// The system is built with the assumption that the motor and encoder turn the same way
-// Since this isn't true in our setup, we need to wire both motors backward, and connect our single
-// encoder to both motor encoder ports (we OC don't need to connect 5V and GND twice, though)
-
-// TicksPerRev is actually 8192, but since the rev hub stores values in a 16-bit short, actually
-// providing the true value would lead to an overflow. Instead, we reduce it by a factor of 10,
-// and compensate in our PID parameters
-@MotorType(ticksPerRev=819.2, gearing=5, maxRPM=2800, orientation= Rotation.CCW)
-@DeviceProperties(xmlTag="ExternalLiftMotor", name="External 5:1 Lift Motor", builtIn = true)
-@DistributorInfo(distributor="AndyMark", model="am-3461")
-@ExpansionHubPIDFVelocityParams(P=0.117, I=0.017, F=1.17)
+//
+@MotorType(ticksPerRev=145.6, gearing=5.2, maxRPM=900, orientation=Rotation.CCW)
+@DeviceProperties(xmlTag="ExternalLiftMotor", name="GoBuilda 5.2:1 Lift Motor", builtIn = true)
+@DistributorInfo(distributor="goBILDA_distributor", model="goBILDA-5202")
+@ExpansionHubPIDFVelocityParams(P=1.17, I=0.117, F=11.7)
 @ExpansionHubPIDFPositionParams(P=5.0)
 public interface ExternalLiftMotor {
 

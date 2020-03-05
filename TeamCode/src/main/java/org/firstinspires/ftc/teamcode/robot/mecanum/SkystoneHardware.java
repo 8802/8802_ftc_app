@@ -99,6 +99,7 @@ public class SkystoneHardware {
     public DcMotorEx liftRight;
 
     public ServoToggle blockGrabber;
+    public ServoToggle clawSpinner;
     public HorizontalSlide blockFlipper;
     public ServoToggle lateralEncoderWheelLifter;
 
@@ -147,7 +148,6 @@ public class SkystoneHardware {
     public static double FANGS_CLOSED = 0.2;
     public static double FANGS_LR_OFFSET = -0.13;
 
-
     public static double WHEEL_LIFTER_DOWN = 0.25;
     public static double WHEEL_LIFTER_UP = 0.6;
 
@@ -183,7 +183,6 @@ public class SkystoneHardware {
         intakeRight = hardwareMap.get(DcMotorEx.class, "intakeRight");
         liftLeft = hardwareMap.get(DcMotorEx.class, "liftLeft");
         liftRight = hardwareMap.get(DcMotorEx.class, "liftRight");
-        intakeLeft.setDirection(DcMotor.Direction.REVERSE);
         lastIntakeCurrent = new IntakeCurrent(0, 0);
         intakeCurrentQueue = new IntakeCurrentQueue();
 
@@ -195,6 +194,9 @@ public class SkystoneHardware {
         blockGrabber = new ServoToggle(
                 hardwareMap.get(Servo.class, "blockGrabber"),
                 BLOCK_GRABBER_OPEN, BLOCK_GRABBER_CLOSED);
+        clawSpinner = new ServoToggle(
+                hardwareMap.get(Servo.class, "clawSpinner"),
+                CLAW_SPINNER_PARALLEL, CLAW_SPINNER_ROTATED);
         blockFlipper = new HorizontalSlide(
                 hardwareMap.get(Servo.class, "leftBlockFlipper"),
                 hardwareMap.get(Servo.class, "rightBlockFlipper"));
@@ -231,7 +233,8 @@ public class SkystoneHardware {
         );
 
         allServos = Arrays.asList(blockFlipper.leftFlipper, blockFlipper.rightFlipper,
-                leftFoundationLatch.servo, rightFoundationLatch.servo, blockGrabber.servo, leftFang.servo, rightFang.servo);
+                leftFoundationLatch.servo, rightFoundationLatch.servo, blockGrabber.servo, clawSpinner.servo,
+                leftFang.servo, rightFang.servo);
 
         /* Hubs for bulk reads */
         chassisHub = hardwareMap.get(ExpansionHubEx.class, "chassisHub");
@@ -433,6 +436,8 @@ public class SkystoneHardware {
         /* Update any FtcDashboard parameters */
         blockGrabber.retractPosition = BLOCK_GRABBER_OPEN;
         blockGrabber.extendPosition = BLOCK_GRABBER_CLOSED;
+        clawSpinner.retractPosition = CLAW_SPINNER_PARALLEL;
+        clawSpinner.extendPosition = CLAW_SPINNER_ROTATED;
         lateralEncoderWheelLifter.retractPosition = WHEEL_LIFTER_DOWN;
         lateralEncoderWheelLifter.extendPosition = WHEEL_LIFTER_UP;
         leftFoundationLatch.retractPosition = FOUNDATION_LATCH_OPEN + FOUNDATION_LATCH_LR_OFFSET;
