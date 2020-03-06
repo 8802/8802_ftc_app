@@ -102,6 +102,8 @@ public abstract class PurePursuitAuto extends SimulatableMecanumOpMode {
             robot.setPowers(MecanumUtil.STOP);
             stop();
         }
+
+        robot.pidLift.update();
     }
 
     @Override

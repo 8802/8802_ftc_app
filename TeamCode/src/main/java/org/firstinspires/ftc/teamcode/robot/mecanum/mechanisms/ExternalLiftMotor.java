@@ -25,7 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Rotation;
 @MotorType(ticksPerRev=819.2, gearing=5, maxRPM=2800, orientation= Rotation.CCW)
 @DeviceProperties(xmlTag="ExternalLiftMotor", name="External 5:1 Lift Motor", builtIn = true)
 @DistributorInfo(distributor="AndyMark", model="am-3461")
-@ExpansionHubPIDFVelocityParams(P=0.117, I=0.017, F=1.17)
+@ExpansionHubPIDFVelocityParams(P=0.15, I=0.017, F=1.8)
 @ExpansionHubPIDFPositionParams(P=5.0)
 public interface ExternalLiftMotor {
 

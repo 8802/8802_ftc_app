@@ -25,7 +25,8 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
 
     SkystoneHardware robot;
 
-    boolean leftStickButtonPrev, rightStickButtonPrev, rightTriggerPrev, leftBumperPrev, rightBumperPrev, yPrev, xPrev, bPrev, upPrev, downPrev, leftPrev;
+    boolean leftStickButtonPrev, rightStickButtonPrev, rightTriggerPrev, leftBumperPrev, rightBumperPrev;
+    boolean yPrev, xPrev, bPrev, upPrev, downPrev, leftPrev, rightPrev;
 
     enum RightTriggerActions {
         GRAB, VERIFY, DROP;
@@ -69,6 +70,7 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
         upPrev = gamepad1.dpad_up;
         downPrev = gamepad1.dpad_down;
         leftPrev = gamepad1.dpad_left;
+        rightPrev = gamepad1.dpad_right;
 
         intakeOn = false;
         nextRightTriggerAction = RightTriggerActions.GRAB;
@@ -81,7 +83,8 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
         robot.packet.put("targetPosition", robot.pidLift.targetPosition);
         robot.sendDashboardTelemetryPacket();
 
-        double scale = robot.pidLift.up() ? LIFT_UP_SLOW_SPEED : 1;
+        //double scale = robot.pidLift.up() ? LIFT_UP_SLOW_SPEED : 1;
+        double scale = 1;
 
         /* Drive code */
         double leftX = MathUtil.powRetainingSign(MecanumUtil.deadZone(-gamepad1.left_stick_x, 0.05), LEFT_TRIGGER_X_POW) * scale;
@@ -212,6 +215,16 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
             }
         } else if (!gamepad1.dpad_up) {
             upPrev = false;
+        }
+
+        if (gamepad1.dpad_down && !downPrev) {
+            downPrev = true;
+            if (gamepad1.a) {
+                robot.leftFang.toggle();
+                robot.rightFang.toggle();
+            }
+        } else if (!gamepad1.dpad_down) {
+            downPrev = false;
         }
 
         // Dpad right resets tower size

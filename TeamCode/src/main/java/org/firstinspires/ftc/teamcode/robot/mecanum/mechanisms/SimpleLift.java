@@ -16,7 +16,7 @@ public class SimpleLift {
     public static int GRABBING = 0;
 
     // LAYER_SHIFT is the distance in ticks between each two layers
-    public static int LAYER_SHIFT = 6900;
+    public static int LAYER_SHIFT = 6650;
 
     // PLACEMENT_LAYER_0 is the position at which we should place blocks on layer 0
     public static int PLACEMENT_LAYER_0 = 0;
@@ -24,12 +24,22 @@ public class SimpleLift {
     // VERIFY_OFFSET is how far upwards we should go for maneuvering blocks
     public static int VERIFY_OFFSET = 4500;
 
-    /* If we're more than PID_RANGE ticks BELOW our target, we'll just set power to 100% */
+    // If we're more than PID_RANGE ticks BELOW our target, we'll just set power to 100%
     public static int PID_RANGE = 3000;
+
+    // If we're going to zero and above this threshold, set power to -1
+    public static int MAX_DOWN_POWER_CUTOFF = 7000;
+    public static int WEAK_DOWN_POWER_CUTOFF = 1500;
+    public static double WEAK_DOWN_POWER = -0.3;
 
     public int layer;
     public int targetPosition;
-    private boolean pidControlled;
+
+    enum Mode {
+        PID, YEET_UP, YEET_DOWN, SLOW_DOWN, STOP
+    }
+
+    private Mode mode;
 
     public DcMotorEx left, right;
 
@@ -45,27 +55,48 @@ public class SimpleLift {
     }
 
     private void doPID() {
-        if (!pidControlled) {
+        if (mode != Mode.PID) {
+            left.setPower(0.3);
             left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            left.setPower(1);
+
+            right.setPower(0.3);
             right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            pidControlled = true;
+            right.setPower(1);
+
+            mode = Mode.PID;
         }
     }
 
-    private void doPower() {
-        if (pidControlled) {
-            left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    private void setPowerMode(Mode m) {
+        if (mode != m) {
+            if (mode == Mode.PID) {
+                left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+            double power = 0;
+            if (m == Mode.YEET_UP) { power = 1; }
+            else if (m == Mode.YEET_DOWN) { power = -1; }
+            else if (m == Mode.SLOW_DOWN) { power = WEAK_DOWN_POWER; }
+            else if (m == Mode.STOP) { power = 0; }
+
+            left.setPower(power);
+            right.setPower(power);
         }
     }
 
     // This function is only called by SkystoneTeleop, where it's used to adjust the position
     // prior to placing a block down. Thus, we want to maneuver into the raised position
     public void changeLayer(int addend) {
-        if (addend + layer >= 0 || addend + layer <= MAX_LAYER) {
+        if (addend + layer >= 0 && addend + layer <= MAX_LAYER) {
             layer += addend;
         }
-        setRaisedPositionFromLayer();
+
+        if (layer == 0) {
+            setDroppedPositionFromLayer();
+        } else {
+            setRaisedPositionFromLayer();
+        }
     }
 
     // This function is called by our auto code, which doesn't really care about stacking.
@@ -110,9 +141,18 @@ public class SimpleLift {
         // Don't spend time querying motor position if the lift isn't raised
         if (targetPosition > 10000) {
             if (left.getCurrentPosition() + PID_RANGE < targetPosition) {
-                doPower();
+                setPowerMode(Mode.YEET_UP);
             } else {
                 doPID();
+            }
+        } else if (targetPosition == GRABBING) {
+            int pos = left.getCurrentPosition();
+            if (pos > MAX_DOWN_POWER_CUTOFF) {
+                setPowerMode(Mode.YEET_DOWN);
+            } else if (pos > WEAK_DOWN_POWER_CUTOFF) {
+                setPowerMode(Mode.SLOW_DOWN);
+            } else {
+                setPowerMode(Mode.STOP);
             }
         } else {
             doPID();
@@ -120,6 +160,6 @@ public class SimpleLift {
     }
 
     public boolean up() {
-        return targetPosition > GRABBING;
+        return targetPosition > VERIFY_OFFSET;
     }
 }
