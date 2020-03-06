@@ -12,6 +12,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cDevice;
@@ -181,6 +182,7 @@ public class SkystoneHardware {
         /* Intake */
         intakeLeft = hardwareMap.get(DcMotorEx.class, "intakeLeft");
         intakeRight = hardwareMap.get(DcMotorEx.class, "intakeRight");
+        intakeRight.setDirection(DcMotorSimple.Direction.REVERSE);
         liftLeft = hardwareMap.get(DcMotorEx.class, "liftLeft");
         liftRight = hardwareMap.get(DcMotorEx.class, "liftRight");
         lastIntakeCurrent = new IntakeCurrent(0, 0);

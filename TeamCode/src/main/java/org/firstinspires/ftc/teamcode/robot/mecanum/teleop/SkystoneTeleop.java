@@ -147,16 +147,9 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
                 case DROP:
                     robot.blockGrabber.retract();
                     if (robot.pidLift.layer <= 7) {
-                        robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_LITTLE));
-                        robot.actionCache.add(new DelayedSubroutine(625, Subroutines.SET_FLIPPER_INTAKING));
-                        robot.actionCache.add(new DelayedSubroutine(1000, Subroutines.LOWER_LIFT_TO_GRABBING));
+                        robot.actionCache.add(new DelayedSubroutine(350, Subroutines.SET_FLIPPER_INTAKING));
+                        robot.actionCache.add(new DelayedSubroutine(700, Subroutines.LOWER_LIFT_TO_GRABBING));
                         robot.actionCache.add(new DelayedSubroutine(1500, (robot) -> { robot.setIntakePower(INTAKE_POWER); }));
-                        intakeOn = true;
-                    } else {
-                        robot.actionCache.add(new DelayedSubroutine(250, Subroutines.LIFT_A_FAIR_BIT));
-                        robot.actionCache.add(new DelayedSubroutine(750, Subroutines.SET_FLIPPER_INTAKING));
-                        robot.actionCache.add(new DelayedSubroutine(2000, Subroutines.LOWER_LIFT_TO_GRABBING));
-                        robot.actionCache.add(new DelayedSubroutine(2500, (robot) -> { robot.setIntakePower(INTAKE_POWER); }));
                         intakeOn = true;
                     }
                     break;

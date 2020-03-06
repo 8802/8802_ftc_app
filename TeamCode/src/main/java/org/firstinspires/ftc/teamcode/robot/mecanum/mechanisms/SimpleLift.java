@@ -48,6 +48,8 @@ public class SimpleLift {
         if (!pidControlled) {
             left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            left.setPower(1);
+            right.setPower(1);
             pidControlled = true;
         }
     }
@@ -56,6 +58,9 @@ public class SimpleLift {
         if (pidControlled) {
             left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            left.setPower(1);
+            right.setPower(1);
+            pidControlled = false;
         }
     }
 
@@ -100,7 +105,8 @@ public class SimpleLift {
     }
 
     public void cacheToGrabbing() {
-        setPosition(GRABBING);
+        targetPosition = GRABBING;
+        updatePosition();
     }
 
     // Depending on how far away we are from the position, it might be faster to use PID to get,
@@ -109,6 +115,7 @@ public class SimpleLift {
     public void update() {
         // Don't spend time querying motor position if the lift isn't raised
         if (targetPosition > PID_RANGE) {
+            int position = left.getCurrentPosition();
             if (left.getCurrentPosition() + PID_RANGE < targetPosition) {
                 doPower();
             } else {

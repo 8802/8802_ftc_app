@@ -21,7 +21,7 @@ public class CalibrateLiftPID extends LinearOpMode {
     FtcDashboard dashboard;
 
     public static int TARGET = 0;
-    public static int LAYER = 0;
+    public static int LAYER = 2;
 
     public static double V_P = 0.117;
     public static double V_I = 0.017;
