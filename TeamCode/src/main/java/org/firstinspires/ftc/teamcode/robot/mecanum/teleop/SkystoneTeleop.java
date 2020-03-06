@@ -15,8 +15,7 @@ import org.openftc.revextensions2.RevBulkData;
 
 
 @Config
-@TeleOp(name="Robot centric teleop")
-public class SkystoneTeleop extends SimulatableMecanumOpMode {
+public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
     public static double TRIGGER_THRESHOLD = 0.2;
     public static double INTAKE_POWER = 0.65;
     public static double LEFT_TRIGGER_X_POW = 2;
@@ -49,10 +48,14 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
 
     // Adjustable properties
     public boolean fieldCentric() {return false;}
+    public abstract boolean frontPegs();
 
     @Override
     public void init() {
         this.robot = this.getRobot();
+        if (frontPegs()) {
+            robot.pidLift.frontPegs = true;
+        }
     }
 
     @Override
@@ -137,7 +140,11 @@ public class SkystoneTeleop extends SimulatableMecanumOpMode {
                     } else {
                         robot.blockFlipper.readyBlockGrab();
                         robot.blockGrabber.extend(); // Grab the block
-                        robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_NORM_EXTEND));
+                        if (frontPegs()) {
+                            robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_FRONT_PEGS));
+                        } else {
+                            robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_NORM_EXTEND));
+                        }
                     }
                     robot.actionCache.add(new DelayedSubroutine(600, (robot) -> { robot.pidLift.changeLayer(1); }));
                     break;

@@ -20,6 +20,9 @@ public class DepositFlipper {
 
     public static double LEFT_MAX_EXTEND = 1;
     public static double RIGHT_MAX_EXTEND = 0.94;
+
+    public static double LEFT_FRONT_PEGS_EXTEND = 0.75;
+    public static double RIGHT_FRONT_PEGS_EXTEND = 0.69;
     
     public Servo leftFlipper;
     public Servo rightFlipper;
@@ -34,6 +37,7 @@ public class DepositFlipper {
     public void readyBlockGrab()   {setPosition(LEFT_GRABBING, RIGHT_GRABBING);}
     public void readyBlockIntake() {setPosition(LEFT_INTAKING, RIGHT_INTAKING);}
     public void readyDriving()     {setPosition(LEFT_DRIVING, RIGHT_DRIVING);}
+    public void frontPegsExtend()  {setPosition(LEFT_FRONT_PEGS_EXTEND, RIGHT_FRONT_PEGS_EXTEND);}
     public void normExtend()       {setPosition(LEFT_NORM_EXTEND, RIGHT_NORM_EXTEND);}
     public void maxExtend()        {setPosition(LEFT_MAX_EXTEND, RIGHT_MAX_EXTEND);}
 

@@ -27,6 +27,8 @@ public class SimpleLift {
     // If we're more than PID_RANGE ticks BELOW our target, we'll just set power to 100%
     public static int PID_RANGE = 3000;
 
+    public static int FRONT_LEVELS_SHIFT = -7500;
+
     // If we're going to zero and above this threshold, set power to -1
     public static int MAX_DOWN_POWER_CUTOFF = 7000;
     public static int WEAK_DOWN_POWER_CUTOFF = 1500;
@@ -41,6 +43,7 @@ public class SimpleLift {
 
     private Mode mode;
 
+    public boolean frontPegs;
     public DcMotorEx left, right;
 
     // Also initializes the DcMotor
@@ -52,6 +55,7 @@ public class SimpleLift {
         doPID();
         left.setPower(1);
         right.setPower(1);
+        frontPegs = false;
     }
 
     private void doPID() {
@@ -117,11 +121,13 @@ public class SimpleLift {
 
     public void setRaisedPositionFromLayer() {
         targetPosition = PLACEMENT_LAYER_0 + VERIFY_OFFSET + layer * LAYER_SHIFT;
+        targetPosition += (frontPegs && layer >= 1) ? FRONT_LEVELS_SHIFT : 0;
         updatePosition();
     }
 
     public void setDroppedPositionFromLayer() {
         targetPosition = PLACEMENT_LAYER_0 + layer * LAYER_SHIFT;
+        targetPosition += (frontPegs && layer >= 1) ? FRONT_LEVELS_SHIFT : 0;
         updatePosition();
     }
 
