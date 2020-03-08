@@ -131,7 +131,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                     new HeadingControlledWaypoint(-54, 36, 12, Math.PI),
                     new HeadingControlledWaypoint(-12, 39, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(0, 39, 12, Math.PI),
-                    new StopWaypoint(50, 41, 8, Math.PI, -1, new CloseDepositUntilSuccessful()),
+                    new StopWaypoint(52, 41, 8, Math.PI, -1, new CloseDepositUntilSuccessful()),
 
                     /* Fifth block is a swooping pattern */
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.ENABLE_INTAKE),
@@ -140,7 +140,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                     new HeadingControlledWaypoint(-16, 36, 12, Math.toRadians(225)),
                     new HeadingControlledWaypoint(-4, 36, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(0, 39, 12, Math.PI, new SkipFifthBlockPlacement()),
-                    new StopWaypoint(50, 41, 8,
+                    new StopWaypoint(52, 41, 8,
                             Math.PI, -1, new DepositUntilSuccessful())
             ));
         } else if (SKYSTONE == SkystoneState.MIDDLE) {
@@ -158,7 +158,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                     new HeadingControlledWaypoint(-49, 12, 4.5, Math.toRadians(225), Subroutines.CHECK_BLOCK_GRAB),
                     new HeadingControlledWaypoint(-25, 36, 8, Math.toRadians(225)),
                     new HeadingControlledWaypoint(-4, 34, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                    new StopWaypoint(50, 39, 8, // TOOD verify this 40 actually works better than 35
+                    new StopWaypoint(52, 39, 8, // TOOD verify this 40 actually works better than 35
                             Math.PI, -1, new CloseDepositUntilSuccessful()),
 
                     new HeadingControlledWaypoint(-32, 36, 8, Math.PI, Subroutines.FANGS_DOWN_AND_INTAKE),
@@ -168,7 +168,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                     new HeadingControlledWaypoint(-36, 36, 8, Math.PI),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, new SkipFifthBlockPlacement()),
-                    new StopWaypoint(50, 41, 8, Math.PI, -1, new DepositUntilSuccessful())
+                    new StopWaypoint(52, 41, 8, Math.PI, -1, new DepositUntilSuccessful())
             ));
         } else {
             scoreSkystones.addAll(Waypoint.collate(
@@ -188,7 +188,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                     new HeadingControlledWaypoint(-16, 36, 12, Math.toRadians(225)),
                     new HeadingControlledWaypoint(-4, 36, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(0, 39, 12, Math.PI),
-                    new StopWaypoint(50, 41, 8,
+                    new StopWaypoint(52, 41, 8,
                             Math.PI, -1, new CloseDepositUntilSuccessful()),
 
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.FANGS_DOWN_AND_INTAKE),
@@ -200,7 +200,7 @@ public class SSAutoMovingFoundation extends PurePursuitAuto {
                     new HeadingControlledWaypoint(-24, 33, 8, -0.85 * Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.PI),
                     new HeadingControlledWaypoint(0, 39, 12, Math.PI, new SkipFifthBlockPlacement()),
-                    new StopWaypoint(50, 41, 8,
+                    new StopWaypoint(52, 41, 8,
                             Math.PI, -1, new DepositUntilSuccessful())
             ));
         }

@@ -132,7 +132,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                     new HeadingControlledWaypoint(-54, 36, 12, Math.PI),
                     new HeadingControlledWaypoint(-12, 41, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(0, 46, 12, Math.PI),
-                    new StopWaypoint(50, 46, 8, Math.PI, -1, new CloseDepositUntilSuccessful()),
+                    new StopWaypoint(54, 46, 8, Math.PI, -1, new CloseDepositUntilSuccessful()),
 
                     /* Fifth block is a swooping pattern */
                     new HeadingControlledWaypoint(0, 41, 8, Math.PI, Subroutines.ENABLE_INTAKE),
@@ -141,7 +141,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                     new HeadingControlledWaypoint(-16, 39, 12, Math.toRadians(225)),
                     new HeadingControlledWaypoint(-4, 39, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(0, 41, 12, Math.PI, new SkipFifthBlockPlacement()),
-                    new StopWaypoint(50, 48, 8,
+                    new StopWaypoint(54, 48, 8,
                             Math.PI, -1, new DepositUntilSuccessful())
             ));
         } else if (SKYSTONE == SkystoneState.MIDDLE) {
@@ -163,7 +163,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                     new HeadingControlledWaypoint(-12, 41, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new StopWaypoint(12, 40, 8, // TOOD verify this 40 actually works better than 35
                             Math.PI, 3, new WaitSubroutine(300)),
-                    new StopWaypoint(50, 49, 7, Math.PI, -1, new CloseDepositUntilSuccessful())
+                    new StopWaypoint(54, 49, 7, Math.PI, -1, new CloseDepositUntilSuccessful())
             ));
         } else {
             scoreSkystones.addAll(Waypoint.collate(
@@ -180,14 +180,14 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
 
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.FANGS_DOWN_AND_INTAKE),
                     new HeadingControlledWaypoint(-30, 39, 8, -0.75 * Math.PI, Subroutines.CHECK_BLOCK_GRAB),
-                    new HeadingControlledWaypoint(-46, 18, 8, -0.75 * Math.PI, Subroutines.CHECK_BLOCK_GRAB),
+                    new HeadingControlledWaypoint(-46, 18, 8, -0.75 * Math.PI, Subroutines.LIFT_FANGS_CHECK_BLOCK_GRAB),
                     //new HeadingControlledWaypoint(-47 , 18, 8, Math.PI, Subroutines.LIFT_FANGS_CHECK_BLOCK_GRAB),
                     new StopWaypoint(-58, 18, 8, Math.PI, 4),
 
                     new HeadingControlledWaypoint(-24, 33, 8, -0.85 * Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(-12, 39, 8, Math.PI),
                     new HeadingControlledWaypoint(0, 41, 12, Math.PI),
-                    new StopWaypoint(50, 41, 8,
+                    new StopWaypoint(54, 41, 8,
                             Math.PI, -1, new CloseDepositUntilSuccessful()))
             );
         }
