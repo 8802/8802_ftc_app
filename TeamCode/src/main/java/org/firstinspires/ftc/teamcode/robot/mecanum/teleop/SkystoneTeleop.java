@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
 import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
-import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.SimpleLift;
 import org.openftc.revextensions2.RevBulkData;
 
 
@@ -141,7 +140,7 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
                     } else {
                         robot.blockFlipper.readyBlockGrab();
                         robot.blockGrabber.extend(); // Grab the block
-                        if (frontPegs() && robot.pidLift.layer >= 1) {
+                        if (frontPegs()) {
                             robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_FRONT_PEGS));
                         } else {
                             robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_NORM_EXTEND));
@@ -174,9 +173,6 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
                         robot.actionCache.add(new DelayedSubroutine(2000, Subroutines.LOWER_LIFT_TO_GRABBING));
                         robot.actionCache.add(new DelayedSubroutine(2500, (robot) -> { robot.setIntakePower(INTAKE_POWER); }));
                         intakeOn = true;
-                    }
-                    if (frontPegs()) {
-                        robot.pidLift.layer = Math.min(robot.pidLift.layer + 1, SimpleLift.MAX_LAYER);
                     }
                     break;
             }
