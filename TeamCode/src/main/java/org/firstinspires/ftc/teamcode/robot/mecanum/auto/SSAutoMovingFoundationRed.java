@@ -147,16 +147,16 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
         } else if (SKYSTONE == SkystoneState.MIDDLE) {
             scoreSkystones.addAll(Waypoint.collate(
                     new HeadingControlledWaypoint(0, 39, 8, Math.PI, Subroutines.ENABLE_INTAKE),
-                    new HeadingControlledWaypoint(-12, 39, 8, Math.toRadians(240), Subroutines.SET_RIGHT_FANG_DOWN),
-                    new HeadingControlledWaypoint(-30, 12, 4.5, Math.toRadians(240), Subroutines.CHECK_BLOCK_GRAB),
-                    new HeadingControlledWaypoint(-16, 36, 8, Math.toRadians(240)),
-                    new HeadingControlledWaypoint(-4, 40, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new HeadingControlledWaypoint(-18, 39, 8, Math.toRadians(240), Subroutines.SET_RIGHT_FANG_DOWN),
+                    new HeadingControlledWaypoint(-36, 12, 4.5, Math.toRadians(240), Subroutines.CHECK_BLOCK_GRAB),
+                    new HeadingControlledWaypoint(-22, 36, 8, Math.toRadians(240)),
+                    new HeadingControlledWaypoint(-10, 40, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new StopWaypoint(12, 40, 8, // TOOD verify this 40 actually works better than 35
                             Math.PI, -1, new CloseDepositUntilSuccessful()),
 
                     new HeadingControlledWaypoint(-32, 39, 8, Math.PI, Subroutines.FANGS_DOWN_AND_INTAKE),
                     new HeadingControlledWaypoint(-48, 30, 8, Math.toRadians(205), Subroutines.LIFT_FANGS_CHECK_BLOCK_GRAB),
-                    new StopWaypoint(-55, 25, 6, Math.toRadians(205),
+                    new StopWaypoint(-60, 25, 6, Math.toRadians(205),
                             4.5, new JoltsUntilBlockGrab(MecanumUtil.FORWARD)),
                     new HeadingControlledWaypoint(-36, 41, 8, Math.toRadians(205), new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(-12, 41, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
