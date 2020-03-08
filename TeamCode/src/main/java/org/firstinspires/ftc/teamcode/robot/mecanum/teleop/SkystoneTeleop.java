@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumUtil;
 import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.SimpleLift;
 import org.openftc.revextensions2.RevBulkData;
 
 
@@ -140,13 +141,19 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
                     } else {
                         robot.blockFlipper.readyBlockGrab();
                         robot.blockGrabber.extend(); // Grab the block
-                        if (frontPegs()) {
+                        if (frontPegs() && robot.pidLift.layer >= 1) {
                             robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_FRONT_PEGS));
                         } else {
                             robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_NORM_EXTEND));
                         }
                     }
-                    robot.actionCache.add(new DelayedSubroutine(600, (robot) -> { robot.pidLift.changeLayer(1); }));
+                    if (frontPegs()) {
+                        robot.actionCache.add(new DelayedSubroutine(600, (robot) -> { robot.pidLift.changeLayer(0); }));
+                    } else {
+                        robot.actionCache.add(new DelayedSubroutine(600, (robot) -> {
+                            robot.pidLift.changeLayer(1);
+                        }));
+                    }
                     break;
 
                 case VERIFY:
@@ -168,6 +175,9 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
                         robot.actionCache.add(new DelayedSubroutine(2500, (robot) -> { robot.setIntakePower(INTAKE_POWER); }));
                         intakeOn = true;
                     }
+                    if (frontPegs()) {
+                        robot.pidLift.layer = Math.min(robot.pidLift.layer + 1, SimpleLift.MAX_LAYER);
+                    }
                     break;
             }
 
@@ -181,12 +191,18 @@ public abstract class SkystoneTeleop extends SimulatableMecanumOpMode {
         if (!gamepad1.left_bumper && leftBumperPrev) {
             leftBumperPrev = false;
             robot.pidLift.changeLayer(-1);
+            if (robot.pidLift.layer == 0 && frontPegs()) {
+                robot.blockFlipper.normExtend();
+            }
         } else if (gamepad1.left_bumper) {
             leftBumperPrev = true;
         }
 
         if (gamepad1.right_bumper && !rightBumperPrev) {
             rightBumperPrev = true;
+            if (robot.pidLift.layer == 0 && frontPegs()) {
+                robot.blockFlipper.frontPegsExtend();
+            }
             robot.pidLift.changeLayer(1);
         } else if (!gamepad1.right_bumper) {
             rightBumperPrev = false;

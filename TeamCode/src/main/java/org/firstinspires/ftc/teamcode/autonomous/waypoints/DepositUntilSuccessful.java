@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.autonomous.waypoints;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware;
+import org.firstinspires.ftc.teamcode.robot.mecanum.mechanisms.SimpleLift;
 
 @Config
 public class DepositUntilSuccessful implements Subroutines.RepeatedSubroutine {
@@ -29,9 +31,21 @@ public class DepositUntilSuccessful implements Subroutines.RepeatedSubroutine {
             robot.actionCache.add(new DelayedSubroutine(425, Subroutines.SET_FLIPPER_NORM_EXTEND));
             robot.actionCache.add(new DelayedSubroutine(300, (r) -> {r.pidLift.setLayer(2);}));
             robot.actionCache.add(new DelayedSubroutine(1050, Subroutines.OPEN_CLAW));
-            robot.actionCache.add(new DelayedSubroutine(1050, (r) -> r.pidLift.setLayer(8)));
+            robot.actionCache.add(new DelayedSubroutine(1050, (r) -> {
+                r.pidLift.left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                r.pidLift.right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                r.pidLift.left.setPower(1);
+                r.pidLift.right.setPower(1);
+            }));
             robot.actionCache.add(new DelayedSubroutine(1200, Subroutines.SET_FLIPPER_INTAKING));
-            robot.actionCache.add(new DelayedSubroutine(1650, Subroutines.LOWER_LIFT_TO_GRABBING));
+            robot.actionCache.add(new DelayedSubroutine(1650, (r) -> {
+                r.pidLift.left.setTargetPosition(SimpleLift.GRABBING);
+                r.pidLift.right.setTargetPosition(SimpleLift.GRABBING);
+                r.pidLift.left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                r.pidLift.right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                r.pidLift.left.setPower(1);
+                r.pidLift.right.setPower(1);
+            }));
             attempt = 1;
         }
 
@@ -58,18 +72,36 @@ public class DepositUntilSuccessful implements Subroutines.RepeatedSubroutine {
     private void replaceBlock(SkystoneHardware robot) {
         robot.blockFlipper.readyBlockGrab();
         robot.blockGrabber.extend(); // Grab the block
-        robot.pidLift.cacheToGrabbing();
+        robot.pidLift.left.setTargetPosition(SimpleLift.GRABBING);
+        robot.pidLift.right.setTargetPosition(SimpleLift.GRABBING);
+        robot.pidLift.left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.pidLift.right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.pidLift.left.setPower(1);
+        robot.pidLift.right.setPower(1);
         robot.actionCache.add(new DelayedSubroutine(600, Subroutines.SET_FLIPPER_NORM_EXTEND));
         robot.actionCache.add(new DelayedSubroutine(1400, Subroutines.OPEN_CLAW));
-        robot.actionCache.add(new DelayedSubroutine(1650, Subroutines.LIFT_A_LITTLE));
+        robot.actionCache.add(new DelayedSubroutine(1650, (r) -> {
+            r.pidLift.left.setTargetPosition(Subroutines.LIFT_RAISE_AMOUNT);
+            r.pidLift.right.setTargetPosition(Subroutines.LIFT_RAISE_AMOUNT);
+        }));
         robot.actionCache.add(new DelayedSubroutine(2150, Subroutines.SET_FLIPPER_INTAKING));
-        robot.actionCache.add(new DelayedSubroutine(2150, Subroutines.LOWER_LIFT_TO_GRABBING));
+        robot.actionCache.add(new DelayedSubroutine(2150, (r) -> {
+            r.pidLift.left.setTargetPosition(SimpleLift.GRABBING);
+            r.pidLift.right.setTargetPosition(SimpleLift.GRABBING);
+        }));
     }
 
     private boolean optionallySkip(SkystoneHardware robot, PurePursuitPath path) {
         if (timeSinceStart.seconds() > NO_NEW_CYCLES_DEADLINE) {
             robot.actionCache.clear();
-            robot.actionCache.add(new DelayedSubroutine(400, Subroutines.LOWER_LIFT_TO_GRABBING));
+            robot.actionCache.add(new DelayedSubroutine(400, (r) -> {
+                r.pidLift.left.setTargetPosition(SimpleLift.GRABBING);
+                r.pidLift.right.setTargetPosition(SimpleLift.GRABBING);
+                r.pidLift.left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                r.pidLift.right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                r.pidLift.left.setPower(1);
+                r.pidLift.right.setPower(1);
+            }));
             path.currPoint = path.waypoints.size() - 2;
             return true;
         }

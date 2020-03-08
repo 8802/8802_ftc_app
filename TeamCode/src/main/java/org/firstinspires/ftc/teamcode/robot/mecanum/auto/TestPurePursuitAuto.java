@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.autonomous.PurePursuitPath;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.StopWaypoint;
+import org.firstinspires.ftc.teamcode.autonomous.waypoints.Subroutines;
 import org.firstinspires.ftc.teamcode.autonomous.waypoints.Waypoint;
 import org.firstinspires.ftc.teamcode.common.SimulatableMecanumOpMode;
 import org.firstinspires.ftc.teamcode.common.elements.Alliance;
@@ -22,7 +23,7 @@ import java.util.List;
 import static org.firstinspires.ftc.teamcode.robot.mecanum.SkystoneHardware.FIELD_RADIUS;
 
 @Autonomous(name="Test Pure Pursuit", group="Testing")
-public abstract class TestPurePursuitAuto extends SimulatableMecanumOpMode {
+public class TestPurePursuitAuto extends SimulatableMecanumOpMode {
     Pose DEFAULT_START_POSITION = new Pose(-FIELD_RADIUS + 22.75 + 9, FIELD_RADIUS - 9, 3 * Math.PI / 2);
 
     SkystoneHardware robot;
@@ -30,7 +31,9 @@ public abstract class TestPurePursuitAuto extends SimulatableMecanumOpMode {
 
     // Robot state
 
-    public abstract List<Waypoint> getPurePursuitWaypoints();
+    public List<Waypoint> getPurePursuitWaypoints() {
+        return null;
+    };
 
     @Override
     public void init() {
@@ -44,6 +47,8 @@ public abstract class TestPurePursuitAuto extends SimulatableMecanumOpMode {
         robot.initBulkReadTelemetry();
         LinkedList<Waypoint> waypoints = Waypoint.collate(
                 new Waypoint(DEFAULT_START_POSITION, 4),
+                new StopWaypoint(DEFAULT_START_POSITION.x, 0, 12, 1.5 * Math.PI, 0, Subroutines.LIFT_A_LITTLE),
+                new Waypoint(DEFAULT_START_POSITION.x, 18, 12),
                 new StopWaypoint(DEFAULT_START_POSITION.x, -38.5, 12, 1.5 * Math.PI, 0)
         );
 
