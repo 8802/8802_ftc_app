@@ -105,7 +105,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                 // Now make our move to deposit
                 new HeadingControlledWaypoint(-4, 43, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                 new HeadingControlledWaypoint(0, 44, 12, Math.PI),
-                new StopWaypoint(12, 46, 8,
+                new StopWaypoint(8, 46, 8,
                         Math.PI, -1, new CloseDepositUntilSuccessful())
         ));
 
@@ -121,7 +121,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                             3),
                     new HeadingControlledWaypoint(-46, 36, 12, Math.PI),
                     new HeadingControlledWaypoint(-12, 41, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                    new StopWaypoint(12, 40, 8, // TOOD verify this 40 actually works better than 35
+                    new StopWaypoint(8, 40, 8, // TOOD verify this 40 actually works better than 35
                             Math.PI, -1, new CloseDepositUntilSuccessful()),
 
                     /* Fourth block goes for 1st lowest */
@@ -152,7 +152,7 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
 
                     new HeadingControlledWaypoint(-22, 41, 8, Math.toRadians(240)),
                     new HeadingControlledWaypoint(-10, 41, 8, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
-                    new StopWaypoint(12, 41, 8, // TOOD verify this 40 actually works better than 35
+                    new StopWaypoint(10, 41, 8, // TOOD verify this 40 actually works better than 35
                             Math.PI, -1, new CloseDepositUntilSuccessful()),
 
                     new HeadingControlledWaypoint(-32, 41, 8, Math.PI, Subroutines.FANGS_DOWN_AND_INTAKE),
@@ -171,10 +171,10 @@ public class SSAutoMovingFoundationRed extends PurePursuitAutoRed {
                     new HeadingControlledWaypoint(-10, 39, 6, Math.PI, Subroutines.CHECK_BLOCK_GRAB),
                     new StopWaypoint(-18, 26.5, 4, Math.toRadians(225),
                             3, new JoltsUntilBlockGrab(joltDirection)),
-                    new HeadingControlledWaypoint(-16, 39, 12, Math.PI),
-                    new HeadingControlledWaypoint(-4, 39, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
+                    new HeadingControlledWaypoint(-16, 41, 8, Math.PI),
+                    new HeadingControlledWaypoint(-4, 40, 12, Math.PI, new GrabBlockOptionallyRejectDouble(Subroutines.GRAB_BLOCK_NO_EXTEND)),
                     new HeadingControlledWaypoint(0, 41, 12, Math.PI),
-                    new StopWaypoint(12, 40, 8,
+                    new StopWaypoint(10, 40, 8,
                             Math.PI, -1, new CloseDepositUntilSuccessful()),
 
 
